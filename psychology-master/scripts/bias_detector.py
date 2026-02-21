@@ -19,6 +19,10 @@ from dataclasses import dataclass, asdict
 from typing import List, Dict, Tuple
 from pathlib import Path
 
+SCRIPT_DIR = Path(__file__).resolve().parent
+SKILL_ROOT = SCRIPT_DIR.parent
+MAX_INPUT_FILE_BYTES = 200_000
+
 
 @dataclass
 class Result:
@@ -178,6 +182,33 @@ POSITIVE_PATTERNS = {
 }
 
 
+def resolve_input_file(file_arg: str) -> Path:
+    raw = Path((file_arg or "").strip())
+    if not raw:
+        raise ValueError("Input file path is empty")
+    resolved = raw.resolve() if raw.is_absolute() else (SKILL_ROOT / raw).resolve()
+    try:
+        resolved.relative_to(SKILL_ROOT)
+    except ValueError as exc:
+        raise ValueError("Input file must stay inside the skill directory.") from exc
+    if not resolved.is_file():
+        raise ValueError(f"Input file not found: {file_arg}")
+    try:
+        if resolved.stat().st_size > MAX_INPUT_FILE_BYTES:
+            raise ValueError(f"Input file exceeds {MAX_INPUT_FILE_BYTES} bytes.")
+    except OSError as exc:
+        raise ValueError(f"Unable to stat input file: {file_arg}") from exc
+    return resolved
+
+
+def read_input_file(file_arg: str) -> str:
+    resolved = resolve_input_file(file_arg)
+    try:
+        return resolved.read_text(encoding="utf-8", errors="replace")
+    except OSError as exc:
+        raise ValueError(f"Unable to read input file: {file_arg}") from exc
+
+
 def analyze_copy(text: str, strict: bool = False) -> Result:
     """Analyze marketing copy for manipulation patterns."""
     errors = []
@@ -298,9 +329,12 @@ def main():
     # Get text to analyze
     if args.file:
         try:
-            text = Path(args.file).read_text()
-        except Exception as e:
-            print(f"Error reading file: {e}")
+            text = read_input_file(args.file)
+        except ValueError as e:
+            if args.json:
+                print(json.dumps(asdict(Result(success=False, data={}, errors=[str(e)], warnings=[])), indent=2))
+            else:
+                print(f"Error reading file: {e}")
             sys.exit(1)
     elif args.copy:
         text = args.copy
