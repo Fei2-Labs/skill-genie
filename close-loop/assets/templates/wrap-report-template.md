@@ -2,6 +2,8 @@
 
 Use this template for the final inline wrap-up output.
 
+Mode: `execute` or `dry-run`
+
 ## Ship State
 
 - Repos checked:
@@ -13,9 +15,9 @@ Use this template for the final inline wrap-up output.
 
 ## Memory Writes
 
-| Destination | Item | Confidence | Evidence source |
-|---|---|---|---|
-|  |  | low/medium/high |  |
+| Destination | Item | Confidence | Evidence source | TTL | Status |
+|---|---|---|---|---|---|
+|  |  | low/medium/high |  |  | active/needs-review |
 
 ## Findings (applied)
 
@@ -35,11 +37,36 @@ Use this template for the final inline wrap-up output.
 - Draft path:
 - Post status:
 
+## KPIs
+
+- Noise rate:
+- Reuse rate:
+- Correction rate:
+
 ## Blocked items
 
 - Item:
 - Blocker:
 - Next action:
+
+## Machine-readable JSON
+
+```json
+{
+  "mode": "execute|dry-run",
+  "shipState": {},
+  "memoryWrites": [],
+  "findingsApplied": [],
+  "noActionNeeded": [],
+  "publishQueue": [],
+  "blockedItems": [],
+  "kpis": {
+    "noiseRate": 0,
+    "reuseRate": 0,
+    "correctionRate": 0
+  }
+}
+```
 
 ## Optional appendices
 
