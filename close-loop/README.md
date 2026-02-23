@@ -19,7 +19,11 @@ End-of-session workflow for shipping work cleanly and retaining high-value memor
 
 ## Files
 
-- `SKILL.md` - Main instructions and execution contract.
+- `SKILL.md` - Entry point + execution order.
+- `components/01-design-principles.md` - Execution policy and action gates.
+- `components/02-phase-1-ship-state.md` - Ship State phase steps.
+- `components/03-phase-2-memory.md` - Memory consolidation and safety rules.
+- `components/04-phase-3-4-and-output.md` - Improvements, publish queue, and output contract.
 - `references/memory-frameworks.md` - Framework references and update checklist.
 - `assets/templates/wrap-report-template.md` - Output template for session wrap reports.
 
