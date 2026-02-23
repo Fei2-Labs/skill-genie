@@ -6,8 +6,10 @@ End-of-session workflow for shipping work cleanly and retaining high-value memor
 
 - Runs a 4-phase wrap-up: Ship State, Consolidate Memory, Review & Apply, Publish Queue.
 - Uses typed memory buckets: working, episodic, semantic, procedural.
-- Applies a persistence filter to reduce noisy memory writes.
-- Enforces safety gates for push, deploy, and publish actions.
+- Uses two-pass consolidation (extract then verify/dedupe/resolve conflicts).
+- Applies a persistence filter plus confidence calibration and TTL retention.
+- Enforces action gates for commit, push, deploy, and publish.
+- Supports `dry-run` mode and emits a machine-readable JSON report.
 
 ## Use this skill when
 
@@ -43,3 +45,4 @@ Execution order:
 - Deterministic end-of-session behavior
 - Minimal irreversible actions without approval
 - Clear output contract with evidence and confidence labels
+- Memory security against poisoning/injection patterns

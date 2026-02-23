@@ -33,8 +33,11 @@ Use it to keep guidance current and avoid stale assumptions.
 - Typed memory buckets come from CoALA-style separation.
 - Selective persistence (`score >= 5`) is inspired by A-MEM/Mem0.
 - Provenance and confidence labeling support auditability.
+- Contradiction handling uses `needs-review` state instead of overwrite.
+- Retention is type-based with explicit TTL policy.
 - External side effects (push/deploy/publish) are safety-gated.
 - Memory writes exclude sensitive data by default.
+- Security checkpoint resists memory poisoning and prompt injection.
 
 ## Update checklist
 
