@@ -42,11 +42,12 @@ Return two artifacts.
 Sections:
 
 1. `Ship State`
-2. `Memory Writes`
-3. `Findings (applied)`
-4. `No action needed`
-5. `Publish queue`
-6. `Blocked items` (only if any)
+2. `Mode Decision`
+3. `Memory Writes`
+4. `Findings (applied)`
+5. `No action needed`
+6. `Publish queue`
+7. `Blocked items` (only if any)
 
 Every memory write must include:
 
@@ -60,16 +61,55 @@ Every memory write must include:
 ```json
 {
   "mode": "execute|dry-run",
+  "selectedStrategyInput": "safe|balanced|openclaw|adaptive",
+  "selectedStrategy": "safe|balanced|openclaw",
+  "modeSelection": {
+    "candidates": [
+      {
+        "name": "safe|balanced|openclaw|adaptive",
+        "utilityGain": 0,
+        "riskPenalty": 0,
+        "costPenalty": 0,
+        "strategyScore": 0
+      }
+    ],
+    "decisionReason": "",
+    "fallbackStrategy": "safe|balanced|openclaw|adaptive"
+  },
   "shipState": {},
+  "memoryEvaluation": {
+    "mode": "static|dynamic",
+    "runs": 0,
+    "result": "pass|fail",
+    "metrics": {
+      "successRateDelta": 0,
+      "retrievedTokenSize": 0,
+      "endToEndMemoryCost": 0
+    }
+  },
+  "archiveUpdate": {
+    "candidateId": "",
+    "parentId": "",
+    "decision": "promote|hold|reject",
+    "reason": ""
+  },
   "memoryWrites": [],
   "findingsApplied": [],
   "noActionNeeded": [],
   "publishQueue": [],
   "blockedItems": [],
+  "safety": {
+    "sandboxed": true,
+    "reflectionRetries": 0
+  },
   "kpis": {
     "noiseRate": 0,
     "reuseRate": 0,
-    "correctionRate": 0
+    "correctionRate": 0,
+    "memoryPrecision": 0,
+    "tokenOverhead": 0,
+    "costPerUsefulWrite": 0,
+    "decisionConfidence": 0
   }
 }
 ```
@@ -81,6 +121,10 @@ Use `assets/templates/wrap-report-template.md` as the default report skeleton.
 - `noiseRate = rejected_candidates / total_candidates`
 - `reuseRate = reused_memories / total_memories_read`
 - `correctionRate = corrected_memories / total_writes`
+- `memoryPrecision = accepted_writes / total_writes`
+- `tokenOverhead = retrievedTokenSize / baselineTokenSize`
+- `costPerUsefulWrite = endToEndMemoryCost / accepted_writes`
+- `decisionConfidence = margin(selectedStrategy, secondBestStrategy)`
 
 ## Guardrails
 

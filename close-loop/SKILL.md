@@ -3,7 +3,7 @@ name: close-loop
 description: End-of-session workflow for shipping changes, consolidating memory, applying self-improvements, and preparing publishable outputs with safety gates.
 license: MIT
 metadata:
-  version: 2.1.1
+  version: 2.3.1
   category: session-memory
 ---
 

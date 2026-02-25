@@ -13,6 +13,7 @@ Use it to keep guidance current and avoid stale assumptions.
 
 | Framework | Source | Date | What it contributes |
 |---|---|---|---|
+| ALMA | arXiv:2602.07755 + github.com/zksha/alma | 2026-02 | Open-ended meta-learning of memory designs, archive-based exploration, and static/dynamic evaluation modes |
 | InfiAgent | arXiv:2601.03204 | 2026-01 | Infinite-horizon continuity and long-run state handling |
 | A-MEM | arXiv:2502.12110 | 2025-02 | Memory formation/consolidation from interactions |
 | Mem0 | arXiv:2504.19413 | 2025-04 | Practical memory layer with selective retention |
@@ -33,6 +34,8 @@ Use it to keep guidance current and avoid stale assumptions.
 - Typed memory buckets come from CoALA-style separation.
 - Selective persistence (`score >= 5`) is inspired by A-MEM/Mem0.
 - Provenance and confidence labeling support auditability.
+- Archive-based non-greedy policy refinement is inspired by ALMA.
+- Static-before-dynamic validation mode mirrors ALMA evaluation design.
 - Contradiction handling uses `needs-review` state instead of overwrite.
 - Retention is type-based with explicit TTL policy.
 - External side effects (push/deploy/publish) are safety-gated.
@@ -48,3 +51,8 @@ Run this checklist before changing framework guidance:
 3. Capture exactly one operational change per framework.
 4. Update `close-loop/SKILL.md` only when behavior must change.
 5. Keep this file concise; move deep notes to separate references if needed.
+
+## Primary links
+
+- ALMA paper: https://arxiv.org/abs/2602.07755
+- ALMA repo: https://github.com/zksha/alma
