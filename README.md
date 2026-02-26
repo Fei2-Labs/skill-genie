@@ -19,6 +19,7 @@ Most personal automation fails because the best methods live in scattered notes.
 
 - [`omnidebug-autopilot`](./omnidebug-autopilot): Autonomous root-cause debugging workflow with deterministic browser reproduction, artifact capture, and fix verification scripts.
 - [`close-loop`](./close-loop): End-of-session ship-and-memory workflow with autonomous strategy selection (`safe`, `balanced`, `openclaw`/`adaptive`), ALMA-inspired evaluation, and machine-readable JSON output.
+- [`ai-csuite`](./ai-csuite): Script-backed AI executive debate workflow that generates stage-aware strategic recommendations, CEO briefs, and decision artifacts.
 
 ## Skill layout
 

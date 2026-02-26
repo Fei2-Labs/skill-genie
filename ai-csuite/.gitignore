@@ -1,0 +1,6 @@
+.DS_Store
+__pycache__/
+*.pyc
+logs/*.md
+!logs/.gitkeep
+config/company.local.yaml

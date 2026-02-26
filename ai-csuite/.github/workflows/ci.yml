@@ -1,0 +1,44 @@
+name: ai-csuite-ci
+
+on:
+  push:
+    paths:
+      - "ai-csuite/**"
+  pull_request:
+    paths:
+      - "ai-csuite/**"
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ai-csuite
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Security scan
+        run: python3 scripts/security_scan.py .
+
+      - name: Prepare session
+        run: |
+          python3 scripts/prepare_session.py \
+            --topic "CI sanity check debate topic" \
+            --company-file config/company.yaml
+
+      - name: Run debate
+        run: |
+          python3 scripts/run_debate.py \
+            --topic "CI sanity check debate topic" \
+            --company-file config/company.yaml \
+            --output logs/ci-output.md
+
+      - name: Validate output
+        run: python3 scripts/validate_output.py --file logs/ci-output.md
