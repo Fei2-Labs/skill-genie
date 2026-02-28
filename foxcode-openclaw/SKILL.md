@@ -184,8 +184,8 @@ Configure 1-2 fallback models for reliability:
 
 **"systemctl --user unavailable" on macOS**
 - This is expected - `systemctl` is Linux-only
-- On macOS, use: `openclaw gateway restart`
-- Or manually restart the OpenClaw app
+- **Fix**: Run `openclaw doctor` to repair gateway service
+- Then use `openclaw gateway restart` to apply config changes
 
 **"API token invalid"**
 - Double-check token from https://foxcode.rjj.cc/api-keys
