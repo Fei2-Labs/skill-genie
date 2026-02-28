@@ -3,7 +3,7 @@ name: foxcode-openclaw
 description: Configure and manage Foxcode AI models in OpenClaw. Guides users through API setup, endpoint selection, primary/fallback model configuration, and status monitoring. Optimized for beginners with psychology-backed teaching approach.
 license: MIT
 metadata:
-  version: 1.2.2
+  version: 1.2.3
   category: ai-configuration
   author: Skill Genie
 ---
@@ -24,6 +24,39 @@ Configure Foxcode's Claude Code models in OpenClaw with an interactive, beginner
 ```
 
 **Note:** The wizard saves API key to `~/.openclaw/agents/main/agent/auth-profiles.json` (OpenClaw's auth system).
+
+## ⚠️ Disclaimer
+
+**Use this tool only if you have knowledge of OpenClaw settings.**
+
+- The author is **not responsible** for any damage to your OpenClaw setup
+- Always backup your configuration before running the wizard
+- This tool modifies critical OpenClaw files (`openclaw.json`, `auth-profiles.json`)
+
+## 🔄 Rollback Instructions
+
+If something goes wrong, restore from backup:
+
+```bash
+# OpenClaw creates automatic backups
+cd ~/.openclaw
+
+# List available backups
+ls -la openclaw.json.bak.*
+
+# Restore the most recent backup
+cp openclaw.json.bak.0 openclaw.json
+
+# For auth-profiles.json, you may need to manually fix
+# or re-run the wizard with correct settings
+```
+
+**Manual rollback for auth-profiles.json:**
+```bash
+# Remove the foxcode profiles
+# Edit: ~/.openclaw/agents/main/agent/auth-profiles.json
+# Delete entries matching "foxcode*:default"
+```
 
 ## Triggers
 
@@ -245,7 +278,12 @@ foxcode-openclaw/
 
 ## Changelog
 
-### v1.2.2 (Current)
+### v1.2.3 (Current)
+- **Added**: Disclaimer - use only with knowledge of OpenClaw settings
+- **Added**: Rollback instructions for failure recovery
+- Author not responsible for any damage to setup
+
+### v1.2.2
 - **Fix**: Create auth profiles for ALL endpoint providers (foxcode, foxcode-aws, foxcode-aws-thinking, etc.)
 - Each provider now gets its own `provider:default` entry in auth-profiles.json
 - Fixed "No API key found for provider" error when using multiple endpoints
