@@ -182,10 +182,14 @@ Configure 1-2 fallback models for reliability:
 - Verify the `key` field contains your valid Foxcode token
 - Re-run the wizard to update auth-profiles.json
 
-**"systemctl --user unavailable" on macOS**
-- This is expected - `systemctl` is Linux-only
-- **Fix**: Run `openclaw doctor` to repair gateway service
-- Then use `openclaw gateway restart` to apply config changes
+**"systemctl --user unavailable: spawn systemctl EACCES"**
+- **Docker installation**: This is a permissions issue in the container
+- **Fix**: Restart the Docker container instead of using gateway restart
+  ```bash
+  docker restart <openclaw-container-name>
+  ```
+- Or restart via Docker Desktop
+- The gateway service check may fail but OpenClaw can still work
 
 **"API token invalid"**
 - Double-check token from https://foxcode.rjj.cc/api-keys
