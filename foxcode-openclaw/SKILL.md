@@ -124,8 +124,8 @@ The wizard will:
 
 Restart OpenClaw to apply changes:
 ```bash
-# Restart via OpenClaw CLI
-openclaw restart
+# Restart the gateway
+openclaw gateway restart
 ```
 
 Validate everything is working:
@@ -184,8 +184,8 @@ Configure 1-2 fallback models for reliability:
 
 **"systemctl --user unavailable" on macOS**
 - This is expected - `systemctl` is Linux-only
-- On macOS, OpenClaw uses launchd or direct process management
-- Restart OpenClaw with: `openclaw restart` or restart the app
+- On macOS, use: `openclaw gateway restart`
+- Or manually restart the OpenClaw app
 
 **"API token invalid"**
 - Double-check token from https://foxcode.rjj.cc/api-keys
