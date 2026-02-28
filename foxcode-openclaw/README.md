@@ -2,6 +2,14 @@
 
 Configure Foxcode AI models in OpenClaw with interactive setup and validation.
 
+<p align="center">
+  <a href="#english">English</a> | <a href="#中文">中文</a>
+</p>
+
+---
+
+<a name="english"></a>
+
 ## Quick Start
 
 ```bash
@@ -75,15 +83,15 @@ python3 scripts/configure_foxcode.py
 
 ```
 foxcode-openclaw/
-├── SKILL.md                    # Skill workflow
-├── README.md                   # This file
+├── SKILL.md
+├── README.md
 ├── scripts/
-│   ├── configure_foxcode.py    # Interactive setup
-│   ├── validate_config.py      # Config validation
-│   └── check_status.py         # Endpoint health check
+│   ├── configure_foxcode.py
+│   ├── validate_config.py
+│   └── check_status.py
 └── references/
-    ├── foxcode-endpoints.md    # Endpoint details
-    └── openclaw-config.md      # Config reference
+    ├── foxcode-endpoints.md
+    └── openclaw-config.md
 ```
 
 ## Troubleshooting
@@ -101,15 +109,15 @@ foxcode-openclaw/
 
 ---
 
-## 中文版
+<a name="中文"></a>
 
-### 快速开始
+## 快速开始
 
 ```bash
 python3 scripts/configure_foxcode.py
 ```
 
-### 准备工作
+## 准备工作
 
 | 项目 | 获取方式 |
 |------|----------|
@@ -117,7 +125,7 @@ python3 scripts/configure_foxcode.py
 | OpenClaw | 已安装 |
 | 配置文件 | `~/.openclaw/openclaw.json` |
 
-### 端点选择
+## 端点选择
 
 | 端点 | 网址 | 适用场景 |
 |------|------|----------|
@@ -127,7 +135,7 @@ python3 scripts/configure_foxcode.py
 | AWS | `https://code.newcli.com/claude/aws` | 速度优先 |
 | AWS 思考 | `https://code.newcli.com/claude/droid` | 复杂任务 |
 
-### 模型选择
+## 模型选择
 
 | 模型 | 适用场景 |
 |------|----------|
@@ -135,7 +143,7 @@ python3 scripts/configure_foxcode.py
 | `claude-sonnet-4-5-20251101` | 日常使用（推荐） |
 | `claude-haiku-4-5-20251101` | 快速任务 |
 
-### 配置示例
+## 配置示例
 
 ```json
 {
@@ -164,7 +172,7 @@ python3 scripts/configure_foxcode.py
 }
 ```
 
-### 常用命令
+## 常用命令
 
 | 任务 | 命令 |
 |------|------|
@@ -172,7 +180,7 @@ python3 scripts/configure_foxcode.py
 | 配置 | `python3 scripts/configure_foxcode.py` |
 | 验证 | `python3 scripts/validate_config.py` |
 
-### 故障排除
+## 故障排除
 
 | 问题 | 解决方案 |
 |------|----------|
@@ -180,7 +188,7 @@ python3 scripts/configure_foxcode.py
 | 端点无法访问 | 运行 `check_status.py`，尝试其他端点 |
 | JSON 语法错误 | 运行 `python3 -m json.tool ~/.openclaw/openclaw.json` |
 
-### 链接
+## 链接
 
 - 状态页面: https://status.rjj.cc/status/foxcode
 - API Keys: https://foxcode.rjj.cc/api-keys
