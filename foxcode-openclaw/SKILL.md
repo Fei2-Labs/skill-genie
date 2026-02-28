@@ -3,7 +3,7 @@ name: foxcode-openclaw
 description: Configure and manage Foxcode AI models in OpenClaw. Guides users through API setup, endpoint selection, primary/fallback model configuration, and status monitoring. Optimized for beginners with psychology-backed teaching approach.
 license: MIT
 metadata:
-  version: 1.2.1
+  version: 1.2.2
   category: ai-configuration
   author: Skill Genie
 ---
@@ -245,9 +245,14 @@ foxcode-openclaw/
 
 ## Changelog
 
-### v1.2.1 (Current)
+### v1.2.2 (Current)
+- **Fix**: Create auth profiles for ALL endpoint providers (foxcode, foxcode-aws, foxcode-aws-thinking, etc.)
+- Each provider now gets its own `provider:default` entry in auth-profiles.json
+- Fixed "No API key found for provider" error when using multiple endpoints
+
+### v1.2.1
 - **Fix**: Correct restart command to `openclaw gateway restart`
-- Updated troubleshooting for macOS systemctl error
+- Updated troubleshooting for Docker/Linux systemctl error
 
 ### v1.2.0
 - **Fix**: Use `auth-profiles.json` for API keys (not openclaw.json)
