@@ -337,3 +337,74 @@ Now that you're set up:
 **You're all set!** 🎉
 
 If you encounter any issues, re-run `python3 scripts/configure_foxcode.py` for interactive help.
+
+---
+
+## 中文版指南 (Chinese Version)
+
+### 快速开始
+
+```bash
+# 运行交互式设置
+python3 scripts/configure_foxcode.py
+```
+
+### 你需要准备
+
+| 项目 | 获取方式 |
+|------|----------|
+| **Foxcode API Token** | [点击这里注册](https://foxcode.rjj.cc/auth/register?aff=FH6PK) → [API Keys 页面](https://foxcode.rjj.cc/api-keys) |
+| **OpenClaw 已安装** | 系统应已安装 |
+| **配置文件位置** | 通常是 `~/.openclaw/openclaw.json` |
+
+### Foxcode 端点选择
+
+| 端点 | 网址 | 适用场景 | 速度 | 价格 |
+|------|------|----------|------|------|
+| **官方** | `https://code.newcli.com/claude` | 稳定性优先 | 标准 | 标准 |
+| **Super** | `https://code.newcli.com/claude/super` | 节省成本 | 良好 | 优惠 |
+| **Ultra** | `https://code.newcli.com/claude/ultra` | 最大优惠 | 较慢 | 最低 |
+| **AWS** | `https://code.newcli.com/claude/aws` | 速度优先 | 最快 | 标准 |
+| **AWS思考** | `https://code.newcli.com/claude/droid` | 复杂任务 | 可变 | 标准 |
+
+### 基本配置示例
+
+```json
+{
+  "models": {
+    "providers": {
+      "foxcode": {
+        "baseUrl": "https://code.newcli.com/claude",
+        "apiKey": "你的API令牌",
+        "api": "anthropic-messages",
+        "models": [
+          {
+            "id": "claude-sonnet-4-5-20251101",
+            "name": "Claude Sonnet",
+            "contextWindow": 200000,
+            "maxTokens": 4096
+          }
+        ]
+      }
+    }
+  }
+}
+```
+
+### 常用命令
+
+```bash
+# 检查端点状态
+python3 scripts/check_status.py
+
+# 验证配置
+python3 scripts/validate_config.py
+
+# 重新配置
+python3 scripts/configure_foxcode.py
+```
+
+### 需要帮助？
+
+- **状态页面**: https://status.rjj.cc/status/foxcode
+- **Foxcode 支持**: https://foxcode.rjj.cc
