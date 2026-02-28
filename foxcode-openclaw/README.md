@@ -16,6 +16,36 @@ Configure Foxcode AI models in OpenClaw with interactive setup and validation.
 python3 scripts/configure_foxcode.py
 ```
 
+## ⚠️ Disclaimer
+
+**Use this tool only if you have knowledge of OpenClaw settings.**
+
+- The author is **not responsible** for any damage to your OpenClaw setup
+- Always backup your configuration before running the wizard
+- This tool modifies critical OpenClaw files (`openclaw.json`, `auth-profiles.json`)
+
+## 🔄 Rollback Instructions
+
+If something goes wrong, restore from backup:
+
+```bash
+# OpenClaw creates automatic backups
+cd ~/.openclaw
+
+# List available backups
+ls -la openclaw.json.bak.*
+
+# Restore the most recent backup
+cp openclaw.json.bak.0 openclaw.json
+```
+
+**Manual rollback for auth-profiles.json:**
+```bash
+# Remove the foxcode profiles
+# Edit: ~/.openclaw/agents/main/agent/auth-profiles.json
+# Delete entries matching "foxcode*:default"
+```
+
 ## Requirements
 
 | Item | Get it |
@@ -131,6 +161,36 @@ foxcode-openclaw/
 python3 scripts/configure_foxcode.py
 ```
 
+## ⚠️ 免责声明
+
+**仅限了解 OpenClaw 设置的用户使用。**
+
+- 作者**不对**任何 OpenClaw 设置损坏负责
+- 运行向导前请务必备份配置
+- 此工具修改关键 OpenClaw 文件（`openclaw.json`、`auth-profiles.json`）
+
+## 🔄 回滚说明
+
+如果出现问题，从备份恢复：
+
+```bash
+# OpenClaw 会自动创建备份
+cd ~/.openclaw
+
+# 列出可用备份
+ls -la openclaw.json.bak.*
+
+# 恢复最近的备份
+cp openclaw.json.bak.0 openclaw.json
+```
+
+**手动回滚 auth-profiles.json：**
+```bash
+# 删除 foxcode 配置
+# 编辑：~/.openclaw/agents/main/agent/auth-profiles.json
+# 删除匹配 "foxcode*:default" 的条目
+```
+
 ## 准备工作
 
 | 项目 | 获取方式 |
@@ -229,6 +289,36 @@ python3 scripts/configure_foxcode.py
 
 ```bash
 python3 scripts/configure_foxcode.py
+```
+
+## ⚠️ 免責事項
+
+**OpenClawの設定に精通している方のみご使用ください。**
+
+- 作者はOpenClawの設定への損害について**責任を負いません**
+- ウィザードを実行する前に必ず設定をバックアップしてください
+- このツールは重要なOpenClawファイル（`openclaw.json`、`auth-profiles.json`）を変更します
+
+## 🔄 ロールバック手順
+
+問題が発生した場合は、バックアップから復元してください：
+
+```bash
+# OpenClawは自動バックアップを作成します
+cd ~/.openclaw
+
+# 利用可能なバックアップを一覧表示
+ls -la openclaw.json.bak.*
+
+# 最新のバックアップを復元
+cp openclaw.json.bak.0 openclaw.json
+```
+
+**auth-profiles.jsonの手動ロールバック：**
+```bash
+# foxcodeプロファイルを削除
+# 編集：~/.openclaw/agents/main/agent/auth-profiles.json
+# "foxcode*:default"に一致するエントリを削除
 ```
 
 ## 要件
