@@ -173,8 +173,8 @@ def test_endpoint(url: str, token: str, timeout: int = 15) -> Dict:
         }
 
 
-def select_endpoint() -> str:
-    """Interactive endpoint selection."""
+def select_endpoints() -> List[str]:
+    """Interactive multi-endpoint selection."""
     print("Available Foxcode Endpoints:")
     print()
 
@@ -185,6 +185,9 @@ def select_endpoint() -> str:
         print(f"    Reliability: {endpoint['reliability']} | Cost: {endpoint['cost']}")
         print()
 
+    print("Select one or more endpoints (comma-separated, e.g., 'official,super,aws')")
+    print("Or type 'all' to add all endpoints.")
+    print()
     print("Recommendations:")
     print("  • Beginners: 'official' - most reliable")
     print("  • Cost-conscious: 'super' - good savings")
@@ -194,13 +197,19 @@ def select_endpoint() -> str:
     print()
 
     while True:
-        choice = input("Select endpoint [official/super/ultra/aws/aws-thinking] (default: official): ").strip().lower()
+        choice = input("Select endpoints (default: official): ").strip().lower()
 
         if not choice:
             choice = "official"
 
-        if choice in ENDPOINTS:
-            return choice
+        if choice == "all":
+            return list(ENDPOINTS.keys())
+
+        selected = [c.strip() for c in choice.split(",")]
+        valid = [s for s in selected if s in ENDPOINTS]
+
+        if valid:
+            return valid
 
         print("❌ Invalid choice. Please try again.")
 
@@ -272,58 +281,58 @@ def select_fallback_models(primary: str) -> List[str]:
 
 
 def create_config(
-    endpoint_key: str,
+    endpoint_keys: List[str],
     api_token: str,
     primary_model: str,
-    fallback_models: List[str]
+    fallback_models: List[str],
+    default_endpoint: str
 ) -> Dict:
-    """Create the configuration dictionary with correct OpenClaw format."""
-    endpoint = ENDPOINTS[endpoint_key]
+    """Create the configuration dictionary with multiple endpoint providers."""
     
-    # Build models list
+    # Build models list (all 3 models, with primary first)
+    all_models = [primary_model]
+    for model_id in MODELS.keys():
+        if model_id != primary_model and model_id not in all_models:
+            all_models.append(model_id)
+    
     models_list = []
+    for model_id in all_models:
+        model_info = MODELS.get(model_id, {})
+        models_list.append({
+            "id": model_id,
+            "name": model_info.get("name", model_id),
+            "contextWindow": 200000,
+            "maxTokens": 4096
+        })
     
-    # Add primary model
-    model_info = MODELS.get(primary_model, {})
-    models_list.append({
-        "id": primary_model,
-        "name": model_info.get("name", primary_model),
-        "contextWindow": 200000,
-        "maxTokens": 4096
-    })
+    # Build providers for each selected endpoint
+    providers = {}
     
-    # Add fallback models
-    for fallback in fallback_models:
-        if fallback != primary_model:
-            model_info = MODELS.get(fallback, {})
-            models_list.append({
-                "id": fallback,
-                "name": model_info.get("name", fallback),
-                "contextWindow": 200000,
-                "maxTokens": 4096
-            })
+    for endpoint_key in endpoint_keys:
+        endpoint = ENDPOINTS[endpoint_key]
+        provider_name = f"foxcode-{endpoint_key}" if endpoint_key != "official" else "foxcode"
+        
+        providers[provider_name] = {
+            "baseUrl": endpoint["url"],
+            "apiKey": api_token,
+            "api": "anthropic-messages",
+            "models": models_list
+        }
     
     # OpenClaw uses camelCase and nested providers structure
     config = {
         "models": {
-            "providers": {
-                "foxcode": {
-                    "baseUrl": endpoint["url"],
-                    "apiKey": api_token,
-                    "api": "anthropic-messages",
-                    "models": models_list
-                }
-            }
+            "providers": providers
         }
     }
     
-    # Add default agent model if we have models
-    if models_list:
-        config["agents"] = {
-            "defaults": {
-                "model": f"foxcode/{primary_model}"
-            }
+    # Set default agent model to the default endpoint's primary model
+    default_provider = f"foxcode-{default_endpoint}" if default_endpoint != "official" else "foxcode"
+    config["agents"] = {
+        "defaults": {
+            "model": f"{default_provider}/{primary_model}"
         }
+    }
     
     return config
 
@@ -383,11 +392,33 @@ def main():
             print("✓ Token format looks valid")
             break
 
-    # Step 2: Select Endpoint
-    print_step(2, "Select Endpoint")
-    endpoint_key = select_endpoint()
-    endpoint = ENDPOINTS[endpoint_key]
-    print(f"\n✓ Selected: {endpoint['name']}")
+    # Step 2: Select Endpoints
+    print_step(2, "Select Endpoints")
+    endpoint_keys = select_endpoints()
+    
+    # If multiple endpoints, ask which one should be default
+    default_endpoint = endpoint_keys[0]
+    if len(endpoint_keys) > 1:
+        print(f"\nYou selected {len(endpoint_keys)} endpoints.")
+        print("Which one should be your default?")
+        for i, key in enumerate(endpoint_keys, 1):
+            print(f"  {i}. {key} - {ENDPOINTS[key]['name']}")
+        
+        while True:
+            choice = input(f"Select default (1-{len(endpoint_keys)}, default: 1): ").strip()
+            if not choice:
+                choice = "1"
+            try:
+                idx = int(choice) - 1
+                if 0 <= idx < len(endpoint_keys):
+                    default_endpoint = endpoint_keys[idx]
+                    break
+            except ValueError:
+                pass
+            print("❌ Invalid choice. Please try again.")
+    
+    print(f"\n✓ Selected endpoints: {', '.join(endpoint_keys)}")
+    print(f"✓ Default endpoint: {default_endpoint}")
 
     # Step 3: Select Primary Model
     print_step(3, "Select Primary Model")
@@ -404,10 +435,11 @@ def main():
 
     # Step 5: Test Connection
     print_step(5, "Test Connection")
-    print(f"Testing endpoint: {endpoint['url']}")
+    default_endpoint_obj = ENDPOINTS[default_endpoint]
+    print(f"Testing default endpoint: {default_endpoint_obj['url']}")
     print("Please wait...")
 
-    test_result = test_endpoint(endpoint["url"], api_token)
+    test_result = test_endpoint(default_endpoint_obj["url"], api_token)
 
     if test_result["success"]:
         print("✓ Connection successful!")
@@ -431,20 +463,20 @@ def main():
     print_step(6, "Save Configuration")
 
     config_path = get_config_path()
-    config = create_config(endpoint_key, api_token, primary_model, fallback_models)
+    config = create_config(endpoint_keys, api_token, primary_model, fallback_models, default_endpoint)
 
     print(f"\nConfiguration to save:")
     print(f"  Location: {config_path}")
-    print(f"  Endpoint: {endpoint['name']}")
+    print(f"  Endpoints: {', '.join(endpoint_keys)}")
+    print(f"  Default Endpoint: {default_endpoint}")
     print(f"  Primary Model: {primary_model}")
-    if fallback_models:
-        print(f"  Fallback Models: {', '.join(fallback_models)}")
+    print(f"  All Models: {', '.join(MODELS.keys())}")
 
     # Show config (without token)
     display_config = json.loads(json.dumps(config))
     if "models" in display_config and "providers" in display_config["models"]:
-        if "foxcode" in display_config["models"]["providers"]:
-            display_config["models"]["providers"]["foxcode"]["apiKey"] = "***HIDDEN***"
+        for provider_name in display_config["models"]["providers"]:
+            display_config["models"]["providers"][provider_name]["apiKey"] = "***HIDDEN***"
     print(f"\nConfig contents:")
     print(json.dumps(display_config, indent=2))
 
