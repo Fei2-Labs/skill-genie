@@ -12,7 +12,7 @@
 
 Before you begin, ensure you have:
 
-- [ ] A Foxcode account (register at [foxcode.rjj.cc](https://foxcode.rjj.cc/auth/register))
+- [ ] A Foxcode account ([register here](https://foxcode.rjj.cc/auth/register?aff=FH6PK))
 - [ ] OpenClaw installed on your system
 - [ ] Basic familiarity with editing text files
 - [ ] About 15 minutes of uninterrupted time
