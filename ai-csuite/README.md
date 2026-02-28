@@ -3,7 +3,7 @@
 Script-backed AI C-Suite skill for structured strategic decisions.
 
 <p align="center">
-  <a href="#english">English</a> | <a href="#中文">中文</a>
+  <a href="#english">English</a> | <a href="#中文">中文</a> | <a href="#日本語">日本語</a>
 </p>
 
 ---
@@ -241,4 +241,109 @@ python3 scripts/validate_output.py --file logs/latest-decision.md
 - `CEO BRIEF`
 - `CEO DECISION`
 - 决策元数据（`CONFIDENCE`、`REVERSIBILITY`、后续步骤）
+
+---
+
+<a name="日本語"></a>
+
+## 概要
+
+構造化された戦略的決定のためのスクリプト支援 AI C-Suite スキル。
+
+## 機能
+
+- SaaS チーム向けのステージ対応エグゼクティブロスターを構築
+- ロールベースの立場で多ラウンド討論を実行
+- 構造化された `CEO BRIEF` と `CEO DECISION` を生成
+- 出力形状を検証し、公開時セーフティチェックのためにスキルをスキャン
+
+## 含まれるファイル
+
+- `SKILL.md`：プロンプトワークフローと操作ルール
+- `config/company.yaml`：必須の会社コンテキストテンプレート
+- `scripts/prepare_session.py`：コンテキストを検証しセッションパケットを構築
+- `scripts/run_debate.py`：討論出力 markdown を生成
+- `scripts/validate_output.py`：必須出力マーカーをチェック
+- `scripts/security_scan.py`：リスクパターン/インポートの静的チェック
+
+## 要件
+
+- Python 3.11+（標準ライブラリのみ）
+- サードパーティ Python 依存関係なし
+
+## クイックスタート
+
+1. スキルディレクトリに入る：
+
+```bash
+cd ai-csuite
+```
+
+2. 会社コンテキストを記入：
+
+```bash
+cp config/company.yaml config/company.local.yaml
+```
+
+`config/company.local.yaml` を実際の値で編集。
+
+3. セキュリティスキャンを実行：
+
+```bash
+python3 scripts/security_scan.py .
+```
+
+4. セッションを準備：
+
+```bash
+python3 scripts/prepare_session.py \
+  --topic "SMB 年間プランの価格を変更すべきか？" \
+  --company-file config/company.local.yaml
+```
+
+5. 討論を実行：
+
+```bash
+python3 scripts/run_debate.py \
+  --topic "SMB 年間プランの価格を変更すべきか？" \
+  --company-file config/company.local.yaml \
+  --output logs/latest-decision.md
+```
+
+6. 生成された出力を検証：
+
+```bash
+python3 scripts/validate_output.py --file logs/latest-decision.md
+```
+
+検証が `PASS` を印刷すれば、決定ファイルは完了。
+
+## 会社設定スキーマ
+
+`config/company.yaml` には以下が含まれる必要があります：
+
+- `company_name`
+- `product`
+- `stage`（`solo | pre-seed | seed | series-a`）
+- `arr_or_mrr`
+- `runway_months`
+- `team_size`
+- `constraints`（YAML リスト）
+
+## ステージ動作
+
+- `solo`：2 ラウンド、リーンエグゼクティブパネル
+- `pre-seed`：2 ラウンド、討論に顧客の声を含む
+- `seed`：3 ラウンド、成長討論の深さを追加
+- `series-a`：3 ラウンド、完全 C-suite カバー
+
+## 出力契約
+
+生成された markdown には以下が含まれます：
+
+- `DATA BRIEF (Pre-Round)`
+- アクティブエージェントのラウンドセクション
+- `CEO BRIEF`
+- `CEO DECISION`
+- 決定メタデータ（`CONFIDENCE`、`REVERSIBILITY`、次のステップ）
 
