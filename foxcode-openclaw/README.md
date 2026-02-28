@@ -3,7 +3,7 @@
 Configure Foxcode AI models in OpenClaw with interactive setup and validation.
 
 <p align="center">
-  <a href="#english">English</a> | <a href="#中文">中文</a>
+  <a href="#english">English</a> | <a href="#中文">中文</a> | <a href="#日本語">日本語</a>
 </p>
 
 ---
@@ -191,4 +191,90 @@ python3 scripts/configure_foxcode.py
 ## 链接
 
 - 状态页面: https://status.rjj.cc/status/foxcode
+- API Keys: https://foxcode.rjj.cc/api-keys
+
+---
+
+<a name="日本語"></a>
+
+## クイックスタート
+
+```bash
+python3 scripts/configure_foxcode.py
+```
+
+## 要件
+
+| 項目 | 入手方法 |
+|------|----------|
+| Foxcode API トークン | [登録](https://foxcode.rjj.cc/auth/register?aff=FH6PK) → [API Keys](https://foxcode.rjj.cc/api-keys) |
+| OpenClaw | インストール済み |
+| 設定ファイル | `~/.openclaw/openclaw.json` |
+
+## エンドポイント
+
+| 名前 | URL | 用途 |
+|------|-----|------|
+| Official | `https://code.newcli.com/claude` | 信頼性 |
+| Super | `https://code.newcli.com/claude/super` | コスト削減 |
+| Ultra | `https://code.newcli.com/claude/ultra` | 最大節約 |
+| AWS | `https://code.newcli.com/claude/aws` | 速度 |
+| AWS Thinking | `https://code.newcli.com/claude/droid` | 複雑なタスク |
+
+## モデル
+
+| モデル | 用途 |
+|-------|------|
+| `claude-opus-4-5-20251101` | 複雑なタスク |
+| `claude-sonnet-4-5-20251101` | 日常使用（推奨） |
+| `claude-haiku-4-5-20251101` | クイックタスク |
+
+## 設定例
+
+```json
+{
+  "models": {
+    "providers": {
+      "foxcode": {
+        "baseUrl": "https://code.newcli.com/claude",
+        "apiKey": "あなたのトークン",
+        "api": "anthropic-messages",
+        "models": [
+          {
+            "id": "claude-sonnet-4-5-20251101",
+            "name": "Claude Sonnet",
+            "contextWindow": 200000,
+            "maxTokens": 4096
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": "foxcode/claude-sonnet-4-5-20251101"
+    }
+  }
+}
+```
+
+## コマンド
+
+| タスク | コマンド |
+|------|---------|
+| ステータス確認 | `python3 scripts/check_status.py` |
+| 設定 | `python3 scripts/configure_foxcode.py` |
+| 検証 | `python3 scripts/validate_config.py` |
+
+## トラブルシューティング
+
+| 問題 | 解決策 |
+|------|--------|
+| 無効なトークン | [API Keys](https://foxcode.rjj.cc/api-keys) から再コピー |
+| エンドポイントに到達できない | `check_status.py` を実行、別のエンドポイントを試す |
+| JSON 構文エラー | `python3 -m json.tool ~/.openclaw/openclaw.json` を実行 |
+
+## リンク
+
+- ステータス: https://status.rjj.cc/status/foxcode
 - API Keys: https://foxcode.rjj.cc/api-keys
