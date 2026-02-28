@@ -3,7 +3,7 @@
 High-signal end-of-session memory and shipping workflow for users, LLMs, and autonomous bots.
 
 <p align="center">
-  <a href="#english">English</a> | <a href="#中文">中文</a>
+  <a href="#english">English</a> | <a href="#中文">中文</a> | <a href="#日本語">日本語</a>
 </p>
 
 ---
@@ -228,3 +228,61 @@ For long or shifting tasks:
 - 模式似乎太保守：检查 `modeSelection` 惩罚和 `decisionConfidence`
 - 记忆成本太高：检查 `retrievedTokenSize`、`endToEndMemoryCost` 和 `costPerUsefulWrite`
 - 冲突记忆持续：在提升前审查 `needs-review` 记录和证据链接
+
+---
+
+<a name="日本語"></a>
+
+## 概要
+
+ユーザー、LLM、自律ボット向けの高信号セッション終了メモリおよび出荷ワークフロー。
+
+## 目的
+
+`close-loop` はセッションのまとめを決定論的オペレーティング手順に変えます：
+
+1. リポ/タスク状態をクリーンにクローズ
+2. 信頼性の高いメモリ更新を生成
+3. 低リスクの自己改善を適用
+4. 公開可能なアーティファクトをキュー
+
+## 対象ユーザー
+
+- ユーザー：`wrap up`、`close session`、`end session`、または `/wrap-up` と言う
+- LLM エージェント：4 つのフェーズを実行し、人間 + JSON アーティファクトを出力
+- `openclaw` ボット：適応戦略パスを実行
+
+## 戦略モード
+
+サポートされるモード入力：
+
+- `safe` - 決定論的で保守的；静的チェックのみ
+- `balanced` - 品質/速度の妥協；制限付き動的チェック
+- `openclaw` - 制限付き自律リトライでの適応アーカイブ探索
+- `adaptive`（エイリアス；`openclaw` に正規化）
+
+## メモリ永続化と取得
+
+メモリモデル：
+- ワーキング（一時）
+- エピソード
+- セマンティック
+- 手続き
+
+永続化ターゲット：
+- ネイティブ IDE メモリストア（利用可能な場合）
+- ネイティブメモリが利用できない場合、`docs/memory/<YYYY-MM-DD_HHMM>-session.md` に永続化
+
+## セーフティモデル
+
+- `commit`、`push`、`deploy`、`publish` のアクションゲート
+- メモリ候補フィルタリングにおけるプロンプトインジェクションおよびポイズニング耐性
+- 矛盾は上書きされない；競合レコードは `needs-review` になる
+- `openclaw` は制限付きリフレクションリトライとコスト/トークン予算を使用
+
+## トラブルシューティング
+
+- メモリ更新が表示されない：出典/スコア/TTL/感度ゲートをチェック；拒否された書き込みはレポートに表示されるはず
+- モードが保守的すぎる：`modeSelection` ペナルティと `decisionConfidence` を検査
+- メモリコストが高すぎる：`retrievedTokenSize`、`endToEndMemoryCost`、`costPerUsefulWrite` を検査
+- 競合メモリが持続：`needs-review` レコードと証拠リンクを昇格前にレビュー
