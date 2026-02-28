@@ -3,7 +3,7 @@ name: foxcode-openclaw
 description: Configure and manage Foxcode AI models in OpenClaw. Guides users through API setup, endpoint selection, primary/fallback model configuration, and status monitoring. Optimized for beginners with psychology-backed teaching approach.
 license: MIT
 metadata:
-  version: 1.0.0
+  version: 1.1.0
   category: ai-configuration
   author: Skill Genie
 ---
@@ -17,10 +17,13 @@ Configure Foxcode's Claude Code models in OpenClaw with an interactive, beginner
 ```
 1. Run: python3 scripts/configure_foxcode.py
 2. Provide your Foxcode API token
-3. Select endpoint tier (Official/Super/Ultra/AWS)
-4. Choose primary and fallback models
+3. Select endpoint(s) - comma-separated or "all"
+4. Choose default endpoint and primary model
 5. Test connection
+6. Run: source ~/.zshrc (or restart terminal)
 ```
+
+**Note:** The wizard automatically sets `FOXCODE_API_TOKEN` in your shell profile and uses `${FOXCODE_API_TOKEN}` in the config for security.
 
 ## Triggers
 
@@ -37,10 +40,12 @@ Configure Foxcode's Claude Code models in OpenClaw with an interactive, beginner
 
 Guided setup wizard that:
 - Validates API token format
+- Allows selecting multiple endpoints (comma-separated or "all")
 - Explains endpoint differences (speed vs cost vs features)
-- Sets primary model preference
-- Configures fallback models for reliability
-- Saves configuration to OpenClaw config file
+- Sets default endpoint and primary model
+- Adds all 3 models to each selected endpoint
+- Uses environment variable reference for security
+- Automatically sets `FOXCODE_API_TOKEN` in shell profile
 - Tests connection before finishing
 
 **Usage:**
@@ -109,12 +114,19 @@ python3 scripts/configure_foxcode.py
 The wizard will:
 1. Ask for your API token (input is hidden for security)
 2. Show available endpoints with current status
-3. Explain the trade-offs (speed vs cost vs features)
-4. Let you select primary and fallback models
-5. Test the connection
-6. Save the configuration
+3. Let you select multiple endpoints (comma-separated or "all")
+4. Ask which endpoint should be default
+5. Let you select primary model
+6. Test the connection
+7. Save the configuration (uses `${FOXCODE_API_TOKEN}` env var)
+8. Set `FOXCODE_API_TOKEN` in your shell profile
 
 ### Phase 3: Verification (2 minutes)
+
+Apply the environment variable:
+```bash
+source ~/.zshrc  # or restart terminal
+```
 
 Validate everything is working:
 ```bash
@@ -164,6 +176,11 @@ Configure 1-2 fallback models for reliability:
 ## Troubleshooting
 
 ### Common Issues
+
+**"Missing env var FOXCODE_API_TOKEN"**
+- Run: `source ~/.zshrc` (or restart terminal)
+- Verify: `echo $FOXCODE_API_TOKEN`
+- If empty, add manually to `~/.zshrc`: `export FOXCODE_API_TOKEN="your-token"`
 
 **"API token invalid"**
 - Double-check token from https://foxcode.rjj.cc/api-keys
@@ -219,7 +236,14 @@ foxcode-openclaw/
 
 ## Changelog
 
-### v1.0.0 (Current)
+### v1.1.0 (Current)
+- Multi-endpoint selection (comma-separated or "all")
+- All 3 models added to each selected endpoint
+- Environment variable reference for API key security
+- Auto-set `FOXCODE_API_TOKEN` in shell profile
+- Separate provider for each endpoint (foxcode, foxcode-super, etc.)
+
+### v1.0.0
 - Initial release
 - Interactive configuration wizard
 - Status monitoring script
