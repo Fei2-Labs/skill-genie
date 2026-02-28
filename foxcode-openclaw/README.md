@@ -44,6 +44,8 @@ python3 scripts/configure_foxcode.py
 
 ## Config Example
 
+The setup wizard adds all 3 models to each selected endpoint:
+
 ```json
 {
   "models": {
@@ -53,13 +55,22 @@ python3 scripts/configure_foxcode.py
         "apiKey": "YOUR_TOKEN",
         "api": "anthropic-messages",
         "models": [
-          {
-            "id": "claude-sonnet-4-5-20251101",
-            "name": "Claude Sonnet",
-            "contextWindow": 200000,
-            "maxTokens": 4096
-          }
+          { "id": "claude-sonnet-4-5-20251101", "name": "Claude Sonnet", "contextWindow": 200000, "maxTokens": 4096 },
+          { "id": "claude-opus-4-5-20251101", "name": "Claude Opus", "contextWindow": 200000, "maxTokens": 4096 },
+          { "id": "claude-haiku-4-5-20251101", "name": "Claude Haiku", "contextWindow": 200000, "maxTokens": 4096 }
         ]
+      },
+      "foxcode-super": {
+        "baseUrl": "https://code.newcli.com/claude/super",
+        "apiKey": "YOUR_TOKEN",
+        "api": "anthropic-messages",
+        "models": [ "..." ]
+      },
+      "foxcode-aws": {
+        "baseUrl": "https://code.newcli.com/claude/aws",
+        "apiKey": "YOUR_TOKEN",
+        "api": "anthropic-messages",
+        "models": [ "..." ]
       }
     }
   },
@@ -145,6 +156,8 @@ python3 scripts/configure_foxcode.py
 
 ## 配置示例
 
+设置向导会将所有 3 个模型添加到每个选定的端点：
+
 ```json
 {
   "models": {
@@ -154,13 +167,16 @@ python3 scripts/configure_foxcode.py
         "apiKey": "你的令牌",
         "api": "anthropic-messages",
         "models": [
-          {
-            "id": "claude-sonnet-4-5-20251101",
-            "name": "Claude Sonnet",
-            "contextWindow": 200000,
-            "maxTokens": 4096
-          }
+          { "id": "claude-sonnet-4-5-20251101", "name": "Claude Sonnet", "contextWindow": 200000, "maxTokens": 4096 },
+          { "id": "claude-opus-4-5-20251101", "name": "Claude Opus", "contextWindow": 200000, "maxTokens": 4096 },
+          { "id": "claude-haiku-4-5-20251101", "name": "Claude Haiku", "contextWindow": 200000, "maxTokens": 4096 }
         ]
+      },
+      "foxcode-super": {
+        "baseUrl": "https://code.newcli.com/claude/super",
+        "apiKey": "你的令牌",
+        "api": "anthropic-messages",
+        "models": [ "..." ]
       }
     }
   },
@@ -231,6 +247,8 @@ python3 scripts/configure_foxcode.py
 
 ## 設定例
 
+セットアップウィザードは、選択した各エンドポイントにすべての3つのモデルを追加します：
+
 ```json
 {
   "models": {
@@ -240,13 +258,16 @@ python3 scripts/configure_foxcode.py
         "apiKey": "あなたのトークン",
         "api": "anthropic-messages",
         "models": [
-          {
-            "id": "claude-sonnet-4-5-20251101",
-            "name": "Claude Sonnet",
-            "contextWindow": 200000,
-            "maxTokens": 4096
-          }
+          { "id": "claude-sonnet-4-5-20251101", "name": "Claude Sonnet", "contextWindow": 200000, "maxTokens": 4096 },
+          { "id": "claude-opus-4-5-20251101", "name": "Claude Opus", "contextWindow": 200000, "maxTokens": 4096 },
+          { "id": "claude-haiku-4-5-20251101", "name": "Claude Haiku", "contextWindow": 200000, "maxTokens": 4096 }
         ]
+      },
+      "foxcode-super": {
+        "baseUrl": "https://code.newcli.com/claude/super",
+        "apiKey": "あなたのトークン",
+        "api": "anthropic-messages",
+        "models": [ "..." ]
       }
     }
   },
