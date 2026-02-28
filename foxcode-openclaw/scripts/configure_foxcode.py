@@ -377,10 +377,11 @@ def get_auth_profiles_path() -> Path:
     return Path.home() / ".openclaw" / "agents" / "main" / "agent" / "auth-profiles.json"
 
 
-def update_auth_profiles(api_token: str) -> bool:
-    """Update auth-profiles.json with Foxcode API key.
+def update_auth_profiles(api_token: str, endpoint_keys: List[str]) -> bool:
+    """Update auth-profiles.json with Foxcode API key for ALL selected endpoints.
     
     OpenClaw stores API keys in auth-profiles.json, not openclaw.json.
+    Each provider (foxcode, foxcode-super, foxcode-aws, etc.) needs its own auth profile.
     """
     auth_path = get_auth_profiles_path()
     
@@ -392,22 +393,27 @@ def update_auth_profiles(api_token: str) -> bool:
         else:
             auth_data = {"version": 1, "profiles": {}, "lastGood": {}, "usageStats": {}}
         
-        # Update/add Foxcode profile
-        auth_data["profiles"]["foxcode:default"] = {
-            "type": "api_key",
-            "provider": "foxcode",
-            "key": api_token
-        }
-        
-        # Update lastGood
-        auth_data["lastGood"]["foxcode"] = "foxcode:default"
-        
-        # Update usageStats
-        if "foxcode:default" not in auth_data.get("usageStats", {}):
-            auth_data["usageStats"]["foxcode:default"] = {
-                "lastUsed": 0,
-                "errorCount": 0
+        # Create auth profile for each selected endpoint provider
+        for endpoint_key in endpoint_keys:
+            provider_name = f"foxcode-{endpoint_key}" if endpoint_key != "official" else "foxcode"
+            profile_key = f"{provider_name}:default"
+            
+            # Add profile
+            auth_data["profiles"][profile_key] = {
+                "type": "api_key",
+                "provider": provider_name,
+                "key": api_token
             }
+            
+            # Update lastGood
+            auth_data["lastGood"][provider_name] = profile_key
+            
+            # Update usageStats
+            if profile_key not in auth_data.get("usageStats", {}):
+                auth_data["usageStats"][profile_key] = {
+                    "lastUsed": 0,
+                    "errorCount": 0
+                }
         
         # Ensure directory exists
         auth_path.parent.mkdir(parents=True, exist_ok=True)
@@ -557,10 +563,12 @@ def main():
             # Step 7: Update auth-profiles.json
             print_step(7, "Save API Key to auth-profiles.json")
             print("OpenClaw stores API keys in auth-profiles.json (not openclaw.json)")
+            print(f"Creating auth profiles for: {', '.join(endpoint_keys)}")
             
-            if update_auth_profiles(api_token):
+            if update_auth_profiles(api_token, endpoint_keys):
                 print(f"\n✓ API key saved to auth-profiles.json")
                 print(f"  File: {get_auth_profiles_path()}")
+                print(f"  Providers: {', '.join(['foxcode' if k == 'official' else f'foxcode-{k}' for k in endpoint_keys])}")
             else:
                 print("\n⚠ Could not update auth-profiles.json")
                 print("You may need to add the API key manually through OpenClaw.")
