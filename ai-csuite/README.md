@@ -2,6 +2,14 @@
 
 Script-backed AI C-Suite skill for structured strategic decisions.
 
+<p align="center">
+  <a href="#english">English</a> | <a href="#中文">中文</a>
+</p>
+
+---
+
+<a name="english"></a>
+
 ## What this skill does
 
 - Builds a stage-aware executive roster for SaaS teams.
@@ -128,4 +136,109 @@ git add ai-csuite
 git commit -m "Publish ai-csuite skill with runtime scripts and docs"
 git push origin main
 ```
+
+---
+
+<a name="中文"></a>
+
+## 简介
+
+脚本支持的 AI C-Suite 技能，用于结构化战略决策。
+
+## 功能
+
+- 为 SaaS 团队构建阶段感知的高管团队
+- 运行多轮辩论，基于角色的立场
+- 生成结构化的 `CEO BRIEF` 和 `CEO DECISION`
+- 验证输出形状并扫描技能进行发布时安全检查
+
+## 包含文件
+
+- `SKILL.md`：提示工作流和操作规则
+- `config/company.yaml`：必需的公司上下文模板
+- `scripts/prepare_session.py`：验证上下文并构建会话包
+- `scripts/run_debate.py`：生成辩论输出 markdown
+- `scripts/validate_output.py`：检查必需输出标记
+- `scripts/security_scan.py`：静态检查风险模式/导入
+
+## 要求
+
+- Python 3.11+（仅标准库）
+- 无第三方 Python 依赖
+
+## 快速开始
+
+1. 进入技能目录：
+
+```bash
+cd ai-csuite
+```
+
+2. 填写公司上下文：
+
+```bash
+cp config/company.yaml config/company.local.yaml
+```
+
+编辑 `config/company.local.yaml` 填入真实值。
+
+3. 运行安全扫描：
+
+```bash
+python3 scripts/security_scan.py .
+```
+
+4. 准备会话：
+
+```bash
+python3 scripts/prepare_session.py \
+  --topic "我们是否应该更改 SMB 年度计划的定价？" \
+  --company-file config/company.local.yaml
+```
+
+5. 运行辩论：
+
+```bash
+python3 scripts/run_debate.py \
+  --topic "我们是否应该更改 SMB 年度计划的定价？" \
+  --company-file config/company.local.yaml \
+  --output logs/latest-decision.md
+```
+
+6. 验证生成的输出：
+
+```bash
+python3 scripts/validate_output.py --file logs/latest-decision.md
+```
+
+如果验证打印 `PASS`，决策文件已完成。
+
+## 公司配置模式
+
+`config/company.yaml` 必须包含：
+
+- `company_name`
+- `product`
+- `stage`（`solo | pre-seed | seed | series-a`）
+- `arr_or_mrr`
+- `runway_months`
+- `team_size`
+- `constraints`（YAML 列表）
+
+## 阶段行为
+
+- `solo`：2 轮，精简高管小组
+- `pre-seed`：2 轮，包含客户声音在辩论中
+- `seed`：3 轮，增加增长辩论深度
+- `series-a`：3 轮，完整 C-suite 覆盖
+
+## 输出契约
+
+生成的 markdown 包括：
+
+- `DATA BRIEF (Pre-Round)`
+- 活跃代理的轮次部分
+- `CEO BRIEF`
+- `CEO DECISION`
+- 决策元数据（`CONFIDENCE`、`REVERSIBILITY`、后续步骤）
 

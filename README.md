@@ -4,6 +4,14 @@
 [![Stars](https://img.shields.io/github/stars/clarezoe/skill-genie)](https://github.com/clarezoe/skill-genie/stargazers)
 [![Issues](https://img.shields.io/github/issues/clarezoe/skill-genie)](https://github.com/clarezoe/skill-genie/issues)
 
+<p align="center">
+  <a href="#english">English</a> | <a href="#中文">中文</a>
+</p>
+
+---
+
+<a name="english"></a>
+
 A curated collection of reusable skills and workflows that turn everyday tasks into fast, repeatable actions.
 
 ## Why this exists
@@ -50,3 +58,56 @@ Each skill folder should contain:
 - Small, composable skills over monoliths.
 - Clear steps over clever tricks.
 - Practical defaults with room to customize.
+
+---
+
+<a name="中文"></a>
+
+## 简介
+
+一个精心策划的可复用技能和工作流集合，将日常任务转化为快速、可重复的操作。
+
+## 为什么存在
+
+大多数个人自动化失败是因为最好的方法散落在各种笔记中。这个仓库将这些方法转化为清晰、可复用的技能，易于查找、运行和改进。
+
+## 内容
+
+- 技能文件夹，包含各自的 `SKILL.md` 和支持资源
+- 参考文档和脚本，保持每个技能实用且可维护
+
+## 精选技能
+
+- [`omnidebug-autopilot`](./omnidebug-autopilot): 自主根因调试工作流，包含确定性浏览器复现、工件捕获和修复验证脚本
+- [`close-loop`](./close-loop): 会话结束时的交付和记忆工作流，包含自主策略选择
+- [`ai-csuite`](./ai-csuite): 脚本支持的 AI 高管辩论工作流
+- [`foxcode-openclaw`](./foxcode-openclaw): 在 OpenClaw 中配置 Foxcode AI 模型，支持交互式设置、状态监控和验证工具
+
+## 技能结构
+
+每个技能文件夹应包含：
+
+- `SKILL.md` - 主要执行工作流
+- `README.md` - 快速入门
+- `references/` - 源文档和深入笔记
+- `assets/` - 模板和可复用工件
+- `scripts/` - 仅当自动化明显减少手动工作时
+
+## 使用方法
+
+1. 浏览匹配你任务的技能文件夹
+2. 阅读技能 `README.md` 了解范围和文件
+3. 打开 `SKILL.md` 并按照工作流操作
+4. 需要时使用包含的参考、脚本和模板
+
+## 添加新技能
+
+- 专注于单一任务
+- 在 `SKILL.md` 中记录正常路径和边缘情况
+- 当脚本能减少手动工作时包含它们
+
+## 原则
+
+- 小而可组合的技能优于单体
+- 清晰的步骤优于巧妙的技巧
+- 实用的默认值，留有定制空间
