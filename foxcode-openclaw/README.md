@@ -11,7 +11,7 @@
 
 | Item | How to Get It |
 |------|---------------|
-| **Foxcode API Token** | Register at [foxcode.rjj.cc](https://foxcode.rjj.cc/auth/register) → [API Keys page](https://foxcode.rjj.cc/api-keys) |
+| **Foxcode API Token** | [Register here](https://foxcode.rjj.cc/auth/register?aff=FH6PK) → [API Keys page](https://foxcode.rjj.cc/api-keys) |
 | **OpenClaw installed** | Should already be set up on your system |
 | **Config file location** | Usually `~/.openclaw/openclaw.json` |
 
@@ -29,8 +29,8 @@
 
 ### Step 1.1: Register or Log In
 
-1. Visit [foxcode.rjj.cc/auth/register](https://foxcode.rjj.cc/auth/register)
-2. Create an account or log in
+1. [Register here](https://foxcode.rjj.cc/auth/register?aff=FH6PK) to create an account
+2. Or log in if you already have an account
 3. Navigate to [API Keys](https://foxcode.rjj.cc/api-keys)
 
 ### Step 1.2: Generate a Token
