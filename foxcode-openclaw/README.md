@@ -44,33 +44,21 @@ python3 scripts/configure_foxcode.py
 
 ## Config Example
 
-The setup wizard uses environment variables for security:
+The wizard saves to two files:
 
+**1. `~/.openclaw/openclaw.json`** (models and endpoints):
 ```json
 {
   "models": {
     "providers": {
       "foxcode": {
         "baseUrl": "https://code.newcli.com/claude",
-        "apiKey": "${FOXCODE_API_TOKEN}",
         "api": "anthropic-messages",
         "models": [
           { "id": "claude-sonnet-4-5-20251101", "name": "Claude Sonnet", "contextWindow": 200000, "maxTokens": 4096 },
           { "id": "claude-opus-4-5-20251101", "name": "Claude Opus", "contextWindow": 200000, "maxTokens": 4096 },
           { "id": "claude-haiku-4-5-20251101", "name": "Claude Haiku", "contextWindow": 200000, "maxTokens": 4096 }
         ]
-      },
-      "foxcode-super": {
-        "baseUrl": "https://code.newcli.com/claude/super",
-        "apiKey": "${FOXCODE_API_TOKEN}",
-        "api": "anthropic-messages",
-        "models": [ "..." ]
-      },
-      "foxcode-aws": {
-        "baseUrl": "https://code.newcli.com/claude/aws",
-        "apiKey": "${FOXCODE_API_TOKEN}",
-        "api": "anthropic-messages",
-        "models": [ "..." ]
       }
     }
   },
@@ -82,7 +70,20 @@ The setup wizard uses environment variables for security:
 }
 ```
 
-**Note:** The wizard automatically sets `FOXCODE_API_TOKEN` in your shell profile.
+**2. `~/.openclaw/agents/main/agent/auth-profiles.json`** (API key):
+```json
+{
+  "profiles": {
+    "foxcode:default": {
+      "type": "api_key",
+      "provider": "foxcode",
+      "key": "sk-ant-your-token-here"
+    }
+  }
+}
+```
+
+**Note:** OpenClaw stores API keys in `auth-profiles.json`, NOT in `openclaw.json`.
 
 ## Commands
 
@@ -158,27 +159,21 @@ python3 scripts/configure_foxcode.py
 
 ## 配置示例
 
-设置向导使用环境变量确保安全：
+向导保存到两个文件：
 
+**1. `~/.openclaw/openclaw.json`**（模型和端点）：
 ```json
 {
   "models": {
     "providers": {
       "foxcode": {
         "baseUrl": "https://code.newcli.com/claude",
-        "apiKey": "${FOXCODE_API_TOKEN}",
         "api": "anthropic-messages",
         "models": [
           { "id": "claude-sonnet-4-5-20251101", "name": "Claude Sonnet", "contextWindow": 200000, "maxTokens": 4096 },
           { "id": "claude-opus-4-5-20251101", "name": "Claude Opus", "contextWindow": 200000, "maxTokens": 4096 },
           { "id": "claude-haiku-4-5-20251101", "name": "Claude Haiku", "contextWindow": 200000, "maxTokens": 4096 }
         ]
-      },
-      "foxcode-super": {
-        "baseUrl": "https://code.newcli.com/claude/super",
-        "apiKey": "${FOXCODE_API_TOKEN}",
-        "api": "anthropic-messages",
-        "models": [ "..." ]
       }
     }
   },
@@ -190,7 +185,20 @@ python3 scripts/configure_foxcode.py
 }
 ```
 
-**注意：** 向导会自动在你的 shell 配置文件中设置 `FOXCODE_API_TOKEN`。
+**2. `~/.openclaw/agents/main/agent/auth-profiles.json`**（API 密钥）：
+```json
+{
+  "profiles": {
+    "foxcode:default": {
+      "type": "api_key",
+      "provider": "foxcode",
+      "key": "sk-ant-your-token-here"
+    }
+  }
+}
+```
+
+**注意：** OpenClaw 将 API 密钥存储在 `auth-profiles.json` 中，而不是 `openclaw.json`。
 
 ## 常用命令
 
@@ -251,27 +259,21 @@ python3 scripts/configure_foxcode.py
 
 ## 設定例
 
-セットアップウィザードは環境変数を使用してセキュリティを確保します：
+ウィザードは2つのファイルに保存します：
 
+**1. `~/.openclaw/openclaw.json`**（モデルとエンドポイント）：
 ```json
 {
   "models": {
     "providers": {
       "foxcode": {
         "baseUrl": "https://code.newcli.com/claude",
-        "apiKey": "${FOXCODE_API_TOKEN}",
         "api": "anthropic-messages",
         "models": [
           { "id": "claude-sonnet-4-5-20251101", "name": "Claude Sonnet", "contextWindow": 200000, "maxTokens": 4096 },
           { "id": "claude-opus-4-5-20251101", "name": "Claude Opus", "contextWindow": 200000, "maxTokens": 4096 },
           { "id": "claude-haiku-4-5-20251101", "name": "Claude Haiku", "contextWindow": 200000, "maxTokens": 4096 }
         ]
-      },
-      "foxcode-super": {
-        "baseUrl": "https://code.newcli.com/claude/super",
-        "apiKey": "${FOXCODE_API_TOKEN}",
-        "api": "anthropic-messages",
-        "models": [ "..." ]
       }
     }
   },
@@ -283,7 +285,20 @@ python3 scripts/configure_foxcode.py
 }
 ```
 
-**注意：** ウィザードはシェルプロファイルに `FOXCODE_API_TOKEN` を自動的に設定します。
+**2. `~/.openclaw/agents/main/agent/auth-profiles.json`**（APIキー）：
+```json
+{
+  "profiles": {
+    "foxcode:default": {
+      "type": "api_key",
+      "provider": "foxcode",
+      "key": "sk-ant-your-token-here"
+    }
+  }
+}
+```
+
+**注意：** OpenClawはAPIキーを `auth-profiles.json` に保存し、`openclaw.json` には保存しません。
 
 ## コマンド
 

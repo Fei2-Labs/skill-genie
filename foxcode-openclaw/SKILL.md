@@ -3,7 +3,7 @@ name: foxcode-openclaw
 description: Configure and manage Foxcode AI models in OpenClaw. Guides users through API setup, endpoint selection, primary/fallback model configuration, and status monitoring. Optimized for beginners with psychology-backed teaching approach.
 license: MIT
 metadata:
-  version: 1.1.0
+  version: 1.2.0
   category: ai-configuration
   author: Skill Genie
 ---
@@ -20,10 +20,10 @@ Configure Foxcode's Claude Code models in OpenClaw with an interactive, beginner
 3. Select endpoint(s) - comma-separated or "all"
 4. Choose default endpoint and primary model
 5. Test connection
-6. Run: source ~/.zshrc (or restart terminal)
+6. Restart OpenClaw
 ```
 
-**Note:** The wizard automatically sets `FOXCODE_API_TOKEN` in your shell profile and uses `${FOXCODE_API_TOKEN}` in the config for security.
+**Note:** The wizard saves API key to `~/.openclaw/agents/main/agent/auth-profiles.json` (OpenClaw's auth system).
 
 ## Triggers
 
@@ -118,14 +118,15 @@ The wizard will:
 4. Ask which endpoint should be default
 5. Let you select primary model
 6. Test the connection
-7. Save the configuration (uses `${FOXCODE_API_TOKEN}` env var)
-8. Set `FOXCODE_API_TOKEN` in your shell profile
+7. Save to `openclaw.json` (models/endpoints)
+8. Save API key to `auth-profiles.json`
 
 ### Phase 3: Verification (2 minutes)
 
-Apply the environment variable:
+Restart OpenClaw to apply changes:
 ```bash
-source ~/.zshrc  # or restart terminal
+# Restart via OpenClaw CLI
+openclaw restart
 ```
 
 Validate everything is working:
@@ -177,10 +178,15 @@ Configure 1-2 fallback models for reliability:
 
 ### Common Issues
 
-**"Missing env var FOXCODE_API_TOKEN"**
-- Run: `source ~/.zshrc` (or restart terminal)
-- Verify: `echo $FOXCODE_API_TOKEN`
-- If empty, add manually to `~/.zshrc`: `export FOXCODE_API_TOKEN="your-token"`
+**"API key not found" or auth errors**
+- Check `~/.openclaw/agents/main/agent/auth-profiles.json` has `foxcode:default` profile
+- Verify the `key` field contains your valid Foxcode token
+- Re-run the wizard to update auth-profiles.json
+
+**"systemctl --user unavailable" on macOS**
+- This is expected - `systemctl` is Linux-only
+- On macOS, OpenClaw uses launchd or direct process management
+- Restart OpenClaw with: `openclaw restart` or restart the app
 
 **"API token invalid"**
 - Double-check token from https://foxcode.rjj.cc/api-keys
@@ -236,7 +242,14 @@ foxcode-openclaw/
 
 ## Changelog
 
-### v1.1.0 (Current)
+### v1.2.0 (Current)
+- **Fix**: Use `auth-profiles.json` for API keys (not openclaw.json)
+- Added `update_auth_profiles()` function for proper OpenClaw auth
+- Removed env var approach - OpenClaw uses its own auth system
+- Added macOS troubleshooting for systemctl error
+- Updated all docs to reflect correct OpenClaw config structure
+
+### v1.1.0
 - Multi-endpoint selection (comma-separated or "all")
 - All 3 models added to each selected endpoint
 - Environment variable reference for API key security
