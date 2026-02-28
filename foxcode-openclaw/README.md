@@ -44,7 +44,7 @@ python3 scripts/configure_foxcode.py
 
 ## Config Example
 
-The setup wizard adds all 3 models to each selected endpoint:
+The setup wizard uses environment variables for security:
 
 ```json
 {
@@ -52,7 +52,7 @@ The setup wizard adds all 3 models to each selected endpoint:
     "providers": {
       "foxcode": {
         "baseUrl": "https://code.newcli.com/claude",
-        "apiKey": "YOUR_TOKEN",
+        "apiKey": "${FOXCODE_API_TOKEN}",
         "api": "anthropic-messages",
         "models": [
           { "id": "claude-sonnet-4-5-20251101", "name": "Claude Sonnet", "contextWindow": 200000, "maxTokens": 4096 },
@@ -62,13 +62,13 @@ The setup wizard adds all 3 models to each selected endpoint:
       },
       "foxcode-super": {
         "baseUrl": "https://code.newcli.com/claude/super",
-        "apiKey": "YOUR_TOKEN",
+        "apiKey": "${FOXCODE_API_TOKEN}",
         "api": "anthropic-messages",
         "models": [ "..." ]
       },
       "foxcode-aws": {
         "baseUrl": "https://code.newcli.com/claude/aws",
-        "apiKey": "YOUR_TOKEN",
+        "apiKey": "${FOXCODE_API_TOKEN}",
         "api": "anthropic-messages",
         "models": [ "..." ]
       }
@@ -81,6 +81,8 @@ The setup wizard adds all 3 models to each selected endpoint:
   }
 }
 ```
+
+**Note:** The wizard automatically sets `FOXCODE_API_TOKEN` in your shell profile.
 
 ## Commands
 
@@ -156,7 +158,7 @@ python3 scripts/configure_foxcode.py
 
 ## 配置示例
 
-设置向导会将所有 3 个模型添加到每个选定的端点：
+设置向导使用环境变量确保安全：
 
 ```json
 {
@@ -164,7 +166,7 @@ python3 scripts/configure_foxcode.py
     "providers": {
       "foxcode": {
         "baseUrl": "https://code.newcli.com/claude",
-        "apiKey": "你的令牌",
+        "apiKey": "${FOXCODE_API_TOKEN}",
         "api": "anthropic-messages",
         "models": [
           { "id": "claude-sonnet-4-5-20251101", "name": "Claude Sonnet", "contextWindow": 200000, "maxTokens": 4096 },
@@ -174,7 +176,7 @@ python3 scripts/configure_foxcode.py
       },
       "foxcode-super": {
         "baseUrl": "https://code.newcli.com/claude/super",
-        "apiKey": "你的令牌",
+        "apiKey": "${FOXCODE_API_TOKEN}",
         "api": "anthropic-messages",
         "models": [ "..." ]
       }
@@ -187,6 +189,8 @@ python3 scripts/configure_foxcode.py
   }
 }
 ```
+
+**注意：** 向导会自动在你的 shell 配置文件中设置 `FOXCODE_API_TOKEN`。
 
 ## 常用命令
 
@@ -247,7 +251,7 @@ python3 scripts/configure_foxcode.py
 
 ## 設定例
 
-セットアップウィザードは、選択した各エンドポイントにすべての3つのモデルを追加します：
+セットアップウィザードは環境変数を使用してセキュリティを確保します：
 
 ```json
 {
@@ -255,7 +259,7 @@ python3 scripts/configure_foxcode.py
     "providers": {
       "foxcode": {
         "baseUrl": "https://code.newcli.com/claude",
-        "apiKey": "あなたのトークン",
+        "apiKey": "${FOXCODE_API_TOKEN}",
         "api": "anthropic-messages",
         "models": [
           { "id": "claude-sonnet-4-5-20251101", "name": "Claude Sonnet", "contextWindow": 200000, "maxTokens": 4096 },
@@ -265,7 +269,7 @@ python3 scripts/configure_foxcode.py
       },
       "foxcode-super": {
         "baseUrl": "https://code.newcli.com/claude/super",
-        "apiKey": "あなたのトークン",
+        "apiKey": "${FOXCODE_API_TOKEN}",
         "api": "anthropic-messages",
         "models": [ "..." ]
       }
@@ -278,6 +282,8 @@ python3 scripts/configure_foxcode.py
   }
 }
 ```
+
+**注意：** ウィザードはシェルプロファイルに `FOXCODE_API_TOKEN` を自動的に設定します。
 
 ## コマンド
 

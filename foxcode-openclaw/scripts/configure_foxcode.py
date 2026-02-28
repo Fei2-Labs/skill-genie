@@ -285,7 +285,8 @@ def create_config(
     api_token: str,
     primary_model: str,
     fallback_models: List[str],
-    default_endpoint: str
+    default_endpoint: str,
+    use_env_var: bool = True
 ) -> Dict:
     """Create the configuration dictionary with multiple endpoint providers."""
     
@@ -308,13 +309,16 @@ def create_config(
     # Build providers for each selected endpoint
     providers = {}
     
+    # Use env var reference or hardcoded token
+    api_key_value = "${FOXCODE_API_TOKEN}" if use_env_var else api_token
+    
     for endpoint_key in endpoint_keys:
         endpoint = ENDPOINTS[endpoint_key]
         provider_name = f"foxcode-{endpoint_key}" if endpoint_key != "official" else "foxcode"
         
         providers[provider_name] = {
             "baseUrl": endpoint["url"],
-            "apiKey": api_token,
+            "apiKey": api_key_value,
             "api": "anthropic-messages",
             "models": models_list
         }
@@ -353,6 +357,53 @@ def save_config(config: Dict, config_path: Path) -> bool:
         return True
     except Exception as e:
         print(f"❌ Error saving config: {e}")
+        return False
+
+
+def set_env_variable(api_token: str) -> bool:
+    """Set FOXCODE_API_TOKEN in shell profile."""
+    # Detect shell profile
+    shell_profiles = [
+        Path.home() / ".zshrc",
+        Path.home() / ".bashrc",
+        Path.home() / ".bash_profile",
+    ]
+    
+    profile_path = None
+    for profile in shell_profiles:
+        if profile.exists():
+            profile_path = profile
+            break
+    
+    if not profile_path:
+        # Default to .zshrc on macOS
+        profile_path = Path.home() / ".zshrc"
+    
+    # Check if already set
+    env_line = f'export FOXCODE_API_TOKEN="{api_token}"'
+    
+    try:
+        existing = ""
+        if profile_path.exists():
+            with open(profile_path, 'r') as f:
+                existing = f.read()
+        
+        # Remove old FOXCODE_API_TOKEN lines
+        lines = [l for l in existing.split('\n') if 'FOXCODE_API_TOKEN' not in l]
+        
+        # Add new line
+        lines.append("")
+        lines.append("# Foxcode API Token (added by configure_foxcode.py)")
+        lines.append(env_line)
+        
+        with open(profile_path, 'w') as f:
+            f.write('\n'.join(lines))
+        
+        print(f"✓ Added to {profile_path}")
+        print("  Run: source ~/.zshrc  (or restart terminal)")
+        return True
+    except Exception as e:
+        print(f"❌ Error setting env var: {e}")
         return False
 
 
@@ -471,14 +522,11 @@ def main():
     print(f"  Default Endpoint: {default_endpoint}")
     print(f"  Primary Model: {primary_model}")
     print(f"  All Models: {', '.join(MODELS.keys())}")
+    print(f"  API Key: $FOXCODE_API_TOKEN (env var)")
 
-    # Show config (without token)
-    display_config = json.loads(json.dumps(config))
-    if "models" in display_config and "providers" in display_config["models"]:
-        for provider_name in display_config["models"]["providers"]:
-            display_config["models"]["providers"][provider_name]["apiKey"] = "***HIDDEN***"
+    # Show config (env var reference, not actual token)
     print(f"\nConfig contents:")
-    print(json.dumps(display_config, indent=2))
+    print(json.dumps(config, indent=2))
 
     print()
     confirm = input("Save this configuration? (y/n): ").strip().lower()
@@ -489,13 +537,24 @@ def main():
             print(f"  File: {config_path}")
             print(f"  Permissions: 600 (owner read/write only)")
 
+            # Step 7: Set environment variable
+            print_step(7, "Set Environment Variable")
+            print("Adding FOXCODE_API_TOKEN to your shell profile...")
+            if set_env_variable(api_token):
+                print("\n✓ Environment variable set!")
+            else:
+                print("\n⚠ Could not set env var automatically.")
+                print("Add this line to your ~/.zshrc or ~/.bashrc:")
+                print(f'  export FOXCODE_API_TOKEN="{api_token}"')
+
             print("\n" + "=" * 60)
             print("Setup Complete!")
             print("=" * 60)
             print("\nNext steps:")
-            print("  1. Restart OpenClaw if it's running")
-            print("  2. Run a test: 'openclaw' then ask a simple question")
-            print("  3. Check status anytime: python3 scripts/check_status.py")
+            print("  1. Run: source ~/.zshrc  (or restart terminal)")
+            print("  2. Restart OpenClaw if it's running")
+            print("  3. Run a test: 'openclaw' then ask a simple question")
+            print("  4. Check status anytime: python3 scripts/check_status.py")
             print()
             print("Need to make changes? Just run this wizard again:")
             print("  python3 scripts/configure_foxcode.py")
