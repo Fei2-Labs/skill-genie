@@ -285,10 +285,13 @@ def create_config(
     api_token: str,
     primary_model: str,
     fallback_models: List[str],
-    default_endpoint: str,
-    use_env_var: bool = True
+    default_endpoint: str
 ) -> Dict:
-    """Create the configuration dictionary with multiple endpoint providers."""
+    """Create the configuration dictionary with multiple endpoint providers.
+    
+    Note: OpenClaw uses auth-profiles.json for API keys, NOT openclaw.json.
+    The apiKey is stored separately in ~/.openclaw/agents/main/agent/auth-profiles.json
+    """
     
     # Build models list (all 3 models, with primary first)
     all_models = [primary_model]
@@ -307,10 +310,8 @@ def create_config(
         })
     
     # Build providers for each selected endpoint
+    # NOTE: No apiKey here - OpenClaw reads from auth-profiles.json
     providers = {}
-    
-    # Use env var reference or hardcoded token
-    api_key_value = "${FOXCODE_API_TOKEN}" if use_env_var else api_token
     
     for endpoint_key in endpoint_keys:
         endpoint = ENDPOINTS[endpoint_key]
@@ -318,7 +319,6 @@ def create_config(
         
         providers[provider_name] = {
             "baseUrl": endpoint["url"],
-            "apiKey": api_key_value,
             "api": "anthropic-messages",
             "models": models_list
         }
@@ -341,6 +341,18 @@ def create_config(
     return config
 
 
+def create_auth_profile(api_token: str) -> Dict:
+    """Create auth profile entry for Foxcode.
+    
+    OpenClaw stores API keys in auth-profiles.json, not openclaw.json.
+    """
+    return {
+        "type": "api_key",
+        "provider": "foxcode",
+        "key": api_token
+    }
+
+
 def save_config(config: Dict, config_path: Path) -> bool:
     """Save configuration to file."""
     try:
@@ -360,50 +372,55 @@ def save_config(config: Dict, config_path: Path) -> bool:
         return False
 
 
-def set_env_variable(api_token: str) -> bool:
-    """Set FOXCODE_API_TOKEN in shell profile."""
-    # Detect shell profile
-    shell_profiles = [
-        Path.home() / ".zshrc",
-        Path.home() / ".bashrc",
-        Path.home() / ".bash_profile",
-    ]
+def get_auth_profiles_path() -> Path:
+    """Get the path to auth-profiles.json."""
+    return Path.home() / ".openclaw" / "agents" / "main" / "agent" / "auth-profiles.json"
+
+
+def update_auth_profiles(api_token: str) -> bool:
+    """Update auth-profiles.json with Foxcode API key.
     
-    profile_path = None
-    for profile in shell_profiles:
-        if profile.exists():
-            profile_path = profile
-            break
-    
-    if not profile_path:
-        # Default to .zshrc on macOS
-        profile_path = Path.home() / ".zshrc"
-    
-    # Check if already set
-    env_line = f'export FOXCODE_API_TOKEN="{api_token}"'
+    OpenClaw stores API keys in auth-profiles.json, not openclaw.json.
+    """
+    auth_path = get_auth_profiles_path()
     
     try:
-        existing = ""
-        if profile_path.exists():
-            with open(profile_path, 'r') as f:
-                existing = f.read()
+        # Load existing auth-profiles
+        if auth_path.exists():
+            with open(auth_path, 'r') as f:
+                auth_data = json.load(f)
+        else:
+            auth_data = {"version": 1, "profiles": {}, "lastGood": {}, "usageStats": {}}
         
-        # Remove old FOXCODE_API_TOKEN lines
-        lines = [l for l in existing.split('\n') if 'FOXCODE_API_TOKEN' not in l]
+        # Update/add Foxcode profile
+        auth_data["profiles"]["foxcode:default"] = {
+            "type": "api_key",
+            "provider": "foxcode",
+            "key": api_token
+        }
         
-        # Add new line
-        lines.append("")
-        lines.append("# Foxcode API Token (added by configure_foxcode.py)")
-        lines.append(env_line)
+        # Update lastGood
+        auth_data["lastGood"]["foxcode"] = "foxcode:default"
         
-        with open(profile_path, 'w') as f:
-            f.write('\n'.join(lines))
+        # Update usageStats
+        if "foxcode:default" not in auth_data.get("usageStats", {}):
+            auth_data["usageStats"]["foxcode:default"] = {
+                "lastUsed": 0,
+                "errorCount": 0
+            }
         
-        print(f"✓ Added to {profile_path}")
-        print("  Run: source ~/.zshrc  (or restart terminal)")
+        # Ensure directory exists
+        auth_path.parent.mkdir(parents=True, exist_ok=True)
+        
+        # Save
+        with open(auth_path, 'w') as f:
+            json.dump(auth_data, f, indent=2)
+        
+        os.chmod(auth_path, 0o600)
+        
         return True
     except Exception as e:
-        print(f"❌ Error setting env var: {e}")
+        print(f"❌ Error updating auth-profiles: {e}")
         return False
 
 
@@ -517,44 +534,44 @@ def main():
     config = create_config(endpoint_keys, api_token, primary_model, fallback_models, default_endpoint)
 
     print(f"\nConfiguration to save:")
-    print(f"  Location: {config_path}")
+    print(f"  Config file: {config_path}")
+    print(f"  Auth file: {get_auth_profiles_path()}")
     print(f"  Endpoints: {', '.join(endpoint_keys)}")
     print(f"  Default Endpoint: {default_endpoint}")
     print(f"  Primary Model: {primary_model}")
     print(f"  All Models: {', '.join(MODELS.keys())}")
-    print(f"  API Key: $FOXCODE_API_TOKEN (env var)")
 
-    # Show config (env var reference, not actual token)
-    print(f"\nConfig contents:")
+    # Show config (no API key - stored separately)
+    print(f"\nConfig contents (openclaw.json):")
     print(json.dumps(config, indent=2))
 
     print()
     confirm = input("Save this configuration? (y/n): ").strip().lower()
 
     if confirm == 'y':
+        # Save openclaw.json
         if save_config(config, config_path):
-            print("\n✓ Configuration saved successfully!")
+            print("\n✓ Configuration saved!")
             print(f"  File: {config_path}")
-            print(f"  Permissions: 600 (owner read/write only)")
-
-            # Step 7: Set environment variable
-            print_step(7, "Set Environment Variable")
-            print("Adding FOXCODE_API_TOKEN to your shell profile...")
-            if set_env_variable(api_token):
-                print("\n✓ Environment variable set!")
+            
+            # Step 7: Update auth-profiles.json
+            print_step(7, "Save API Key to auth-profiles.json")
+            print("OpenClaw stores API keys in auth-profiles.json (not openclaw.json)")
+            
+            if update_auth_profiles(api_token):
+                print(f"\n✓ API key saved to auth-profiles.json")
+                print(f"  File: {get_auth_profiles_path()}")
             else:
-                print("\n⚠ Could not set env var automatically.")
-                print("Add this line to your ~/.zshrc or ~/.bashrc:")
-                print(f'  export FOXCODE_API_TOKEN="{api_token}"')
+                print("\n⚠ Could not update auth-profiles.json")
+                print("You may need to add the API key manually through OpenClaw.")
 
             print("\n" + "=" * 60)
             print("Setup Complete!")
             print("=" * 60)
             print("\nNext steps:")
-            print("  1. Run: source ~/.zshrc  (or restart terminal)")
-            print("  2. Restart OpenClaw if it's running")
-            print("  3. Run a test: 'openclaw' then ask a simple question")
-            print("  4. Check status anytime: python3 scripts/check_status.py")
+            print("  1. Restart OpenClaw if it's running")
+            print("  2. Run a test: 'openclaw' then ask a simple question")
+            print("  3. Check status anytime: python3 scripts/check_status.py")
             print()
             print("Need to make changes? Just run this wizard again:")
             print("  python3 scripts/configure_foxcode.py")
