@@ -44,8 +44,7 @@ Guided setup wizard that:
 - Explains endpoint differences (speed vs cost vs features)
 - Sets default endpoint and primary model
 - Adds all 3 models to each selected endpoint
-- Uses environment variable reference for security
-- Automatically sets `FOXCODE_API_TOKEN` in shell profile
+- Saves API key to `auth-profiles.json` (OpenClaw's auth system)
 - Tests connection before finishing
 
 **Usage:**
