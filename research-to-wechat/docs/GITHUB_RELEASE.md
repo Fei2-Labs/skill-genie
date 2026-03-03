@@ -22,6 +22,10 @@ The release should include:
 - `research-to-wechat/references/capability-map.md`
 - `research-to-wechat/references/style-engine.md`
 - `research-to-wechat/references/execution-contract.md`
+- `research-to-wechat/references/platform-copy.md`
+- `research-to-wechat/references/design-guide.md`
+- `research-to-wechat/design.pen`
+- `research-to-wechat/scripts/fetch_wechat_article.py`
 - `research-to-wechat/docs/GITHUB_RELEASE.md`
 - `research-to-wechat/docs/EXAMPLES.md`
 - root `README.md`
@@ -48,9 +52,19 @@ Verify the skill README answers these questions:
 
 - what problem does this skill solve
 - who is it for
+- how `Path A` and `Path B` differ
 - what files does it produce
+- what `manifest.json.outputs.wechat` contains
 - what inputs does it accept
+- how the research architecture and question lattice work
+- how the writing frameworks (deep-analysis, tutorial) structure the article
+- how the normalization checklist and image evaluation ensure quality
+- how evidence limits and disclosure are handled
 - how style resolution works
+- how HTML rendering works (md2wechat ai mode preferred, baoyu fallback)
+- how the WeChat delivery ladder degrades
+- how optional multi-platform distribution works (Phase 8)
+- how article design selection works with Pencil MCP (10 styles, auto-selection)
 - where the execution rules live
 
 ## Root repo review
@@ -65,7 +79,7 @@ Verify the root `README.md`:
 
 Repository-facing short description:
 
-`End-to-end WeChat article orchestration from source material to researched draft, visual polish, HTML rendering, and browser draft save.`
+`Research-first WeChat article pipeline with evidence ledger, writing frameworks, routed structure, md2wechat HTML rendering, manifest output, optional multi-platform distribution, and API/browser/manual draft fallback.`
 
 Suggested topics:
 
@@ -76,21 +90,33 @@ Suggested topics:
 - `article-generation`
 - `writing-system`
 - `research`
+- `multi-platform`
 
 ## Suggested release note shape
 
 ```md
 ## Added
-- New `research-to-wechat` skill for end-to-end article production
-- Neutral capability alias layer
-- Internal style engine and execution contract references
+- Writing frameworks: deep-analysis 四幕式 (8000-12000字) and tutorial 六段式 (2000-4000字)
+- Writing checklists and prohibitions for each framework
+- Research architecture with 32+ question lattice across 4 cognitive layers
+- Strategic clarification protocol (5 dimensions) before brief creation
+- Article normalization checklist (12+ rules) for source artifact cleanup
+- Image placeholder strategy with placement criteria and keyword construction
+- Two-tier image evaluation (Tier A elimination, Tier B quality match)
+- Cover spec: 900x383px at 2x with center-cropped thumbnail
+- HTML rendering via md2wechat skill (ai mode, no external API)
+- Optional multi-platform distribution (小红书、即刻、小宇宙、朋友圈)
+- Platform copy specs for each distribution target
+- WeChat article fetch script (Python, mobile UA)
 
 ## Updated
-- Root README now lists the skill in all supported languages
+- Evidence ledger format, manifest schema, and delivery ladder
+- Capability aliases for all pipeline stages
+- README, examples, and release docs match v0.4.0 contract
 
 ## Verified
 - Skill packaging passes
-- Forbidden legacy naming removed from the skill directory
+- Release docs match the current execution contract
 ```
 
 ## Suggested screenshots
@@ -118,4 +144,5 @@ Do not publish if any of these are true:
 - skill packaging fails
 - any forbidden legacy term still appears in `research-to-wechat/`
 - root README and skill README describe different outputs
+- README omits the manifest or delivery ladder behavior
 - example prompts no longer match the current style system
