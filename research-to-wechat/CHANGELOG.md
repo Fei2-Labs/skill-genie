@@ -10,7 +10,7 @@ All notable changes to `research-to-wechat` will be documented in this file.
 - **Writing frameworks**: tutorial 六段式框架 (先看结果→概念→操作→实战→拿走即用→升华, 2000-4000字) with result-first rule, visual rhythm specs, and operation step format
 - **Writing checklists**: per-frame self-check lists (deep-analysis: 12 items, tutorial: 11 items)
 - **Writing prohibitions**: language and content prohibitions merged from both frameworks
-- **HTML converter**: md2wechat skill (preferred, Go binary, ai mode with Claude-powered HTML generation, no external API) → baoyu-markdown-to-html (fallback, TypeScript, default/grace/simple themes)
+- **HTML converter**: md2wechat skill (Go binary, ai mode with Claude-powered HTML generation, no external API)
 - **Article design templates**: `design.pen` with 10 layout styles (极简/编辑/杂志/科技/生活/典雅/粗犷/活泼/商务/艺术), each with Light/Dark variants, plus 6 CTA templates
 - **Design auto-selection**: automatic design matching based on article topic and structure frame (requires Pencil MCP)
 - **Design guide**: new `references/design-guide.md` with selection rules, node ID table, CTA matching, and Pencil MCP workflow
@@ -30,7 +30,7 @@ All notable changes to `research-to-wechat` will be documented in this file.
 - execution-contract.md: Phase 6 HTML rendering updated with converter selection order and fallback logic
 - execution-contract.md: manifest.json format expanded to support optional multi-platform output fields
 - capability-map.md: source-ingest now includes bundled fetch_wechat_article.py as primary WeChat fetch tool
-- capability-map.md: wechat-render now has explicit two-level resolution (md2wechat Go skill → baoyu skill)
+- capability-map.md: wechat-render now references md2wechat Go skill
 - capability-map.md: wechat-draft updated with md2wechat's built-in `--draft` API support
 - capability-map.md: cover-art now specifies 900x383px dimensions and 2x export
 - capability-map.md: new article-design alias with Pencil MCP prerequisite and auto-selection rules
