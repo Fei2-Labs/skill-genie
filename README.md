@@ -29,6 +29,7 @@ Most personal automation fails because the best methods live in scattered notes.
 - [`close-loop`](./close-loop): End-of-session ship-and-memory workflow with autonomous strategy selection (`safe`, `balanced`, `openclaw`/`adaptive`), ALMA-inspired evaluation, and machine-readable JSON output.
 - [`ai-csuite`](./ai-csuite): Script-backed AI executive debate workflow that generates stage-aware strategic recommendations, CEO briefs, and decision artifacts.
 - [`foxcode-openclaw`](./foxcode-openclaw): Configure Foxcode AI models in OpenClaw with interactive setup, status monitoring, and validation tools. Supports 5 endpoints and 3 Claude models.
+- [`research-to-wechat`](./research-to-wechat): End-to-end article orchestration that turns topics, URLs, and transcripts into researched Markdown, visual assets, WeChat-ready HTML, and a saved draft.
 
 ## Skill layout
 
@@ -36,7 +37,10 @@ Each skill folder should contain:
 
 - `SKILL.md` for the main execution workflow
 - `README.md` for quick orientation
+- `CHANGELOG.md` for skill-specific release history when needed
+- `LICENSE` when the skill is intended to be published independently
 - `references/` for source docs and deeper notes
+- `docs/` for skill-specific publishing or usage documentation
 - `assets/` for templates and reusable artifacts
 - `scripts/` only when automation clearly reduces manual work
 
@@ -82,6 +86,7 @@ Each skill folder should contain:
 - [`close-loop`](./close-loop): 会话结束时的交付和记忆工作流，包含自主策略选择
 - [`ai-csuite`](./ai-csuite): 脚本支持的 AI 高管辩论工作流
 - [`foxcode-openclaw`](./foxcode-openclaw): 在 OpenClaw 中配置 Foxcode AI 模型，支持交互式设置、状态监控和验证工具
+- [`research-to-wechat`](./research-to-wechat): 面向公众号内容生产的端到端文章编排 skill，可把选题、链接和字幕转成深度研究文章、配图、HTML 与草稿箱结果
 
 ## 技能结构
 
@@ -89,7 +94,10 @@ Each skill folder should contain:
 
 - `SKILL.md` - 主要执行工作流
 - `README.md` - 快速入门
+- `CHANGELOG.md` - 需要时记录该 skill 自己的发布历史
+- `LICENSE` - 当该 skill 需要独立发布时使用
 - `references/` - 源文档和深入笔记
+- `docs/` - 该 skill 自己的发布或使用文档
 - `assets/` - 模板和可复用工件
 - `scripts/` - 仅当自动化明显减少手动工作时
 
@@ -135,6 +143,7 @@ Each skill folder should contain:
 - [`close-loop`](./close-loop): 自律戦略選択を備えたセッション終了時のシップ＆メモリワークフロー
 - [`ai-csuite`](./ai-csuite): ステージ対応の戦略的推奨、CEOブリーフ、決定アーティファクトを生成するスクリプト支援AI経営陣討論ワークフロー
 - [`foxcode-openclaw`](./foxcode-openclaw): インタラクティブセットアップ、ステータス監視、検証ツールを備えたOpenClawでのFoxcode AIモデル設定
+- [`research-to-wechat`](./research-to-wechat): トピック、URL、字幕から調査済みMarkdown、ビジュアル、WeChat向けHTML、下書き保存までをつなぐ記事オーケストレーションスキル
 
 ## スキル構成
 
@@ -142,7 +151,10 @@ Each skill folder should contain:
 
 - `SKILL.md` - メイン実行ワークフロー
 - `README.md` - クイックオリエンテーション
+- `CHANGELOG.md` - 必要に応じたスキル単位の更新履歴
+- `LICENSE` - スキルを個別公開する場合のライセンス
 - `references/` - ソースドキュメントと詳細なメモ
+- `docs/` - そのスキル専用の公開・利用ドキュメント
 - `assets/` - テンプレートと再利用可能なアーティファクト
 - `scripts/` - 自動化が手動作業を明確に削減する場合のみ
 
