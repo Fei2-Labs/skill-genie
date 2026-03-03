@@ -240,3 +240,8 @@ Users can override by naming a style (e.g., "用杂志排版", "科技风格 Dar
 - HTML 转换用 md2wechat（ai 模式，不调外部 API）
 - 诚实标注 AI 参与和证据范围
 - 最终只保存草稿，不直接发布
+
+## Acknowledgements
+
+- [content-pipeline](https://github.com/OrangeViolin/content-pipeline) by OrangeViolin — writing frameworks (deep-analysis 四幕式, tutorial 六段式), multi-platform distribution specs, and fetch_wechat_article.py
+- [md2wechat-skill](https://github.com/geekjourneyx/md2wechat-skill) by geekjourneyx — Markdown-to-WeChat HTML converter with ai mode themes and draft API integration
