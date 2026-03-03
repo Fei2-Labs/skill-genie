@@ -62,7 +62,7 @@ Verify the skill README answers these questions:
 - how the normalization checklist and image evaluation ensure quality
 - how evidence limits and disclosure are handled
 - how style resolution works
-- how HTML rendering works (md2wechat ai mode preferred, baoyu fallback)
+- how HTML rendering works (md2wechat ai mode)
 - how the WeChat delivery ladder degrades
 - how optional multi-platform distribution works (Phase 8)
 - how article design selection works with Pencil MCP (10 styles, auto-selection)
