@@ -19,6 +19,8 @@ All notable changes to `research-to-wechat` will be documented in this file.
 - **Platform copy specs**: new `references/platform-copy.md` with per-platform writing rules
 - **WeChat article fetch script**: `scripts/fetch_wechat_article.py` (Python, mobile WeChat UA, 30s timeout)
 - **multi-platform-distribute capability alias**: Chrome CDP sequential execution, independent profiles, L0-L3 fallback
+- **OpenClaw compatibility**: metadata block in SKILL.md frontmatter (emoji, homepage, requires, primaryEnv, version, category)
+- **OpenClaw install script**: `scripts/install-openclaw.sh` for `~/.openclaw/skills/` installation
 
 ### Updated
 
@@ -33,7 +35,7 @@ All notable changes to `research-to-wechat` will be documented in this file.
 - capability-map.md: cover-art now specifies 900x383px dimensions and 2x export
 - capability-map.md: new article-design alias with Pencil MCP prerequisite and auto-selection rules
 - SKILL.md: 8-phase pipeline (Phase 8 optional), article-design alias, design-guide reference, updated done conditions
-- README.md: article design section with topic-to-design table, Pencil MCP setup instructions, Chinese section updated
+- README.md: article design section with topic-to-design table, Pencil MCP setup instructions, OpenClaw install section, Chinese section updated
 - docs/EXAMPLES.md: design selection examples, updated output checklist
 - docs/GITHUB_RELEASE.md: design-guide.md and design.pen in required files, design review question added
 

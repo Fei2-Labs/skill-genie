@@ -1,6 +1,17 @@
 ---
 name: research-to-wechat
 description: A research-first content pipeline that turns a topic, notes, article, URL, or transcript into a sourced article with an evidence ledger, routed structure, polished Markdown, inline visuals, cover image, WeChat-ready HTML, browser-saved draft, and optional multi-platform distribution (小红书、即刻、播客、朋友圈). Use when the user wants 深度研究、改写成公众号、写作、排版、配图、HTML 转换、公众号草稿生成、多平台分发.
+metadata:
+  openclaw:
+    emoji: "🔬"
+    homepage: "https://github.com/Fei2-Labs/skill-genie"
+    requires:
+      anyBins: ["python3"]
+    primaryEnv: "WECHAT_APPID"
+  version: "0.4.0"
+  category: "content-generation"
+  author: "Skill Genie"
+  license: "MIT"
 ---
 
 # Research to WeChat
@@ -114,6 +125,7 @@ Determine this SKILL.md directory as `SKILL_DIR`, then use `${SKILL_DIR}/scripts
 | Script | Purpose |
 |--------|---------|
 | `scripts/fetch_wechat_article.py` | WeChat article fetch (Python, simulates WeChat mobile UA) |
+| `scripts/install-openclaw.sh` | OpenClaw skill installer (copies to `~/.openclaw/skills/`) |
 
 ## Provenance Contract
 
