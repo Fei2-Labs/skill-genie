@@ -26,6 +26,7 @@ The release should include:
 - `research-to-wechat/references/design-guide.md`
 - `research-to-wechat/design.pen`
 - `research-to-wechat/scripts/fetch_wechat_article.py`
+- `research-to-wechat/scripts/install-openclaw.sh`
 - `research-to-wechat/docs/GITHUB_RELEASE.md`
 - `research-to-wechat/docs/EXAMPLES.md`
 - root `README.md`

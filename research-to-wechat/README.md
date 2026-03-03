@@ -2,6 +2,23 @@
 
 Turn a topic, notes, article, URL, or transcript into a research-backed WeChat article with an evidence ledger, routed structure, polished Markdown, inline visuals, cover art, HTML output, a saved browser draft, and optional multi-platform distribution (小红书、即刻、播客、朋友圈).
 
+## Install
+
+**OpenClaw / ClawHub:**
+```bash
+clawhub install research-to-wechat
+```
+
+**Manual:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/Fei2-Labs/skill-genie/main/research-to-wechat/scripts/install-openclaw.sh | bash
+```
+
+**Optional dependencies:**
+- `md2wechat` skill — for HTML rendering (`clawhub install md2wechat` or [install guide](https://github.com/geekjourneyx/md2wechat-skill))
+- Pencil MCP server — for article design templates from `design.pen`
+- `WECHAT_APPID` / `WECHAT_SECRET` — for draft upload (not needed for research and writing)
+
 ## What this skill is
 
 `research-to-wechat` is a research-first control-plane skill for WeChat article production.
