@@ -245,3 +245,4 @@ Users can override by naming a style (e.g., "用杂志排版", "科技风格 Dar
 
 - [content-pipeline](https://github.com/OrangeViolin/content-pipeline) by OrangeViolin — writing frameworks (deep-analysis 四幕式, tutorial 六段式), multi-platform distribution specs, and fetch_wechat_article.py
 - [md2wechat-skill](https://github.com/geekjourneyx/md2wechat-skill) by geekjourneyx — Markdown-to-WeChat HTML converter with ai mode themes and draft API integration
+- [翔宇工作流](https://xiangyugongzuoliu.com/35-n8n-ai-auto-writing-system-workflow/) — research architecture (structured question lattice, strategic clarification) and article normalization checklist inspired by the n8n AI auto-writing workflow
