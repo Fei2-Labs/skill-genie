@@ -179,9 +179,7 @@ Custom mode asks for:
 
 ## HTML rendering
 
-The skill converts Markdown to WeChat-compatible HTML via:
-1. **md2wechat skill** (preferred) — Go binary using ai mode (Claude-powered, no external API). Themes: `autumn-warm`, `spring-fresh`, `ocean-calm`, `custom`.
-2. **baoyu-markdown-to-html** (fallback) — themes: `default`, `grace`, `simple`.
+The skill converts Markdown to WeChat-compatible HTML via the **md2wechat skill** — Go binary using ai mode (Claude-powered, no external API). Themes: `autumn-warm`, `spring-fresh`, `ocean-calm`, `custom`.
 
 ## Article design (requires Pencil MCP)
 

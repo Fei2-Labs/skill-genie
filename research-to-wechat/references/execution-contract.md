@@ -358,10 +358,7 @@ Render `article-formatted.md` into `article.html` through `wechat-render`.
    Config: `bash skills/md2wechat/scripts/run.sh config init` (sets up `~/.config/md2wechat/config.yaml`)
    Requires: `WECHAT_APPID` and `WECHAT_SECRET` env vars for draft upload; `IMAGE_API_KEY` for AI image generation.
 
-2. **baoyu-markdown-to-html skill** — fallback when md2wechat is not installed:
-   Available themes: `default`, `grace`, `simple`
-
-If the user has no preference, use `autumn-warm` (md2wechat ai) or `default` (baoyu).
+If the user has no preference, use `autumn-warm`.
 
 Product: `article.html` in the workspace directory. Browser-open the preview to verify
 cover, digest, author, and image paths match the markdown source.

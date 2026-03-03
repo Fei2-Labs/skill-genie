@@ -66,8 +66,6 @@ Use this file to resolve neutral capability aliases to installed skills without 
        Default: `--mode ai --theme autumn-warm`.
        Install: `curl -fsSL https://raw.githubusercontent.com/geekjourneyx/md2wechat-skill/main/scripts/install.sh | bash`
        Repo: https://github.com/geekjourneyx/md2wechat-skill
-    2. `baoyu-markdown-to-html` skill — fallback when md2wechat is not installed.
-       Themes: default, grace, simple.
   note: prefer a worker that keeps cover, digest, author, and inline image paths aligned with markdown
   note: prefer a worker that can replace local content images with upload-ready URLs when needed
   note: md2wechat also supports `--upload` to push images to WeChat CDN and `--draft` to create drafts directly
