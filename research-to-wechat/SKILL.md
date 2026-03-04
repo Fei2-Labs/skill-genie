@@ -26,6 +26,8 @@ Use this skill as a research-first control plane. Do not duplicate downstream sk
 - Keep Markdown as the canonical article asset until the HTML handoff.
 - Save a draft only. Never publish live.
 - Separate verified fact, working inference, and open question.
+- Every major claim must be traceable to a source. Collect source URLs during research.
+- Every article must end with a "## 参考链接" or "## References" section listing all sources.
 - Apply the full normalization checklist to every article before refinement. Source artifacts, broken formatting, and LaTeX fragments must not survive into the final draft.
 - Every inline image must pass a two-tier evaluation: first eliminate disqualifying defects, then verify content match to the surrounding text.
 - Never pretend the workflow did interviews, long field research, team debate, or hands-on testing when it did not.
