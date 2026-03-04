@@ -214,9 +214,10 @@ reference.
 
 ### Source Artifact Removal
 - strip AI-generated citation tags (`[oai_citation:...]`, `[source:...]`)
-- strip numbered in-text citations and trailing reference lists
-- convert useful citation content to inline attribution
+- strip numbered in-text citations but PRESERVE the reference list
+- convert in-text citation numbers to inline attribution ("according to X")
 - strip scraped UI: navigation, footers, cookie banners, "share" blocks
+- ensure article ends with "## 参考链接" or "## References" section
 
 ### Format Repair
 - fix unclosed bold/italic/code markers
@@ -253,6 +254,7 @@ reference.
 - [ ] 每章结尾是否有钩子拉向下一章？
 - [ ] 结尾是否有升华（不是总结）？
 - [ ] 段落是否都在 150 字以内？
+- [ ] 文章结尾是否有"参考链接"部分？
 
 ### tutorial checklist (出稿前自检)
 
@@ -267,6 +269,7 @@ reference.
 - [ ] 配图标记是否够多？（至少 4-6 处）
 - [ ] 字数是否在 2000-4000 字之间？
 - [ ] 结尾是否有自然的 CTA？
+- [ ] 文章结尾是否有"参考链接"部分？
 
 ## Writing Prohibitions
 

@@ -8,8 +8,10 @@ All notable changes to `research-to-wechat` will be documented in this file.
 
 - **Writing frameworks**: deep-analysis 四幕式框架 (序言+01/02/03/04, 8000-12000字) with sentence rhythm, data density, cross-cultural references, golden sentences, emotional arc, and chapter hooks
 - **Writing frameworks**: tutorial 六段式框架 (先看结果→概念→操作→实战→拿走即用→升华, 2000-4000字) with result-first rule, visual rhythm specs, and operation step format
-- **Writing checklists**: per-frame self-check lists (deep-analysis: 12 items, tutorial: 11 items)
+- **Writing checklists**: per-frame self-check lists (deep-analysis: 13 items, tutorial: 12 items) including references requirement
 - **Writing prohibitions**: language and content prohibitions merged from both frameworks
+- **References requirement**: every article must end with "## 参考链接" or "## References" section
+- **Source traceability**: every major claim must be traceable to source (URL, publication, author, date)
 - **HTML converter**: md2wechat skill (Go binary, ai mode with Claude-powered HTML generation, no external API)
 - **Article design templates**: `design.pen` with 10 layout styles (极简/编辑/杂志/科技/生活/典雅/粗犷/活泼/商务/艺术), each with Light/Dark variants, plus 6 CTA templates
 - **Design auto-selection**: automatic design matching based on article topic and structure frame (requires Pencil MCP)

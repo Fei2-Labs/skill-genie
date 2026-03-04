@@ -132,9 +132,12 @@ Create `research.md` with three explicit zones:
 - `open questions`
 
 For each major claim, keep enough traceability to recover:
-- source origin
+- source origin (URL, publication, author, date)
 - key quote or datum
 - why it matters to the article
+
+Every claim that goes beyond common knowledge must be traceable to a source.
+Collect source URLs and titles during research for the final References section.
 
 If a key claim remains unsupported and changes the main thesis, stop and ask for direction instead of smoothing over the gap.
 
@@ -157,6 +160,7 @@ Requirements:
 - 3 to 6 planned visual insertion points
 - temporary visual markers written as `![图片X](TBD)` on isolated lines
 - frontmatter must include `digest`, `structureFrame`, and `disclosure`
+- article must end with "## 参考链接" or "## References" section listing all sources
 
 ### Normalization Checklist
 
@@ -165,10 +169,11 @@ The checklist is mandatory for Path B (source rewrite) and recommended for Path 
 
 **Citation and reference cleanup:**
 - remove `[oai_citation:...]` and similar AI-generated citation tags
-- remove in-text citation numbers (`[1]`, `[文献2]`, `[source 3]`) and
-  trailing reference/bibliography lists unless the user explicitly wants them
-- if a citation contains a genuinely useful source name, convert it to an
-  inline mention ("according to X" or "X found that")
+- remove in-text citation numbers (`[1]`, `[文献2]`, `[source 3]`) but
+  PRESERVE the reference/bibliography list at the end
+- convert in-text citation numbers to inline mentions ("according to X" or "X found that")
+- ensure the article ends with a "## 参考链接" or "## References" section
+  listing all sources with titles and URLs where available
 
 **Invisible character and syntax repair:**
 - strip zero-width spaces, zero-width joiners, and other invisible Unicode
@@ -206,6 +211,12 @@ The checklist is mandatory for Path B (source rewrite) and recommended for Path 
 **Honesty:**
 - do not make false claims about research effort, interviews, or firsthand usage
 - place visuals where they improve comprehension, not decoration
+
+**References requirement:**
+- every article must end with a "## 参考链接" or "## References" section
+- list all sources cited in the article with titles and URLs
+- include sources from the research phase that informed major claims
+- if no external sources were used, state "本文基于公开资料整理" or similar
 
 Disclosure rules:
 - default to a compact disclosure block near the end or in frontmatter-backed metadata
