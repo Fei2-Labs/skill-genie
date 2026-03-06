@@ -24,6 +24,21 @@ Blocking rule for video sources:
 - title, description, chapters, and summary are supporting context only and cannot replace the transcript
 - if the transcript is unavailable, stop and ask for the transcript or subtitle file
 
+Blocking rule for PDF sources:
+- when the source is a PDF (research paper, report, whitepaper), extract and
+  preserve all figures, charts, tables, and diagrams as image assets
+- use the PDF reading tool to identify pages containing visual elements
+- screenshot each figure/chart/table at sufficient resolution (≥ 600px wide)
+  and save to `imgs/source-fig-01.png`, `imgs/source-fig-02.png`, etc.
+- record each extracted figure in `source.md` with:
+  - figure number or label from the original paper
+  - page number
+  - caption text (if present)
+  - file path of the extracted image
+  - which section or claim it supports
+- figures from the original source carry higher credibility than AI-generated
+  illustrations — they must be preferred in the final article wherever relevant
+
 Record:
 - source type
 - source language
@@ -232,6 +247,17 @@ First hand off to `markdown-polish` and make `article-formatted.md` the canonica
 Before generating images, evaluate each `![图片X](TBD)` marker against
 these criteria. Remove markers that fail; add markers where needed.
 
+**Source figure priority** — if the source is a PDF paper or report with
+extracted figures/charts/tables:
+- scan all extracted source figures from Phase 1 (`imgs/source-fig-*.png`)
+- for each placeholder position, check whether a source figure directly
+  supports the surrounding text's claim or data point
+- if a source figure matches, use it instead of generating a new image
+- add the original caption and paper attribution below the figure
+- source figures carry more credibility than AI-generated illustrations
+  and should always be preferred when relevant
+- only generate new images for positions where no source figure applies
+
 **Placement criteria** — a position earns an image if it meets at least two:
 - the surrounding text describes something that benefits from visualization
   (a process, architecture, comparison, data pattern, or physical object)
@@ -373,6 +399,22 @@ If the user has no preference, use `autumn-warm`.
 
 Product: `article.html` in the workspace directory. Browser-open the preview to verify
 cover, digest, author, and image paths match the markdown source.
+
+### WeChat HTML Compatibility
+
+Before writing HTML to the WeChat editor (via API or browser), verify these
+mandatory constraints. See [wechat-compat.md](wechat-compat.md) for full details.
+
+1. **All CSS must be inline** — the WeChat editor strips `<style>` tags on save.
+   Use `premailer` or an equivalent inliner. No `<style>` block may remain.
+2. **Use `<section>` instead of `<div>`** — WeChat has inconsistent `<div>` support.
+3. **No flexbox or grid** — use `<table>` for multi-column layouts.
+4. **Dark theme needs explicit background** — wrap content in
+   `<section style="background:#0F172A;">` (or appropriate dark color).
+   Set `background` on inner containers too to prevent white gaps.
+
+If md2wechat handles the conversion, it should already produce inline CSS.
+If any other renderer is used, run the output through CSS inlining before upload.
 
 ### Draft Upload
 

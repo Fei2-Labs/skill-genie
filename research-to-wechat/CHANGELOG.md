@@ -2,7 +2,26 @@
 
 All notable changes to `research-to-wechat` will be documented in this file.
 
-## 0.4.0 - 2026-03-04
+## 0.4.1 - 2026-03-06
+
+### Added
+
+- **PDF figure extraction**: when source is a PDF paper/report, all figures, charts, tables, and diagrams are extracted as image assets (`imgs/source-fig-*.png`) with captions and page numbers
+- **Source figure priority**: extracted figures from original papers are preferred over AI-generated images in the final article for credibility
+- **WeChat HTML compatibility rules**: mandatory inline CSS, `<section>` instead of `<div>`, no flex/grid, dark theme background wrapping
+- **WeChat compat reference**: new `references/wechat-compat.md` with API endpoints, CDP workflow, and error quick reference
+
+### Updated
+
+- execution-contract.md: Phase 1 adds PDF blocking rule for figure extraction
+- execution-contract.md: Phase 5 image strategy adds source figure priority before AI generation
+- execution-contract.md: Phase 6 adds WeChat HTML Compatibility section
+- capability-map.md: source-ingest now covers PDF figure extraction
+- capability-map.md: wechat-render and wechat-draft reference wechat-compat.md
+- SKILL.md: PDF added to accepted inputs with extraction policy
+- README.md: PDF handling rules added to supported inputs
+
+## 0.4.0 - 2026-03-05
 
 ### Added
 
