@@ -6,10 +6,13 @@ Use this file to resolve neutral capability aliases to installed skills without 
 
 - `source-ingest`
   look for: a skill that can fetch a URL and recover the full source text needed for writing
-  use for: article URLs, video URLs, login-gated pages, delayed-render pages
+  use for: article URLs, video URLs, login-gated pages, delayed-render pages, PDF papers
   note: for video URLs, prefer a worker that can recover the complete transcript or caption text, not just metadata
   note: for article rewrites, prefer a worker that preserves headline, author, dates, and other source metadata
   note: ideal output fields are `title`, `author`, `description`, `content`, `images`, and source subtype
+  note: for PDF papers/reports, extract all figures, charts, tables, and diagrams as image assets
+        (screenshot each at ≥ 600px wide, save to `imgs/source-fig-*.png`, record caption and page number)
+        Source figures carry higher credibility than AI-generated images and must be preferred in the article.
   note: for WeChat articles, use the bundled fetch script first:
         `python3 "${SKILL_DIR}/scripts/fetch_wechat_article.py" "<URL>" --json`
         (uses mobile WeChat user-agent to bypass anti-scraping; 30-second timeout)
@@ -69,6 +72,7 @@ Use this file to resolve neutral capability aliases to installed skills without 
   note: prefer a worker that keeps cover, digest, author, and inline image paths aligned with markdown
   note: prefer a worker that can replace local content images with upload-ready URLs when needed
   note: md2wechat also supports `--upload` to push images to WeChat CDN and `--draft` to create drafts directly
+  note: output HTML must comply with [wechat-compat.md](wechat-compat.md) — inline CSS only, `<section>` not `<div>`, no flex/grid
 
 - `wechat-draft`
   look for: a skill that creates a WeChat Official Account draft
@@ -81,6 +85,7 @@ Use this file to resolve neutral capability aliases to installed skills without 
   note: prefer API draft (L0) over browser automation
   note: prefer draft saving rather than live publishing
   note: the worker should expose draft status clearly so `manifest.json` can record it
+  note: for browser-based draft (L1/L2), see [wechat-compat.md](wechat-compat.md) for CDP workflow, API endpoints, and error reference
 
 - `multi-platform-distribute`
   look for: a skill or script that publishes content to multiple platforms via Chrome CDP or API

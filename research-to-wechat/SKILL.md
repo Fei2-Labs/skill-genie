@@ -8,7 +8,7 @@ metadata:
     requires:
       anyBins: ["python3"]
     primaryEnv: "WECHAT_APPID"
-  version: "0.4.0"
+  version: "0.4.2"
   category: "content-generation"
   author: "Skill Genie"
   license: "MIT"
@@ -71,11 +71,17 @@ Use the current alias map in [capability-map.md](references/capability-map.md).
 - notes, outline, or raw material dump
 - article text
 - markdown file
+- PDF paper, report, or whitepaper
 - article URL
 - WeChat article URL
 - video URL
 - full transcript
 - subtitle file that can be expanded into a full transcript
+
+PDF policy:
+- when the source is a PDF paper or report, extract all figures, charts, tables, and diagrams as image assets
+- save extracted figures to `imgs/source-fig-*.png` with captions and page numbers recorded in `source.md`
+- source figures carry higher credibility than AI-generated images and must be preferred in the final article
 
 Video policy:
 - a video source is valid only when the workflow can obtain the full spoken transcript

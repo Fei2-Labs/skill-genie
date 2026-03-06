@@ -91,11 +91,17 @@ The workflow first preserves the useful source core, then rebuilds it for WeChat
 - notes or raw material dump
 - raw article text
 - markdown file
+- PDF paper, report, or whitepaper
 - article URL
 - WeChat article URL (fetched via bundled `scripts/fetch_wechat_article.py`)
 - video URL
 - full transcript
 - subtitle file that can be expanded into a full transcript
+
+PDF handling rules:
+- when the source is a PDF paper or report, all figures, charts, tables, and diagrams are extracted as image assets
+- extracted figures are saved to `imgs/source-fig-*.png` with captions and page numbers recorded in `source.md`
+- source figures carry higher credibility than AI-generated images and are preferred in the final article wherever they support the text
 
 Video handling rules:
 - a video workflow does not start writing until the full transcript is available
