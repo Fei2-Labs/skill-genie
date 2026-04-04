@@ -30,6 +30,8 @@ Most personal automation fails because the best methods live in scattered notes.
 - [`ai-csuite`](./ai-csuite): Script-backed AI executive debate workflow that generates stage-aware strategic recommendations, CEO briefs, and decision artifacts.
 - [`foxcode-openclaw`](./foxcode-openclaw): Configure Foxcode AI models in OpenClaw with interactive setup, status monitoring, and validation tools. Supports 5 endpoints and 3 Claude models.
 - [`research-to-wechat`](./research-to-wechat): End-to-end article orchestration that turns topics, URLs, and transcripts into researched Markdown, visual assets, WeChat-ready HTML, and a saved draft.
+- [`wechat-compliance-check`](./wechat-compliance-check): Scan WeChat articles for 100+ sensitive words across 8 categories (VPN tools, political, reverse-engineering, grey market, etc.) and auto-rewrite violations before publishing.
+- [`aegis-protocol`](./aegis-protocol): High-confidence code security review workflow for changed code, using modern threat-informed methodologies with strict false-positive filtering.
 
 ## Skill layout
 
@@ -87,6 +89,8 @@ Each skill folder should contain:
 - [`ai-csuite`](./ai-csuite): 脚本支持的 AI 高管辩论工作流
 - [`foxcode-openclaw`](./foxcode-openclaw): 在 OpenClaw 中配置 Foxcode AI 模型，支持交互式设置、状态监控和验证工具
 - [`research-to-wechat`](./research-to-wechat): 面向公众号内容生产的端到端文章编排 skill，可把选题、链接和字幕转成深度研究文章、配图、HTML 与草稿箱结果
+- [`wechat-compliance-check`](./wechat-compliance-check): 扫描公众号文章中 8 大类 100+ 敏感词（翻墙工具、政治敏感、逆向破解、灰产等），自动改写为安全表述
+- [`aegis-protocol`](./aegis-protocol): 高置信度代码安全审查工作流，基于现代威胁建模方法论，严格过滤误报
 
 ## 技能结构
 
@@ -144,6 +148,8 @@ Each skill folder should contain:
 - [`ai-csuite`](./ai-csuite): ステージ対応の戦略的推奨、CEOブリーフ、決定アーティファクトを生成するスクリプト支援AI経営陣討論ワークフロー
 - [`foxcode-openclaw`](./foxcode-openclaw): インタラクティブセットアップ、ステータス監視、検証ツールを備えたOpenClawでのFoxcode AIモデル設定
 - [`research-to-wechat`](./research-to-wechat): トピック、URL、字幕から調査済みMarkdown、ビジュアル、WeChat向けHTML、下書き保存までをつなぐ記事オーケストレーションスキル
+- [`wechat-compliance-check`](./wechat-compliance-check): WeChat記事の8カテゴリ100+センシティブワードをスキャンし、公開前に自動書き換え
+- [`aegis-protocol`](./aegis-protocol): 変更コードの高信頼性セキュリティレビューワークフロー、脅威モデリングベースの手法で誤検知を厳格にフィルタリング
 
 ## スキル構成
 
