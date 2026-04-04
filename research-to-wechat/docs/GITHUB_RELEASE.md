@@ -26,6 +26,7 @@ The release should include:
 - `research-to-wechat/references/design-guide.md`
 - `research-to-wechat/design.pen`
 - `research-to-wechat/scripts/fetch_wechat_article.py`
+- `research-to-wechat/scripts/wechat_delivery.py`
 - `research-to-wechat/scripts/install-openclaw.sh`
 - `research-to-wechat/docs/GITHUB_RELEASE.md`
 - `research-to-wechat/docs/EXAMPLES.md`
@@ -62,7 +63,7 @@ Verify the skill README answers these questions:
 - how the normalization checklist and image evaluation ensure quality
 - how evidence limits and disclosure are handled
 - how style resolution works
-- how HTML rendering works (md2wechat ai mode)
+- how HTML rendering and verification work (native renderer + compatibility check)
 - how the WeChat delivery ladder degrades
 - how optional multi-platform distribution works (Phase 8)
 - how article design selection works with Pencil MCP (10 styles, auto-selection)
@@ -80,7 +81,7 @@ Verify the root `README.md`:
 
 Repository-facing short description:
 
-`Research-first WeChat article pipeline with evidence ledger, writing frameworks, routed structure, md2wechat HTML rendering, manifest output, optional multi-platform distribution, and API/browser/manual draft fallback.`
+`Research-first WeChat article pipeline with evidence ledger, writing frameworks, routed structure, native WeChat HTML rendering, manifest output, optional multi-platform distribution, and HTTP/browser/manual draft fallback.`
 
 Suggested topics:
 
@@ -105,14 +106,14 @@ Suggested topics:
 - Image placeholder strategy with placement criteria and keyword construction
 - Two-tier image evaluation (Tier A elimination, Tier B quality match)
 - Cover spec: 900x383px at 2x with center-cropped thumbnail
-- HTML rendering via md2wechat skill (ai mode, no external API)
+- HTML rendering via native delivery scripts with compatibility verification
 - Optional multi-platform distribution (小红书、即刻、小宇宙、朋友圈)
 - Platform copy specs for each distribution target
 - WeChat article fetch script (Python, mobile UA)
 
 ## Updated
 - Evidence ledger format, manifest schema, and delivery ladder
-- Capability aliases for all pipeline stages
+- Internal native capability contract for all pipeline stages
 - README, examples, and release docs match v0.4.0 contract
 
 ## Verified

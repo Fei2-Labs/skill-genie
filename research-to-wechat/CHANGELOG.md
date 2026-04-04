@@ -2,6 +2,14 @@
 
 All notable changes to `research-to-wechat` will be documented in this file.
 
+## 0.4.2 - 2026-03-06
+
+### Updated
+
+- Dark-theme guidance now distinguishes official WeChat H5 dark mode from final editor HTML rendering
+- wechat-compat.md now documents `color-scheme`, `prefers-color-scheme`, CSS variable guidance, and why uploaded article HTML must still precompute dark palettes
+- execution-contract.md and capability-map.md now require renderers to separate standalone preview behavior from uploaded editor HTML behavior
+
 ## 0.4.1 - 2026-03-06
 
 ### Added
@@ -31,7 +39,7 @@ All notable changes to `research-to-wechat` will be documented in this file.
 - **Writing prohibitions**: language and content prohibitions merged from both frameworks
 - **References requirement**: every article must end with "## 参考链接" or "## References" section
 - **Source traceability**: every major claim must be traceable to source (URL, publication, author, date)
-- **HTML converter**: md2wechat skill (Go binary, ai mode with Claude-powered HTML generation, no external API)
+- **HTML converter contract**: native WeChat HTML rendering path with explicit compatibility verification
 - **Article design templates**: `design.pen` with 10 layout styles (极简/编辑/杂志/科技/生活/典雅/粗犷/活泼/商务/艺术), each with Light/Dark variants, plus 6 CTA templates
 - **Design auto-selection**: automatic design matching based on article topic and structure frame (requires Pencil MCP)
 - **Design guide**: new `references/design-guide.md` with selection rules, node ID table, CTA matching, and Pencil MCP workflow
@@ -51,8 +59,8 @@ All notable changes to `research-to-wechat` will be documented in this file.
 - execution-contract.md: Phase 6 HTML rendering updated with converter selection order and fallback logic
 - execution-contract.md: manifest.json format expanded to support optional multi-platform output fields
 - capability-map.md: source-ingest now includes bundled fetch_wechat_article.py as primary WeChat fetch tool
-- capability-map.md: wechat-render now references md2wechat Go skill
-- capability-map.md: wechat-draft updated with md2wechat's built-in `--draft` API support
+- capability-map.md: wechat-render describes a native HTML rendering contract
+- capability-map.md: wechat-draft describes native draft save requirements
 - capability-map.md: cover-art now specifies 900x383px dimensions and 2x export
 - capability-map.md: new article-design alias with Pencil MCP prerequisite and auto-selection rules
 - SKILL.md: 8-phase pipeline (Phase 8 optional), article-design alias, design-guide reference, updated done conditions

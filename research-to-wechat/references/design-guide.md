@@ -9,7 +9,10 @@
 
 The design templates live in `design.pen` at the skill root directory. Reading and applying these designs requires the **Pencil MCP server** to be running.
 
-If Pencil MCP is not available, skip design selection and proceed with HTML rendering only (md2wechat handles its own styling via themes).
+If Pencil MCP is not available, skip design selection and proceed with native
+HTML rendering only. Choose light or dark mode directly from the article topic,
+user instruction, and `styleMode`, then verify the final HTML against the
+compatibility rules.
 
 ## Available Designs
 
@@ -88,6 +91,11 @@ Default to **Light** mode. Use **Dark** mode when:
 - the user explicitly requests dark mode
 - the article topic is strongly associated with dark aesthetics (cybersecurity, night/space, underground culture)
 - the hero image works better on a dark background
+
+For this skill, a **Dark** article design means a fixed dark visual treatment
+that is precomputed into the final article HTML. It is not the same as the
+official WeChat H5 system-following dark mode behavior. If a standalone preview
+page is generated, that preview may additionally use `prefers-color-scheme`.
 
 ## Design Application Workflow
 
