@@ -1,4 +1,5 @@
 # Execution Contract
+<!-- // TODO: split execution-contract.md into smaller modules/components -->
 
 ## Route Selection
 
@@ -19,25 +20,22 @@ Then choose the structure frame:
 Convert the raw input into one workable source package in `source.md`.
 
 Blocking rule for video sources:
-- do not proceed from a video source until the full transcript has been captured
-- acceptable inputs are full on-page transcript text, caption text, or a subtitle file that can be expanded into full text
-- title, description, chapters, and summary are supporting context only and cannot replace the transcript
-- if the transcript is unavailable, stop and ask for the transcript or subtitle file
+- do not proceed until the full transcript has been captured
+- acceptable inputs are full transcript text, caption text, or a subtitle file
+- title, description, chapters, and summary are supporting context only
 
 Blocking rule for PDF sources:
-- when the source is a PDF (research paper, report, whitepaper), extract and
-  preserve all figures, charts, tables, and diagrams as image assets
-- use the PDF reading tool to identify pages containing visual elements
-- screenshot each figure/chart/table at sufficient resolution (≥ 600px wide)
-  and save to `imgs/source-fig-01.png`, `imgs/source-fig-02.png`, etc.
-- record each extracted figure in `source.md` with:
-  - figure number or label from the original paper
-  - page number
-  - caption text (if present)
-  - file path of the extracted image
-  - which section or claim it supports
-- figures from the original source carry higher credibility than AI-generated
-  illustrations — they must be preferred in the final article wherever relevant
+- extract all figures, charts, tables, and diagrams as image assets
+- save them as `imgs/source-fig-01.png`, `imgs/source-fig-02.png`, and so on
+- record figure label, page number, caption, file path, and supported claim in `source.md`
+
+For WeChat article URLs:
+- use `python3 "${SKILL_DIR}/scripts/fetch_wechat_article.py" "<URL>" --json`
+- preserve title, author, description, content, and image list before rewriting
+
+For generic URLs:
+- use browser tools to capture the same fields
+- if the page exposes only metadata and not body text, stop and ask for a readable source
 
 Record:
 - source type
@@ -46,37 +44,24 @@ Record:
 - thesis or central question
 - key entities, dates, claims, quotes, and unknowns
 - material that must survive into the final article
-- source metadata fields: title, author, description, body, image list, and page subtype when available
 
 If the route is `Path B`, also record:
 - original structure and useful sections
 - what must be preserved verbatim or semantically
 - what should be rewritten for WeChat readability
 
-If the source worker returns only metadata or a thin description for a URL that should contain article body text, stop and ask for:
-- the raw article text
-- a markdown export
-- or a browser-openable page session that can expose the full body
-
 ## Phase 2: Brief and Research Architecture
 
 Create `brief.md` before drafting.
 
-### Strategic Clarification
+Resolve these dimensions before building the brief:
+1. research goal
+2. target audience
+3. core research points
+4. language and style
+5. topic boundaries
 
-Before building the brief, verify these five dimensions are resolved.
-Ask the user only for dimensions that remain genuinely ambiguous after reading the source packet:
-
-1. **Research goal**: what the article must prove, explain, or enable
-2. **Target audience**: reader's current knowledge level and what they need next
-3. **Core research points**: the 3-5 claims or angles the article must cover
-4. **Language and style**: tone, evidence density, and any constraints
-5. **Topic boundaries**: what is explicitly out of scope
-
-If the source packet already answers a dimension clearly, do not re-ask.
-Record resolved dimensions in `brief.md` under a `## Clarification Record` section.
-
-### Brief Declaration
+Record resolved dimensions in `brief.md` under `## Clarification Record`.
 
 `brief.md` must declare:
 - route choice and why
@@ -89,46 +74,13 @@ Record resolved dimensions in `brief.md` under a `## Clarification Record` secti
 - disagreement or uncertainty checks
 - source material that cannot be dropped
 
-### Research Brief Structure
+Build one central research brief and up to five side briefs.
 
-Build one central research brief and up to five side briefs for angle expansion.
-
-Each brief must contain:
-- `topic`: precise research question
-- `purpose`: what finding this answer contributes to the article
-- `audience`: who needs this information and why
-- `key_points`: 3-5 specific things to investigate
-- `framework`: analytical lens or comparison structure to apply
-- `expected_depth`: surface scan / working analysis / deep dive
-
-The central brief covers the article's main thesis.
-Side briefs cover supporting angles that strengthen or challenge the main thesis.
-Do not generate side briefs for tangential decoration.
-
-### Question Lattice
-
-Generate at least 8 questions per layer (32+ total):
-
-- `基础层` (definitions and first principles):
-  what the topic is, core concept decomposition, boundary conditions,
-  first-principles grounding, key terminology disambiguation.
-  Method: treat this layer as if explaining to someone who is smart but new
-  to the domain — use the Feynman technique to verify genuine understanding.
-
-- `连接层` (structure and classification):
-  internal knowledge structures, category systems, relationships between
-  sub-concepts, comparison dimensions, taxonomies, and actor maps.
-  Method: map how parts connect before analyzing any single part.
-
-- `应用层` (methods and practice):
-  actionable methodologies, decision frameworks, tradeoff matrices,
-  workflow steps, best practices, and common failure modes.
-  Method: every question should have an answer that someone could act on.
-
-- `前沿层` (real-world application and edge cases):
-  case analysis, risk scenarios, emerging variations, internalization
-  strategies, future implications, and boundary-pushing applications.
-  Method: stress-test the topic against real constraints and edge conditions.
+Generate at least 32 questions across four layers:
+- `基础层`: definitions and first principles
+- `连接层`: structure, taxonomy, actor maps, and comparison dimensions
+- `应用层`: methods, workflows, decision frameworks, and failure modes
+- `前沿层`: cases, risks, edge conditions, and future implications
 
 ## Phase 3: Research Merge and Evidence Ledger
 
@@ -141,18 +93,12 @@ Rules:
 - keep track of unresolved claims
 - do not move to prose until angle, evidence, and structure are aligned
 
-Create `research.md` with three explicit zones:
+Create `research.md` with:
 - `verified facts`
 - `working inferences`
 - `open questions`
 
-For each major claim, keep enough traceability to recover:
-- source origin (URL, publication, author, date)
-- key quote or datum
-- why it matters to the article
-
 Every claim that goes beyond common knowledge must be traceable to a source.
-Collect source URLs and titles during research for the final References section.
 
 If a key claim remains unsupported and changes the main thesis, stop and ask for direction instead of smoothing over the gap.
 
@@ -161,12 +107,9 @@ If a key claim remains unsupported and changes the main thesis, stop and ask for
 Write `article.md` as the first complete article.
 
 Route the draft by frame:
-- `deep-analysis`
-  use a narrative or scene-led opening, then move through background, core analysis, case or turn, and synthesis
-- `tutorial`
-  show the result early, then move through concept, setup, walkthrough, demo, and quick-start takeaway
-- `newsletter`
-  open with the top line, then short sections with fast transitions
+- `deep-analysis`: narrative or scene-led opening, then background, core analysis, case or turn, and synthesis
+- `tutorial`: show the result early, then concept, setup, walkthrough, demo, and quick-start takeaway
+- `newsletter`: top line first, then short sections with fast transitions
 
 Requirements:
 - one H1 at most
@@ -175,274 +118,119 @@ Requirements:
 - 3 to 6 planned visual insertion points
 - temporary visual markers written as `![图片X](TBD)` on isolated lines
 - frontmatter must include `digest`, `structureFrame`, and `disclosure`
-- article must end with "## 参考链接" or "## References" section listing all sources
+- article must end with `## 参考链接` or `## References`
 
-### Normalization Checklist
-
-Apply these rules to `article.md` before moving to refinement.
-The checklist is mandatory for Path B (source rewrite) and recommended for Path A.
-
-**Citation and reference cleanup:**
-- remove `[oai_citation:...]` and similar AI-generated citation tags
-- remove in-text citation numbers (`[1]`, `[文献2]`, `[source 3]`) but
-  PRESERVE the reference/bibliography list at the end
-- convert in-text citation numbers to inline mentions ("according to X" or "X found that")
-- ensure the article ends with a "## 参考链接" or "## References" section
-  listing all sources with titles and URLs where available
-
-**Invisible character and syntax repair:**
-- strip zero-width spaces, zero-width joiners, and other invisible Unicode
-- fix unclosed or malformed bold/italic markers
-- fix unclosed or redundant code blocks
-- normalize smart quotes, em-dashes, and ellipsis to consistent style
-
-**Math and diagram conversion:**
-- convert ALL LaTeX, MathJax, and `$$`-delimited math to plain-text
-  descriptions (e.g., "the square root of x" not `\sqrt{x}`)
-- convert flowcharts, mind maps, and ASCII diagrams to structured text
-  descriptions or ordered lists
-
-**Table standardization:**
-- every Markdown table must have a header row, a separator row, and
-  consistent column count
-- fix ragged or broken table formatting from source extraction
-
-**Structural cleanup:**
-- remove scraped UI elements: navigation bars, headers, footers, sidebars,
-  cookie notices, "share this" blocks
-- remove "read more" links, subscription prompts, and paywall remnants
-- ensure exactly one H1 at article start; make it descriptive and
-  search-friendly
-- verify H2/H3 hierarchy has no skipped levels
-- keep to GitHub-Flavored Markdown only
-
-**Content integrity:**
-- do not silently delete paragraphs that contain substantive claims
-- if a section is removed because it is off-topic, note the removal in
-  the evidence ledger
-- preserve all data points, statistics, and named sources from the
-  original material unless they are demonstrably wrong
-
-**Honesty:**
-- do not make false claims about research effort, interviews, or firsthand usage
-- place visuals where they improve comprehension, not decoration
-
-**References requirement:**
-- every article must end with a "## 参考链接" or "## References" section
-- list all sources cited in the article with titles and URLs
-- include sources from the research phase that informed major claims
-- if no external sources were used, state "本文基于公开资料整理" or similar
-
-Disclosure rules:
-- default to a compact disclosure block near the end or in frontmatter-backed metadata
-- state AI role, human role if known, and evidence scope
-- if the evidence base is thin, state the limitation instead of hiding it
+Apply the normalization checklist before refinement:
+- remove citation artifacts
+- remove invisible characters
+- convert LaTeX and diagrams to plain-language descriptions
+- standardize tables
+- remove scraped UI remnants
+- preserve statistics, named sources, and substantive paragraphs unless they are demonstrably wrong
 
 ## Phase 5: Refinement and Visual Layer
 
-First hand off to `markdown-polish` and make `article-formatted.md` the canonical article.
+Make `article-formatted.md` the canonical article.
 
-### Image Placeholder Strategy
+Before generating visuals:
+- keep placeholders only when they improve comprehension or structure
+- prefer extracted source figures when they directly support the surrounding claim
+- keep at least 300 words between major visuals unless the article structure truly needs more density
 
-Before generating images, evaluate each `![图片X](TBD)` marker against
-these criteria. Remove markers that fail; add markers where needed.
+For each approved image position, build:
+1. primary keyword
+2. one style modifier and one context modifier
+3. 2 to 3 alternative search or generation variants
 
-**Source figure priority** — if the source is a PDF paper or report with
-extracted figures/charts/tables:
-- scan all extracted source figures from Phase 1 (`imgs/source-fig-*.png`)
-- for each placeholder position, check whether a source figure directly
-  supports the surrounding text's claim or data point
-- if a source figure matches, use it instead of generating a new image
-- add the original caption and paper attribution below the figure
-- source figures carry more credibility than AI-generated illustrations
-  and should always be preferred when relevant
-- only generate new images for positions where no source figure applies
+Cover generation requirements:
+- primary cover: `imgs/cover.png`, 900x383 px, exported at 2x
+- square thumbnail: `imgs/cover-thumb.png`, 200x200 px
+- frontmatter `coverImage` must point to `imgs/cover.png`
 
-**Placement criteria** — a position earns an image if it meets at least two:
-- the surrounding text describes something that benefits from visualization
-  (a process, architecture, comparison, data pattern, or physical object)
-- the position serves a structural function: summarizing a completed section,
-  creating a visual transition, or separating dense argument blocks
-- the content is abstract enough that an image would reduce cognitive load
-- the position is not within 300 words of another image (avoid clustering)
+Image evaluation:
+- Tier A reject rules: watermark, baked-in sales text, low resolution, off-topic subject, cultural mismatch
+- Tier B match rules: core subject, language consistency, style consistency, and information value
 
-**Article-type image strategy** — classify each placeholder by its surrounding content:
-- entity/product focus: use the entity's proper name or product as the
-  search core; show the thing itself or its interface
-- abstract/theory focus: translate the abstract concept into a mainstream
-  visual metaphor (e.g., "network effects" → interconnected nodes diagram)
-- process/tutorial focus: visualize actions, steps, or before/after states
-- narrative/storytelling focus: capture atmosphere, setting, or key emotion
-- data/analysis focus: match to a specific chart or data visualization type
-- hybrid: combine strategies based on which section the image serves
+## Phase 6: Article Design
 
-**Image keyword construction** — for each approved placeholder, build:
-1. primary keyword: the core visual subject (max 4 words)
-2. modifiers: one style modifier + one context modifier
-   (e.g., "isometric", "dark background", "minimal", "professional photo")
-3. search variants: 2-3 alternative phrasings including at least one English
-   variant for broader search or generation coverage
+If Pencil MCP is available:
+- open `${SKILL_DIR}/design.pen`
+- choose a template via [design-guide.md](design-guide.md)
+- populate title, author, sections, images, and CTA
+- verify via screenshot
 
-**Global coordination:**
-- plan all image keywords together before generating any single image
-- ensure visual rhythm: vary between close-up/wide, concrete/abstract,
-  photo/illustration across the article
-- no two images should depict the same visual concept
+If Pencil MCP is unavailable:
+- stay in the native HTML renderer
+- choose light or dark mode directly from user instruction, `styleMode`, or article topic
 
-### Image Generation
+## Phase 7: Native WeChat Delivery
 
-Generate inline images for the marked positions through `inline-visuals`.
-Replace every temporary marker with a real relative asset path.
-
-### Cover Generation
-
-Generate the cover through `cover-art`:
-- primary cover: 900 x 383 px (2.35:1 aspect), export at 2x (1800 x 766)
-- secondary thumbnail: 200 x 200 px square cropped from center of primary
-- place at `imgs/cover.png` (primary) and `imgs/cover-thumb.png` (secondary)
-- make sure frontmatter points `coverImage` to `imgs/cover.png`
-- make sure the disclosure block and evidence-sensitive wording survive polishing
-- workers may use HTML export templates internally (html2canvas → PNG download),
-  but the final workspace must keep resolved PNG paths for cover and inline assets
-
-### Image Evaluation
-
-After generating or selecting each image, verify against two tiers:
-
-**Tier A — elimination** (reject immediately if any apply):
-- visible watermark, logo overlay, or stock-photo ID
-- commercial sales text or promotional banner baked into the image
-- resolution too low to read on mobile (< 600px wide)
-- content inappropriate, off-topic, or culturally mismatched
-
-**Tier B — quality match** (evaluate remaining candidates):
-- core match: does the image depict the primary keyword subject?
-  (highest priority — reject if the answer is no)
-- language consistency: if the image contains text, does it match
-  the article language or is the text minimal enough to be neutral?
-- style consistency: does the image feel like it belongs in the same
-  article as the other images?
-- information value: does the image add understanding beyond the text,
-  or is it pure decoration?
-
-If an image fails Tier B core match, regenerate with adjusted keywords
-before accepting a decorative fallback.
-
-### Article Design Selection
-
-After images are finalized, apply a visual design template from `design.pen` via `article-design`.
-This step requires the **Pencil MCP server** to be available. If Pencil MCP is not configured, skip
-this step and proceed to HTML rendering (md2wechat handles its own styling).
-
-**Auto-selection**: when the user does not specify a design, select one based on article topic and
-structure frame using the rules in [design-guide.md](design-guide.md):
-
-| Article Topic | Design |
-|---------------|--------|
-| AI / programming / tech | 04 科技 |
-| Business / strategy / finance | 09 商务 |
-| Lifestyle / personal growth | 05 生活 |
-| Culture / history / humanities | 06 典雅 |
-| News / commentary / opinion | 02 编辑 |
-| Design / creativity / branding | 07 粗犷 |
-| Fun / youth / community | 08 活泼 |
-| Art / music / film | 10 艺术 |
-| General / uncategorized | 01 极简 |
-
-**User override**: if the user names a design style (e.g., "用科技排版", "杂志风格", "Dark 模式"),
-use their choice instead of auto-selection.
-
-**Workflow**:
-1. determine `SKILL_DIR` (the directory containing SKILL.md)
-2. open `${SKILL_DIR}/design.pen` via Pencil MCP `open_document`
-3. read the selected template via `batch_get` with the design node ID and `readDepth: 3`
-4. copy the template via `batch_design` Copy operation
-5. populate with actual article content (title, author, sections, images, CTA)
-6. verify via `get_screenshot`
-
-Default to Light mode. Use Dark mode when the user requests it or the content strongly
-suggests it (cybersecurity, space, underground culture themes).
-
-## Phase 6: WeChat Delivery and Manifest
-
-### HTML Rendering
-
-Render `article-formatted.md` into `article.html` through `wechat-render`.
-
-**Converter selection** (in priority order):
-
-1. **md2wechat skill** (Go binary, ai mode) — if the skill is installed:
-   ```bash
-   # Preview only (no image upload)
-   bash skills/md2wechat/scripts/run.sh convert [article-path] --mode ai --theme [theme] --preview -o [output-path]
-
-   # With image upload to WeChat CDN
-   bash skills/md2wechat/scripts/run.sh convert [article-path] --mode ai --theme [theme] --upload -o [output-path]
-   ```
-   Uses Claude to generate WeChat-compatible HTML with inline CSS. No external API calls.
-
-   Built-in themes:
-   - `autumn-warm` (秋日暖光): warm orange accent, best for emotional stories and lifestyle essays
-   - `spring-fresh` (春日清新): spring green, best for travel and nature content
-   - `ocean-calm` (深海静谧): deep ocean blue, best for technical articles and business analysis
-   - `custom`: user-defined prompt for complete customization
-
-   Default: `--mode ai --theme autumn-warm`.
-   For long-form deep-analysis: consider `ocean-calm`.
-   For tutorial: consider `spring-fresh` or `autumn-warm`.
-
-   Install: `curl -fsSL https://raw.githubusercontent.com/geekjourneyx/md2wechat-skill/main/scripts/install.sh | bash`
-   Config: `bash skills/md2wechat/scripts/run.sh config init` (sets up `~/.config/md2wechat/config.yaml`)
-   Requires: `WECHAT_APPID` and `WECHAT_SECRET` env vars for draft upload; `IMAGE_API_KEY` for AI image generation.
-
-If the user has no preference, use `autumn-warm`.
-
-Product: `article.html` in the workspace directory. Browser-open the preview to verify
-cover, digest, author, and image paths match the markdown source.
-
-### WeChat HTML Compatibility
-
-Before writing HTML to the WeChat editor (via API or browser), verify these
-mandatory constraints. See [wechat-compat.md](wechat-compat.md) for full details.
-
-1. **All CSS must be inline** — the WeChat editor strips `<style>` tags on save.
-   Use `premailer` or an equivalent inliner. No `<style>` block may remain.
-2. **Use `<section>` instead of `<div>`** — WeChat has inconsistent `<div>` support.
-3. **No flexbox or grid** — use `<table>` for multi-column layouts.
-4. **Dark theme needs explicit background** — wrap content in
-   `<section style="background:#0F172A;">` (or appropriate dark color).
-   Set `background` on inner containers too to prevent white gaps.
-
-If md2wechat handles the conversion, it should already produce inline CSS.
-If any other renderer is used, run the output through CSS inlining before upload.
-
-### Draft Upload
-
-Before draft delivery, run an environment check for whichever path is available:
-- API draft path (md2wechat): `bash skills/md2wechat/scripts/run.sh config validate`
-  (checks WECHAT_APPID, WECHAT_SECRET, and API connectivity)
-- browser draft path: Chrome availability, profile/session status, and editor reachability
-
-If md2wechat is installed and configured, the convert + draft can be a single command:
+Before delivery, run:
 ```bash
-bash skills/md2wechat/scripts/run.sh convert [article-path] --mode ai --theme [theme] --upload --draft --cover [cover-path]
+python3 "${SKILL_DIR}/scripts/wechat_delivery.py" check
 ```
 
-Draft handoff rules:
-- title, summary, author, and cover must be resolved before browser upload
-- if login is needed, pause for login and resume
-- before first use, suggest the environment check offered by the resolved draft worker
-- report success with output paths and draft status
+### Render
 
-Draft fallback ladder:
-- `L0 api-draft`
-  use when direct draft API is available
-- `L1 automated-browser`
-  use when the worker can upload content and images end-to-end
-- `L2 assisted-browser`
-  use when login, selectors, or confirmation need the user
-- `L3 manual-handoff`
-  use when automation fails; provide exact paths and copy fields
+Render `article-formatted.md` into `article.html`:
+```bash
+python3 "${SKILL_DIR}/scripts/wechat_delivery.py" render article-formatted.md -o article.html
+```
+
+Optional flags:
+- `--design [design-id-or-name]`
+- `--color-mode light|dark`
+- `--upload-map [json-path]`
+
+The output HTML must satisfy:
+- inline CSS only
+- no `<div>`
+- no flexbox or grid
+- explicit dark background on the outer wrapper and key inner containers
+- title, author, digest, cover, and inline images aligned with markdown/frontmatter
+
+### Upload Images
+
+When local images need CDN URLs, upload them with:
+```bash
+python3 "${SKILL_DIR}/scripts/wechat_delivery.py" upload-images imgs/inline-01.png imgs/inline-02.png --appid "$WECHAT_APPID" --secret "$WECHAT_SECRET" --output upload-map.json
+```
+
+Rules:
+- endpoint: `/cgi-bin/media/uploadimg`
+- multipart field name: `media`
+- authentication: official `access_token` from `stable_token`
+- returned mapping replaces local paths in the render step
+
+### Save Draft
+
+Create or update the draft with:
+```bash
+python3 "${SKILL_DIR}/scripts/wechat_delivery.py" save-draft --html article.html --markdown article-formatted.md --appid "$WECHAT_APPID" --secret "$WECHAT_SECRET"
+```
+
+To update an existing draft instead of creating a new one:
+```bash
+python3 "${SKILL_DIR}/scripts/wechat_delivery.py" save-draft --html article.html --markdown article-formatted.md --appid "$WECHAT_APPID" --secret "$WECHAT_SECRET" --media-id "$WECHAT_DRAFT_MEDIA_ID"
+```
+
+Rules:
+- obtain `access_token` from `https://api.weixin.qq.com/cgi-bin/stable_token`
+- upload the cover image with `/cgi-bin/material/add_material`
+- create drafts with `/cgi-bin/draft/add`
+- update drafts with `/cgi-bin/draft/update` and `media_id`
+- default cover upload type is `image`; switch to `thumb` only when the account requires thumbnail-specific constraints
+- use `thumb_media_id` from the permanent cover upload
+- report `draftStatus` clearly for the manifest
+
+### Delivery Ladder
+
+- `L0 official-http`
+  use when `WECHAT_APPID` and `WECHAT_SECRET` are available
+- `L1 assisted-browser`
+  use only when account setup or draft inspection needs the user
+- `L2 manual-handoff`
+  stop with exact file paths, required draft fields, and current API error when official delivery fails
 
 Before finishing, write `manifest.json` with:
 - route choice
@@ -453,7 +241,7 @@ Before finishing, write `manifest.json` with:
 - draft status
 - output file paths
 
-Required manifest shape (wechat field is always required; other platforms are optional):
+Required manifest shape:
 ```json
 {
   "outputs": {
@@ -465,51 +253,19 @@ Required manifest shape (wechat field is always required; other platforms are op
       "author": "Author name",
       "digest": "120-char digest",
       "images": ["/abs/path/imgs/inline-01.png"]
-    },
-    "xiaohongshu": { "html": "...", "copy": { "title": "...", "body": "...", "tags": [] } },
-    "jike": { "copy": { "body": "...", "circles": [] } },
-    "xiaoyuzhou": { "audio": "...", "script": "...", "copy": { "title": "...", "description": "..." } },
-    "moments": { "copy": { "body": "..." } }
+    }
   }
 }
 ```
 
 If rendering or draft upload fails, keep the highest-quality completed artifact set and report the exact stopping point.
 
-## Phase 7: Multi-Platform Distribution (Optional)
+## Phase 8: Multi-Platform Distribution
 
-This phase only executes when the user explicitly requests it (e.g., "多平台分发", "转小红书", "转即刻", "写朋友圈文案", "做播客脚本"). If the user does not request it, Phase 6 is the final phase.
+This phase runs only when the user explicitly requests it.
 
-### Trigger and Scope
-
-When the user triggers multi-platform distribution:
-1. check which platforms the user wants (all, or specific ones)
-2. generate platform-specific content for each requested platform
-3. extend `manifest.json` with the new platform output entries
-4. optionally trigger distribution via `multi-platform-distribute`
-
-### Platform Content Generation
-
-For each platform, generate content following the rules in
-[platform-copy.md](platform-copy.md):
-
-- **小红书 (xiaohongshu)**: article → 8-10 card carousel HTML + publishing copy
-  (title 15-20 chars, body 150-250 chars, 8-12 tags)
-- **即刻 (jike)**: article → conversation-style post (200-400 chars, circle tags)
-- **小宇宙 (xiaoyuzhou)**: article → podcast script (1500-2000 chars) + optional TTS audio
-- **朋友圈 (moments)**: article → 3-5 line personal status copy
-
-### Distribution Execution
-
-If the user says "发布" or "一键发布", execute the distribution flow:
-
-Execution order (sequential, avoid Chrome port conflicts):
-1. 公众号 (wechat) — Phase 6 already handled this
-2. 小红书 (xhs) — Chrome CDP
-3. 即刻 (jike) — Chrome CDP
-4. 小宇宙 (xiaoyuzhou) — Chrome CDP
-
-Same four-level fallback ladder as Phase 6:
-- `L0 api-draft` → `L1 automated-browser` → `L2 assisted-browser` → `L3 manual-handoff`
-
-Report each platform's status (success/failed/skipped) with links where available.
+Rules:
+- derive platform copy from the canonical article
+- follow [platform-copy.md](platform-copy.md)
+- execute platforms sequentially to avoid platform state conflicts
+- record every generated platform asset in `manifest.json`

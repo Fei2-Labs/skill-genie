@@ -1,5 +1,5 @@
 {
-  "version": "2.8",
+  "version": "2.9",
   "children": [
     {
       "type": "frame",
@@ -2121,7 +2121,7 @@
       "type": "frame",
       "id": "4Znb9",
       "x": 0,
-      "y": 4500,
+      "y": 4700,
       "name": "01 极简 Dark",
       "clip": true,
       "width": 375,
@@ -3322,7 +3322,7 @@
       "type": "frame",
       "id": "ktRJG",
       "x": 450,
-      "y": 4500,
+      "y": 4700,
       "name": "02 编辑 Dark",
       "clip": true,
       "width": 375,
@@ -4561,7 +4561,7 @@
       "type": "frame",
       "id": "fVmOU",
       "x": 900,
-      "y": 4500,
+      "y": 4700,
       "name": "03 杂志 Dark",
       "clip": true,
       "width": 375,
@@ -5201,13 +5201,19 @@
           "type": "frame",
           "id": "qKSOV",
           "name": "heroImage4L",
+          "metadata": {
+            "type": "unsplash",
+            "username": "antona6",
+            "link": "https://unsplash.com/@antona6",
+            "author": "Arun Antony"
+          },
           "clip": true,
           "width": "fill_container",
           "height": 220,
           "fill": {
             "type": "image",
             "enabled": true,
-            "url": "./images/generated-1772579818128.png",
+            "url": "https://images.unsplash.com/photo-1578070581071-d9b52bf80993?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI5ODE2ODJ8&ixlib=rb-4.1.0&q=80&w=1080",
             "mode": "fill"
           }
         },
@@ -5321,7 +5327,8 @@
               "content": "当 AI 从代码补全进化到自主编程，开发者的角色正在被重新定义。这不仅是工具的升级，更是一场关于创造力与效率的革命。",
               "lineHeight": 1.8,
               "fontFamily": "DM Sans",
-              "fontSize": 15
+              "fontSize": 15,
+              "fontWeight": "normal"
             },
             {
               "type": "text",
@@ -5346,7 +5353,8 @@
               "content": "早期的 AI 编程工具只能提供简单的代码补全，但如今的大语言模型已经能够理解完整的项目上下文，生成复杂的代码逻辑。从 GitHub Copilot 到 Claude Code，工具的能力边界正在不断扩展。开发者不再需要逐行编写每一段代码，而是转向更高层次的架构设计和逻辑规划。",
               "lineHeight": 1.8,
               "fontFamily": "DM Sans",
-              "fontSize": 15
+              "fontSize": 15,
+              "fontWeight": "normal"
             },
             {
               "type": "frame",
@@ -5387,13 +5395,19 @@
               "type": "frame",
               "id": "O8kcf",
               "name": "articleImg4L",
+              "metadata": {
+                "type": "unsplash",
+                "username": "_sanjeev_ngrj_",
+                "link": "https://unsplash.com/@_sanjeev_ngrj_",
+                "author": "Sanjeev Nagaraj"
+              },
               "clip": true,
               "width": "fill_container",
               "height": 200,
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "./images/generated-1772579843209.png",
+                "url": "https://images.unsplash.com/photo-1729314034609-3992728d74a5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI5ODE2ODN8&ixlib=rb-4.1.0&q=80&w=1080",
                 "mode": "fill"
               },
               "cornerRadius": 8
@@ -5421,7 +5435,8 @@
               "content": "多模态理解、长上下文窗口和 Agent 架构的成熟，使 AI 具备了自主完成复杂任务的能力。它可以阅读文档、分析代码库、执行测试并自主修复问题。这种从「辅助」到「自主」的跨越，标志着软件工程范式的根本性转变。",
               "lineHeight": 1.8,
               "fontFamily": "DM Sans",
-              "fontSize": 15
+              "fontSize": 15,
+              "fontWeight": "normal"
             },
             {
               "type": "frame",
@@ -5477,7 +5492,8 @@
                       "fill": "#94A3B8",
                       "content": "ai_agent.py",
                       "fontFamily": "JetBrains Mono",
-                      "fontSize": 11
+                      "fontSize": 11,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -5500,7 +5516,8 @@
                       "fill": "#22C55E",
                       "content": "class AutonomousAgent:",
                       "fontFamily": "JetBrains Mono",
-                      "fontSize": 12
+                      "fontSize": 12,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "text",
@@ -5509,7 +5526,8 @@
                       "fill": "#93C5FD",
                       "content": "    def plan(self, task):",
                       "fontFamily": "JetBrains Mono",
-                      "fontSize": 12
+                      "fontSize": 12,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "text",
@@ -5518,7 +5536,8 @@
                       "fill": "#F8FAFC",
                       "content": "        steps = self.analyze(task)",
                       "fontFamily": "JetBrains Mono",
-                      "fontSize": 12
+                      "fontSize": 12,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "text",
@@ -5527,7 +5546,8 @@
                       "fill": "#F8FAFC",
                       "content": "        return self.execute(steps)",
                       "fontFamily": "JetBrains Mono",
-                      "fontSize": 12
+                      "fontSize": 12,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -5556,7 +5576,8 @@
               "content": "在 AI 自主编程时代，开发者将从代码编写者转变为系统架构师和 AI 协调者。核心竞争力不再是编写代码的速度，而是问题抽象能力、系统设计思维和对 AI 工具的深度理解。掌握 Prompt Engineering 和 Agent 工作流设计，将成为新时代开发者的必备技能。",
               "lineHeight": 1.8,
               "fontFamily": "DM Sans",
-              "fontSize": 15
+              "fontSize": 15,
+              "fontWeight": "normal"
             },
             {
               "type": "rectangle",
@@ -5658,7 +5679,8 @@
                       "fill": "#4ADE80",
                       "content": "ai-community ~ %",
                       "fontFamily": "JetBrains Mono",
-                      "fontSize": 10
+                      "fontSize": 10,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -5669,7 +5691,8 @@
                   "fill": "#4ADE80",
                   "content": "$ subscribe",
                   "fontFamily": "JetBrains Mono",
-                  "fontSize": 13
+                  "fontSize": 13,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "text",
@@ -5694,7 +5717,8 @@
                   "content": "// 前沿动态 · 深度交流 · 实践分享",
                   "textAlign": "center",
                   "fontFamily": "JetBrains Mono",
-                  "fontSize": 12
+                  "fontSize": 12,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "frame",
@@ -5728,7 +5752,8 @@
                           "fill": "#4ADE8060",
                           "content": "per seat",
                           "fontFamily": "JetBrains Mono",
-                          "fontSize": 10
+                          "fontSize": 10,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -5757,7 +5782,8 @@
                           "fill": "#4ADE8060",
                           "content": "early 20",
                           "fontFamily": "JetBrains Mono",
-                          "fontSize": 10
+                          "fontSize": 10,
+                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -5819,7 +5845,8 @@
                   "fill": "#4ADE8080",
                   "content": "$ scan --wechat --note 'AI群'",
                   "fontFamily": "JetBrains Mono",
-                  "fontSize": 11
+                  "fontSize": 11,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "frame",
@@ -5864,7 +5891,8 @@
                   "content": "TechByte · AI 技术前沿",
                   "textAlign": "center",
                   "fontFamily": "DM Sans",
-                  "fontSize": 12
+                  "fontSize": 12,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "text",
@@ -5874,7 +5902,8 @@
                   "content": "原创内容 · 转载请注明出处",
                   "textAlign": "center",
                   "fontFamily": "DM Sans",
-                  "fontSize": 11
+                  "fontSize": 11,
+                  "fontWeight": "normal"
                 }
               ]
             }
@@ -5886,7 +5915,7 @@
       "type": "frame",
       "id": "EBxCi",
       "x": 1350,
-      "y": 4500,
+      "y": 4700,
       "name": "04 科技 Dark",
       "clip": true,
       "width": 375,
@@ -5897,13 +5926,19 @@
           "type": "frame",
           "id": "E4DJK",
           "name": "heroImage4D",
+          "metadata": {
+            "type": "unsplash",
+            "username": "writecodenow",
+            "link": "https://unsplash.com/@writecodenow",
+            "author": "Boitumelo"
+          },
           "clip": true,
           "width": "fill_container",
           "height": 220,
           "fill": {
             "type": "image",
             "enabled": true,
-            "url": "./images/generated-1772579937162.png",
+            "url": "https://images.unsplash.com/photo-1617240016072-d92174e44171?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI5ODE2ODN8&ixlib=rb-4.1.0&q=80&w=1080",
             "mode": "fill"
           }
         },
@@ -6017,7 +6052,8 @@
               "content": "当 AI 从代码补全进化到自主编程，开发者的角色正在被重新定义。这不仅是工具的升级，更是一场关于创造力与效率的革命。",
               "lineHeight": 1.8,
               "fontFamily": "DM Sans",
-              "fontSize": 15
+              "fontSize": 15,
+              "fontWeight": "normal"
             },
             {
               "type": "text",
@@ -6042,7 +6078,8 @@
               "content": "早期的 AI 编程工具只能提供简单的代码补全，但如今的大语言模型已经能够理解完整的项目上下文，生成复杂的代码逻辑。从 GitHub Copilot 到 Claude Code，工具的能力边界正在不断扩展。开发者不再需要逐行编写每一段代码，而是转向更高层次的架构设计和逻辑规划。",
               "lineHeight": 1.8,
               "fontFamily": "DM Sans",
-              "fontSize": 15
+              "fontSize": 15,
+              "fontWeight": "normal"
             },
             {
               "type": "frame",
@@ -6083,13 +6120,19 @@
               "type": "frame",
               "id": "u4kTs",
               "name": "articleImg4D",
+              "metadata": {
+                "type": "unsplash",
+                "username": "pjmasdache",
+                "link": "https://unsplash.com/@pjmasdache",
+                "author": "Pj masdache"
+              },
               "clip": true,
               "width": "fill_container",
               "height": 200,
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "./images/generated-1772579960696.png",
+                "url": "https://images.unsplash.com/photo-1554415824-7cc47f524e53?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI5ODE2ODN8&ixlib=rb-4.1.0&q=80&w=1080",
                 "mode": "fill"
               },
               "cornerRadius": 8
@@ -6117,7 +6160,8 @@
               "content": "多模态理解、长上下文窗口和 Agent 架构的成熟，使 AI 具备了自主完成复杂任务的能力。它可以阅读文档、分析代码库、执行测试并自主修复问题。这种从「辅助」到「自主」的跨越，标志着软件工程范式的根本性转变。",
               "lineHeight": 1.8,
               "fontFamily": "DM Sans",
-              "fontSize": 15
+              "fontSize": 15,
+              "fontWeight": "normal"
             },
             {
               "type": "frame",
@@ -6177,7 +6221,8 @@
                       "fill": "#64748B",
                       "content": "ai_agent.py",
                       "fontFamily": "JetBrains Mono",
-                      "fontSize": 11
+                      "fontSize": 11,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -6200,7 +6245,8 @@
                       "fill": "#22C55E",
                       "content": "class AutonomousAgent:",
                       "fontFamily": "JetBrains Mono",
-                      "fontSize": 12
+                      "fontSize": 12,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "text",
@@ -6209,7 +6255,8 @@
                       "fill": "#93C5FD",
                       "content": "    def plan(self, task):",
                       "fontFamily": "JetBrains Mono",
-                      "fontSize": 12
+                      "fontSize": 12,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "text",
@@ -6218,7 +6265,8 @@
                       "fill": "#E2E8F0",
                       "content": "        steps = self.analyze(task)",
                       "fontFamily": "JetBrains Mono",
-                      "fontSize": 12
+                      "fontSize": 12,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "text",
@@ -6227,7 +6275,8 @@
                       "fill": "#E2E8F0",
                       "content": "        return self.execute(steps)",
                       "fontFamily": "JetBrains Mono",
-                      "fontSize": 12
+                      "fontSize": 12,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -6256,7 +6305,8 @@
               "content": "在 AI 自主编程时代，开发者将从代码编写者转变为系统架构师和 AI 协调者。核心竞争力不再是编写代码的速度，而是问题抽象能力、系统设计思维和对 AI 工具的深度理解。掌握 Prompt Engineering 和 Agent 工作流设计，将成为新时代开发者的必备技能。",
               "lineHeight": 1.8,
               "fontFamily": "DM Sans",
-              "fontSize": 15
+              "fontSize": 15,
+              "fontWeight": "normal"
             },
             {
               "type": "rectangle",
@@ -6358,7 +6408,8 @@
                       "fill": "#4ADE80",
                       "content": "ai-community ~ %",
                       "fontFamily": "JetBrains Mono",
-                      "fontSize": 10
+                      "fontSize": 10,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -6369,7 +6420,8 @@
                   "fill": "#4ADE80",
                   "content": "$ subscribe",
                   "fontFamily": "JetBrains Mono",
-                  "fontSize": 13
+                  "fontSize": 13,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "text",
@@ -6394,7 +6446,8 @@
                   "content": "// 前沿动态 · 深度交流 · 实践分享",
                   "textAlign": "center",
                   "fontFamily": "JetBrains Mono",
-                  "fontSize": 12
+                  "fontSize": 12,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "frame",
@@ -6428,7 +6481,8 @@
                           "fill": "#4ADE8060",
                           "content": "per seat",
                           "fontFamily": "JetBrains Mono",
-                          "fontSize": 10
+                          "fontSize": 10,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -6457,7 +6511,8 @@
                           "fill": "#4ADE8060",
                           "content": "early 20",
                           "fontFamily": "JetBrains Mono",
-                          "fontSize": 10
+                          "fontSize": 10,
+                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -6519,7 +6574,8 @@
                   "fill": "#4ADE8080",
                   "content": "$ scan --wechat --note 'AI群'",
                   "fontFamily": "JetBrains Mono",
-                  "fontSize": 11
+                  "fontSize": 11,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "frame",
@@ -6564,7 +6620,8 @@
                   "content": "TechByte · AI 技术前沿",
                   "textAlign": "center",
                   "fontFamily": "DM Sans",
-                  "fontSize": 12
+                  "fontSize": 12,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "text",
@@ -6574,7 +6631,8 @@
                   "content": "原创内容 · 转载请注明出处",
                   "textAlign": "center",
                   "fontFamily": "DM Sans",
-                  "fontSize": 11
+                  "fontSize": 11,
+                  "fontWeight": "normal"
                 }
               ]
             }
@@ -6723,7 +6781,8 @@
               "content": "在快节奏的城市生活中，我们常常忘记了停下脚步的意义。慢生活并非逃离现实，而是学会在喧嚣中为自己创造一片宁静的空间。",
               "lineHeight": 1.8,
               "fontFamily": "Raleway",
-              "fontSize": 15
+              "fontSize": 15,
+              "fontWeight": "normal"
             },
             {
               "type": "text",
@@ -6748,7 +6807,8 @@
               "content": "每天清晨，在城市苏醒之前给自己留出半小时。泡一杯茶，坐在窗前看天色渐亮。这种简单的仪式感，能让整个一天都变得从容。不必追求完美的早起时间，重要的是找到属于自己的节奏。当你学会用一杯茶的时间与自己对话，内心的宁静便会自然而来。",
               "lineHeight": 1.8,
               "fontFamily": "Raleway",
-              "fontSize": 15
+              "fontSize": 15,
+              "fontWeight": "normal"
             },
             {
               "type": "frame",
@@ -6840,7 +6900,8 @@
               "content": "即使身处繁华都市，自然从未远离。阳台上的几盆绿植、窗台上的一瓶鲜花、周末公园里的林间漫步——这些微小的自然接触，能有效降低焦虑感，恢复内心的平衡。研究表明，每天接触自然 20 分钟就能显著改善心理健康。",
               "lineHeight": 1.8,
               "fontFamily": "Raleway",
-              "fontSize": 15
+              "fontSize": 15,
+              "fontWeight": "normal"
             },
             {
               "type": "frame",
@@ -6900,7 +6961,8 @@
                   "content": "尝试「5-4-3-2-1」感官练习：看到 5 样东西、触碰 4 样东西、听到 3 种声音、闻到 2 种气味、品尝 1 种味道。这个简单的方法能帮助你快速回到当下。",
                   "lineHeight": 1.7,
                   "fontFamily": "Raleway",
-                  "fontSize": 14
+                  "fontSize": 14,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -6927,7 +6989,8 @@
               "content": "每周给自己安排一段「无屏幕时间」。放下手机，关闭电脑，让思绪自由流淌。你会发现，当数字噪音消失后，创造力和灵感反而会悄然降临。慢生活的本质，是重新找回对时间的掌控感，让每一刻都被真实地体验和感受。",
               "lineHeight": 1.8,
               "fontFamily": "Raleway",
-              "fontSize": 15
+              "fontSize": 15,
+              "fontWeight": "normal"
             },
             {
               "type": "rectangle",
@@ -7104,7 +7167,8 @@
                       "content": "¥199/人 · 前 30 名限时优惠 ¥129",
                       "textAlign": "center",
                       "fontFamily": "Raleway",
-                      "fontSize": 14
+                      "fontSize": 14,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -7273,7 +7337,8 @@
                   "content": "慢生活研究所 · 用心感受每一天",
                   "textAlign": "center",
                   "fontFamily": "Raleway",
-                  "fontSize": 12
+                  "fontSize": 12,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "text",
@@ -7283,7 +7348,8 @@
                   "content": "原创内容 · 转载请注明出处",
                   "textAlign": "center",
                   "fontFamily": "Raleway",
-                  "fontSize": 11
+                  "fontSize": 11,
+                  "fontWeight": "normal"
                 }
               ]
             }
@@ -7295,7 +7361,7 @@
       "type": "frame",
       "id": "wiCwu",
       "x": 1800,
-      "y": 4500,
+      "y": 4700,
       "name": "05 生活 Dark",
       "clip": true,
       "width": 375,
@@ -7432,7 +7498,8 @@
               "content": "在快节奏的城市生活中，我们常常忘记了停下脚步的意义。慢生活并非逃离现实，而是学会在喧嚣中为自己创造一片宁静的空间。",
               "lineHeight": 1.8,
               "fontFamily": "Raleway",
-              "fontSize": 15
+              "fontSize": 15,
+              "fontWeight": "normal"
             },
             {
               "type": "text",
@@ -7457,7 +7524,8 @@
               "content": "每天清晨，在城市苏醒之前给自己留出半小时。泡一杯茶，坐在窗前看天色渐亮。这种简单的仪式感，能让整个一天都变得从容。不必追求完美的早起时间，重要的是找到属于自己的节奏。当你学会用一杯茶的时间与自己对话，内心的宁静便会自然而来。",
               "lineHeight": 1.8,
               "fontFamily": "Raleway",
-              "fontSize": 15
+              "fontSize": 15,
+              "fontWeight": "normal"
             },
             {
               "type": "frame",
@@ -7549,7 +7617,8 @@
               "content": "即使身处繁华都市，自然从未远离。阳台上的几盆绿植、窗台上的一瓶鲜花、周末公园里的林间漫步——这些微小的自然接触，能有效降低焦虑感，恢复内心的平衡。研究表明，每天接触自然 20 分钟就能显著改善心理健康。",
               "lineHeight": 1.8,
               "fontFamily": "Raleway",
-              "fontSize": 15
+              "fontSize": 15,
+              "fontWeight": "normal"
             },
             {
               "type": "frame",
@@ -7609,7 +7678,8 @@
                   "content": "尝试「5-4-3-2-1」感官练习：看到 5 样东西、触碰 4 样东西、听到 3 种声音、闻到 2 种气味、品尝 1 种味道。这个简单的方法能帮助你快速回到当下。",
                   "lineHeight": 1.7,
                   "fontFamily": "Raleway",
-                  "fontSize": 14
+                  "fontSize": 14,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -7636,7 +7706,8 @@
               "content": "每周给自己安排一段「无屏幕时间」。放下手机，关闭电脑，让思绪自由流淌。你会发现，当数字噪音消失后，创造力和灵感反而会悄然降临。慢生活的本质，是重新找回对时间的掌控感，让每一刻都被真实地体验和感受。",
               "lineHeight": 1.8,
               "fontFamily": "Raleway",
-              "fontSize": 15
+              "fontSize": 15,
+              "fontWeight": "normal"
             },
             {
               "type": "rectangle",
@@ -7813,7 +7884,8 @@
                       "content": "¥199/人 · 前 30 名限时优惠 ¥129",
                       "textAlign": "center",
                       "fontFamily": "Raleway",
-                      "fontSize": 14
+                      "fontSize": 14,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -7986,7 +8058,8 @@
                   "content": "慢生活研究所 · 用心感受每一天",
                   "textAlign": "center",
                   "fontFamily": "Raleway",
-                  "fontSize": 12
+                  "fontSize": 12,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "text",
@@ -7996,7 +8069,8 @@
                   "content": "原创内容 · 转载请注明出处",
                   "textAlign": "center",
                   "fontFamily": "Raleway",
-                  "fontSize": 11
+                  "fontSize": 11,
+                  "fontWeight": "normal"
                 }
               ]
             }
@@ -8019,13 +8093,19 @@
           "type": "frame",
           "id": "LmBlB",
           "name": "hero6",
+          "metadata": {
+            "type": "unsplash",
+            "username": "diadesigner",
+            "link": "https://unsplash.com/@diadesigner",
+            "author": "Diana Bondarenko"
+          },
           "clip": true,
           "width": "fill_container",
           "height": 220,
           "fill": {
             "type": "image",
             "enabled": true,
-            "url": "./images/generated-1772579834961.png",
+            "url": "https://images.unsplash.com/photo-1719933465296-51eb1bc43d2a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI5NjUwNzR8&ixlib=rb-4.1.0&q=80&w=1080",
             "mode": "fill"
           }
         },
@@ -8253,13 +8333,19 @@
               "type": "frame",
               "id": "Jep5e",
               "name": "artImg6",
+              "metadata": {
+                "type": "unsplash",
+                "username": "audumbar999",
+                "link": "https://unsplash.com/@audumbar999",
+                "author": "Audumbar Haldankar"
+              },
               "clip": true,
               "width": "fill_container",
               "height": 200,
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "./images/generated-1772579883807.png",
+                "url": "https://images.unsplash.com/photo-1711690162203-dfc1457c92b6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI5NjUwNzV8&ixlib=rb-4.1.0&q=80&w=1080",
                 "mode": "fill"
               },
               "cornerRadius": 4
@@ -8676,7 +8762,7 @@
       "type": "frame",
       "id": "RK3dM",
       "x": 2250,
-      "y": 4500,
+      "y": 4700,
       "name": "06 典雅 Dark",
       "clip": true,
       "width": 375,
@@ -8687,13 +8773,19 @@
           "type": "frame",
           "id": "RNhAN",
           "name": "darkHero6",
+          "metadata": {
+            "type": "unsplash",
+            "username": "vincentvangogh",
+            "link": "https://unsplash.com/@vincentvangogh",
+            "author": "Vincent Roman"
+          },
           "clip": true,
           "width": "fill_container",
           "height": 220,
           "fill": {
             "type": "image",
             "enabled": true,
-            "url": "./images/generated-1772579834961.png",
+            "url": "https://images.unsplash.com/photo-1602153270341-84099e1223c7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI5NjUwNzV8&ixlib=rb-4.1.0&q=80&w=1080",
             "mode": "fill"
           }
         },
@@ -8921,13 +9013,19 @@
               "type": "frame",
               "id": "VWBzb",
               "name": "artImg6",
+              "metadata": {
+                "type": "unsplash",
+                "username": "kushalib15",
+                "link": "https://unsplash.com/@kushalib15",
+                "author": "Kushali Bhagat"
+              },
               "clip": true,
               "width": "fill_container",
               "height": 200,
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "./images/generated-1772579883807.png",
+                "url": "https://images.unsplash.com/photo-1757071461288-6eedd1e08ee6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI5NjUwNzZ8&ixlib=rb-4.1.0&q=80&w=1080",
                 "mode": "fill"
               },
               "cornerRadius": 4
@@ -9355,13 +9453,19 @@
           "type": "frame",
           "id": "A2Ae9",
           "name": "hero7",
+          "metadata": {
+            "type": "unsplash",
+            "username": "jon__kelvin",
+            "link": "https://unsplash.com/@jon__kelvin",
+            "author": "Jonathan Majam"
+          },
           "clip": true,
           "width": "fill_container",
           "height": 220,
           "fill": {
             "type": "image",
             "enabled": true,
-            "url": "./images/generated-1772579997445.png",
+            "url": "https://images.unsplash.com/photo-1769209435706-ede116e74045?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI5NjUwNzZ8&ixlib=rb-4.1.0&q=80&w=1080",
             "mode": "fill"
           },
           "stroke": {
@@ -9526,13 +9630,19 @@
               "type": "frame",
               "id": "v5Wby",
               "name": "artImg7",
+              "metadata": {
+                "type": "unsplash",
+                "username": "rebecca_h",
+                "link": "https://unsplash.com/@rebecca_h",
+                "author": "Rebecca Hausner"
+              },
               "clip": true,
               "width": "fill_container",
               "height": 200,
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "./images/generated-1772580021977.png",
+                "url": "https://images.unsplash.com/photo-1699359104595-99d9165579ea?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI5NjUwNzd8&ixlib=rb-4.1.0&q=80&w=1080",
                 "mode": "fill"
               },
               "stroke": {
@@ -9867,7 +9977,7 @@
       "type": "frame",
       "id": "AKs17",
       "x": 2700,
-      "y": 4500,
+      "y": 4700,
       "name": "07 粗犷 Dark",
       "clip": true,
       "width": 375,
@@ -9878,13 +9988,19 @@
           "type": "frame",
           "id": "c4PZI",
           "name": "darkHero7",
+          "metadata": {
+            "type": "unsplash",
+            "username": "justmejuliee",
+            "link": "https://unsplash.com/@justmejuliee",
+            "author": "Julia Taubitz"
+          },
           "clip": true,
           "width": "fill_container",
           "height": 220,
           "fill": {
             "type": "image",
             "enabled": true,
-            "url": "./images/generated-1772579997445.png",
+            "url": "https://images.unsplash.com/photo-1769284042126-531af29f1415?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI5NjUwNzh8&ixlib=rb-4.1.0&q=80&w=1080",
             "mode": "fill"
           },
           "stroke": {
@@ -10049,13 +10165,19 @@
               "type": "frame",
               "id": "PeyOY",
               "name": "artImg7",
+              "metadata": {
+                "type": "unsplash",
+                "username": "davidbenesph",
+                "link": "https://unsplash.com/@davidbenesph",
+                "author": "David Beneš"
+              },
               "clip": true,
               "width": "fill_container",
               "height": 200,
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "./images/generated-1772580021977.png",
+                "url": "https://images.unsplash.com/photo-1617627275612-8dd4016bfdc3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI5NjUwNzh8&ixlib=rb-4.1.0&q=80&w=1080",
                 "mode": "fill"
               },
               "stroke": {
@@ -10401,13 +10523,19 @@
           "type": "frame",
           "id": "43QZ3",
           "name": "hero8",
+          "metadata": {
+            "type": "unsplash",
+            "username": "blenderdesigner",
+            "link": "https://unsplash.com/@blenderdesigner",
+            "author": "Sufyan"
+          },
           "clip": true,
           "width": "fill_container",
           "height": 220,
           "fill": {
             "type": "image",
             "enabled": true,
-            "url": "./images/generated-1772580131213.png",
+            "url": "https://images.unsplash.com/photo-1671001803647-07e1bbb287b2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI5NjUwNzl8&ixlib=rb-4.1.0&q=80&w=1080",
             "mode": "fill"
           }
         },
@@ -10605,13 +10733,19 @@
               "type": "frame",
               "id": "udl45",
               "name": "artImg8",
+              "metadata": {
+                "type": "unsplash",
+                "username": "jaimemarrero",
+                "link": "https://unsplash.com/@jaimemarrero",
+                "author": "Jaime Marrero"
+              },
               "clip": true,
               "width": "fill_container",
               "height": 200,
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "./images/generated-1772580164717.png",
+                "url": "https://images.unsplash.com/photo-1683549003873-b5c0d1c9ea51?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI5NjUwNzl8&ixlib=rb-4.1.0&q=80&w=1080",
                 "mode": "fill"
               },
               "cornerRadius": 16,
@@ -11129,7 +11263,7 @@
       "type": "frame",
       "id": "X6VqH",
       "x": 3150,
-      "y": 4500,
+      "y": 4700,
       "name": "08 活泼 Dark",
       "clip": true,
       "width": 375,
@@ -11140,13 +11274,19 @@
           "type": "frame",
           "id": "sFkM2",
           "name": "darkHero8",
+          "metadata": {
+            "type": "unsplash",
+            "username": "loganvoss",
+            "link": "https://unsplash.com/@loganvoss",
+            "author": "Logan Voss"
+          },
           "clip": true,
           "width": "fill_container",
           "height": 220,
           "fill": {
             "type": "image",
             "enabled": true,
-            "url": "./images/generated-1772580131213.png",
+            "url": "https://images.unsplash.com/photo-1759267378162-bf93ccf4b909?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI5NjUwNzl8&ixlib=rb-4.1.0&q=80&w=1080",
             "mode": "fill"
           }
         },
@@ -11344,13 +11484,19 @@
               "type": "frame",
               "id": "3LtKW",
               "name": "artImg8",
+              "metadata": {
+                "type": "unsplash",
+                "username": "akinggraphic",
+                "link": "https://unsplash.com/@akinggraphic",
+                "author": "Adeniji Abdullahi A"
+              },
               "clip": true,
               "width": "fill_container",
               "height": 200,
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "./images/generated-1772580164717.png",
+                "url": "https://images.unsplash.com/photo-1641886336879-340cc977163c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI5NjUwODB8&ixlib=rb-4.1.0&q=80&w=1080",
                 "mode": "fill"
               },
               "cornerRadius": 16,
@@ -13019,7 +13165,7 @@
       "type": "frame",
       "id": "49JrE",
       "x": 3600,
-      "y": 4500,
+      "y": 4700,
       "name": "09 商务 Dark",
       "clip": true,
       "width": 375,
@@ -14853,8 +14999,8 @@
                 {
                   "type": "rectangle",
                   "id": "8LdfL",
-                  "x": -40,
-                  "y": -20,
+                  "x": 86.59723415330538,
+                  "y": 41.04241719908025,
                   "name": "ctaDeco1",
                   "rotation": 20,
                   "fill": "#EC489920",
@@ -14864,8 +15010,8 @@
                 {
                   "type": "rectangle",
                   "id": "Kcizr",
-                  "x": 260,
-                  "y": 380,
+                  "x": 128.14466094067262,
+                  "y": 153.80553169338924,
                   "name": "ctaDeco2",
                   "rotation": -14.999999999999998,
                   "fill": "#EC489915",
@@ -14875,8 +15021,8 @@
                 {
                   "type": "ellipse",
                   "id": "Ixq6Q",
-                  "x": 270,
-                  "y": 30,
+                  "x": 123.5,
+                  "y": 276.28001883254814,
                   "name": "ctaDeco3",
                   "fill": "#EC489912",
                   "width": 80,
@@ -14888,8 +15034,8 @@
                   "x": 0,
                   "y": 0,
                   "name": "ctaInner",
-                  "width": "fill_container(0)",
-                  "height": "fill_container(0)",
+                  "width": 327,
+                  "height": 480,
                   "layout": "vertical",
                   "gap": 20,
                   "padding": 28,
@@ -15095,7 +15241,7 @@
       "type": "frame",
       "id": "stjEM",
       "x": 4050,
-      "y": 4500,
+      "y": 4700,
       "name": "10 艺术 Dark",
       "clip": true,
       "width": 375,
@@ -15778,8 +15924,8 @@
                 {
                   "type": "rectangle",
                   "id": "xmzL0",
-                  "x": -40,
-                  "y": -20,
+                  "x": 86.59723415330538,
+                  "y": 41.04241719908025,
                   "name": "ctaDeco1",
                   "rotation": 20,
                   "fill": "#F472B620",
@@ -15789,8 +15935,8 @@
                 {
                   "type": "rectangle",
                   "id": "I8egE",
-                  "x": 260,
-                  "y": 380,
+                  "x": 128.14466094067262,
+                  "y": 153.80553169338924,
                   "name": "ctaDeco2",
                   "rotation": -14.999999999999998,
                   "fill": "#F472B615",
@@ -15800,8 +15946,8 @@
                 {
                   "type": "ellipse",
                   "id": "LU9g4",
-                  "x": 270,
-                  "y": 30,
+                  "x": 123.5,
+                  "y": 276.28001883254814,
                   "name": "ctaDeco3",
                   "fill": "#F472B612",
                   "width": 80,
@@ -15813,8 +15959,8 @@
                   "x": 0,
                   "y": 0,
                   "name": "ctaInner",
-                  "width": "fill_container(0)",
-                  "height": "fill_container(0)",
+                  "width": 327,
+                  "height": 480,
                   "layout": "vertical",
                   "gap": 20,
                   "padding": 28,
@@ -16015,6 +16161,17 @@
           ]
         }
       ]
+    },
+    {
+      "type": "text",
+      "id": "g85oi",
+      "x": 0,
+      "y": 0,
+      "fill": "#000000",
+      "content": "505112",
+      "fontFamily": "Inter",
+      "fontSize": 12,
+      "fontWeight": "normal"
     }
   ]
 }
