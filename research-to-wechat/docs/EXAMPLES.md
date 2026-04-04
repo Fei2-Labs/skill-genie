@@ -71,8 +71,8 @@ manifest.json 里请把 outputs.wechat.markdown/html/cover_image/title/author/di
 
 ```text
 这篇内容只需要保存到公众号草稿箱，不要正式发布。
-如果 API draft 可用就走 API；不行就退到浏览器自动化；再不行就停在 assisted 或 manual handoff。
-如果登录公众号网页是必需步骤，就暂停等我登录后继续。
+如果官方 `WECHAT_APPID/WECHAT_SECRET` 可用就直接走官方草稿 API。
+如果官方 API 因账号配置或权限失败，就停在 assisted 或 manual handoff，并把错误原因和需要的字段告诉我。
 ```
 
 ## Multi-platform distribution
@@ -86,7 +86,7 @@ manifest.json 里请把 outputs.wechat.markdown/html/cover_image/title/author/di
 ## HTML theme selection
 
 ```text
-这篇文章用 md2wechat 的 ocean-calm 主题转 HTML，适合技术分析类内容。
+这篇文章用 native dark 渲染转 HTML，适合技术分析类内容。
 转完后预览确认封面、摘要、配图路径都对得上 Markdown 源文件。
 ```
 
@@ -94,7 +94,7 @@ manifest.json 里请把 outputs.wechat.markdown/html/cover_image/title/author/di
 
 ```text
 这篇 AI 文章用科技风格排版，Dark 模式。
-如果 Pencil MCP 没配置就跳过排版，直接用 md2wechat 的主题转 HTML。
+如果 Pencil MCP 没配置就跳过排版，直接用 native dark 渲染转 HTML。
 ```
 
 ```text
@@ -114,7 +114,7 @@ The result should leave behind:
 - one `brief.md` with strategic clarification record
 - one `research.md` with verified facts / working inferences / open questions
 - one canonical formatted markdown file (normalization checklist applied)
-- one HTML file ready for WeChat (rendered via md2wechat ai mode)
+- one HTML file ready for WeChat after native rendering and compatibility verification
 - one cover image (900x383px at 2x)
 - resolved inline image paths (each passing two-tier evaluation)
 - one `manifest.json` with `outputs.wechat.*`
@@ -130,5 +130,5 @@ The result should leave behind:
 - blurring verified fact and inference
 - decorative images that do not improve understanding
 - skipping the normalization checklist or writing framework self-check
-- using external API mode for HTML conversion when ai mode is available
+- assuming official draft delivery is ready before `WECHAT_APPID/WECHAT_SECRET` and media requirements are confirmed
 - direct live publishing when the request says draft only

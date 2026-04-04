@@ -84,6 +84,9 @@ python scripts/conversion_audit.py --funnel signup --segment new_users
 
 # Bias detection in messaging
 python scripts/bias_detector.py --copy "marketing_copy.txt"
+
+# Search reference files
+python scripts/search.py --query "habit formation" --ignore-case
 ```
 
 ## Workflow

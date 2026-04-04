@@ -1,0 +1,1514 @@
+{
+  "designs": [
+    {
+      "kind": "article",
+      "id": "4Znb9",
+      "name": "01 极简 Dark",
+      "family": "01",
+      "label": "极简",
+      "mode": "dark",
+      "background": "#0C0C0C",
+      "surface": "#0C0C0C",
+      "text": "#E0F7FA",
+      "muted": "#CBD5E1",
+      "accent": "#22D3EE",
+      "line": "#CBD5E1",
+      "radius": 20,
+      "gap": 24,
+      "padding": 28,
+      "hero": {
+        "kind": "image",
+        "fill": "url('https://images.unsplash.com/photo-1571558225867-e4a256347652?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI1Nzk4MTJ8&ixlib=rb-4.1.0&q=80&w=1080') center/cover no-repeat",
+        "height": 220
+      },
+      "title": {
+        "size": 28,
+        "weight": "700",
+        "fill": "#E0F7FA"
+      },
+      "intro": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#CBD5E1"
+      },
+      "heading": {
+        "size": 20,
+        "weight": "700",
+        "fill": "#E0F7FA"
+      },
+      "body": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#CBD5E1"
+      },
+      "meta": {
+        "size": 13,
+        "weight": "500",
+        "fill": "#CBD5E1"
+      },
+      "quote": {
+        "size": 14,
+        "weight": "normal",
+        "fill": "#22D3EE"
+      },
+      "flags": {
+        "headerBar": false,
+        "heroOverlay": false,
+        "sectionNumbers": false,
+        "quoteMarker": false
+      }
+    },
+    {
+      "kind": "article",
+      "id": "HQLZX",
+      "name": "01 极简 Light",
+      "family": "01",
+      "label": "极简",
+      "mode": "light",
+      "background": "#FFFFFF",
+      "surface": "#FFFFFF",
+      "text": "#164E63",
+      "muted": "#334155",
+      "accent": "#0891B2",
+      "line": "#CBD5E1",
+      "radius": 20,
+      "gap": 24,
+      "padding": 28,
+      "hero": {
+        "kind": "image",
+        "fill": "url('https://images.unsplash.com/photo-1571558225867-e4a256347652?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI1Nzk4MTJ8&ixlib=rb-4.1.0&q=80&w=1080') center/cover no-repeat",
+        "height": 220
+      },
+      "title": {
+        "size": 28,
+        "weight": "700",
+        "fill": "#164E63"
+      },
+      "intro": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#334155"
+      },
+      "heading": {
+        "size": 20,
+        "weight": "700",
+        "fill": "#164E63"
+      },
+      "body": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#334155"
+      },
+      "meta": {
+        "size": 13,
+        "weight": "500",
+        "fill": "#334155"
+      },
+      "quote": {
+        "size": 14,
+        "weight": "normal",
+        "fill": "#0891B2"
+      },
+      "flags": {
+        "headerBar": false,
+        "heroOverlay": false,
+        "sectionNumbers": false,
+        "quoteMarker": false
+      }
+    },
+    {
+      "kind": "article",
+      "id": "ktRJG",
+      "name": "02 编辑 Dark",
+      "family": "02",
+      "label": "编辑",
+      "mode": "dark",
+      "background": "#18181B",
+      "surface": "#18181B",
+      "text": "#FAFAFA",
+      "muted": "#A1A1AA",
+      "accent": "#FAFAFA",
+      "line": "#CBD5E1",
+      "radius": 20,
+      "gap": 24,
+      "padding": 28,
+      "hero": {
+        "kind": "color",
+        "fill": "#09090B",
+        "height": 48
+      },
+      "title": {
+        "size": 14,
+        "weight": "700",
+        "fill": "#FAFAFA"
+      },
+      "intro": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#A1A1AA"
+      },
+      "heading": {
+        "size": 20,
+        "weight": "700",
+        "fill": "#FAFAFA"
+      },
+      "body": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#A1A1AA"
+      },
+      "meta": {
+        "size": 11,
+        "weight": "normal",
+        "fill": "#A1A1AA"
+      },
+      "quote": {
+        "size": 14,
+        "weight": "700",
+        "fill": "#FAFAFA"
+      },
+      "flags": {
+        "headerBar": true,
+        "heroOverlay": false,
+        "sectionNumbers": false,
+        "quoteMarker": false
+      }
+    },
+    {
+      "kind": "article",
+      "id": "P7h4J",
+      "name": "02 编辑 Light",
+      "family": "02",
+      "label": "编辑",
+      "mode": "light",
+      "background": "#FAFAFA",
+      "surface": "#FAFAFA",
+      "text": "#FAFAFA",
+      "muted": "#3F3F46",
+      "accent": "#FAFAFA",
+      "line": "#CBD5E1",
+      "radius": 20,
+      "gap": 24,
+      "padding": 28,
+      "hero": {
+        "kind": "color",
+        "fill": "#09090B",
+        "height": 48
+      },
+      "title": {
+        "size": 14,
+        "weight": "700",
+        "fill": "#FAFAFA"
+      },
+      "intro": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#3F3F46"
+      },
+      "heading": {
+        "size": 20,
+        "weight": "700",
+        "fill": "#09090B"
+      },
+      "body": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#3F3F46"
+      },
+      "meta": {
+        "size": 11,
+        "weight": "normal",
+        "fill": "#A1A1AA"
+      },
+      "quote": {
+        "size": 14,
+        "weight": "700",
+        "fill": "#FAFAFA"
+      },
+      "flags": {
+        "headerBar": true,
+        "heroOverlay": false,
+        "sectionNumbers": false,
+        "quoteMarker": false
+      }
+    },
+    {
+      "kind": "article",
+      "id": "fVmOU",
+      "name": "03 杂志 Dark",
+      "family": "03",
+      "label": "杂志",
+      "mode": "dark",
+      "background": "#1C1917",
+      "surface": "#1C1917",
+      "text": "#FAFAF9",
+      "muted": "#A8A29E",
+      "accent": "#EAB308",
+      "line": "#CBD5E1",
+      "radius": 20,
+      "gap": 24,
+      "padding": 28,
+      "hero": {
+        "kind": "image",
+        "fill": "url('https://images.unsplash.com/photo-1759563874667-73fd773d33d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI1ODAwODZ8&ixlib=rb-4.1.0&q=80&w=1080') center/cover no-repeat",
+        "height": 220
+      },
+      "title": {
+        "size": 30,
+        "weight": "700",
+        "fill": "#FAFAF9"
+      },
+      "intro": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#A8A29E"
+      },
+      "heading": {
+        "size": 20,
+        "weight": "700",
+        "fill": "#FAFAF9"
+      },
+      "body": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#A8A29E"
+      },
+      "meta": {
+        "size": 13,
+        "weight": "500",
+        "fill": "#A8A29E"
+      },
+      "quote": {
+        "size": 14,
+        "weight": "700",
+        "fill": "#EAB308"
+      },
+      "flags": {
+        "headerBar": false,
+        "heroOverlay": false,
+        "sectionNumbers": false,
+        "quoteMarker": false
+      }
+    },
+    {
+      "kind": "article",
+      "id": "GJ40s",
+      "name": "03 杂志 Light",
+      "family": "03",
+      "label": "杂志",
+      "mode": "light",
+      "background": "#FAFAF9",
+      "surface": "#FAFAF9",
+      "text": "#0C0A09",
+      "muted": "#44403C",
+      "accent": "#CA8A04",
+      "line": "#CBD5E1",
+      "radius": 20,
+      "gap": 24,
+      "padding": 28,
+      "hero": {
+        "kind": "image",
+        "fill": "url('https://images.unsplash.com/photo-1759563874667-73fd773d33d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI1ODAwODZ8&ixlib=rb-4.1.0&q=80&w=1080') center/cover no-repeat",
+        "height": 220
+      },
+      "title": {
+        "size": 30,
+        "weight": "700",
+        "fill": "#0C0A09"
+      },
+      "intro": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#44403C"
+      },
+      "heading": {
+        "size": 20,
+        "weight": "700",
+        "fill": "#0C0A09"
+      },
+      "body": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#44403C"
+      },
+      "meta": {
+        "size": 13,
+        "weight": "500",
+        "fill": "#44403C"
+      },
+      "quote": {
+        "size": 14,
+        "weight": "700",
+        "fill": "#CA8A04"
+      },
+      "flags": {
+        "headerBar": false,
+        "heroOverlay": false,
+        "sectionNumbers": false,
+        "quoteMarker": false
+      }
+    },
+    {
+      "kind": "article",
+      "id": "EBxCi",
+      "name": "04 科技 Dark",
+      "family": "04",
+      "label": "科技",
+      "mode": "dark",
+      "background": "#0F172A",
+      "surface": "#0F172A",
+      "text": "#F8FAFC",
+      "muted": "#94A3B8",
+      "accent": "#F8FAFC",
+      "line": "#CBD5E1",
+      "radius": 20,
+      "gap": 24,
+      "padding": 28,
+      "hero": {
+        "kind": "image",
+        "fill": "url('./images/generated-1772579937162.png') center/cover no-repeat",
+        "height": 220
+      },
+      "title": {
+        "size": 28,
+        "weight": "800",
+        "fill": "#F8FAFC"
+      },
+      "intro": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#94A3B8"
+      },
+      "heading": {
+        "size": 20,
+        "weight": "700",
+        "fill": "#F8FAFC"
+      },
+      "body": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#94A3B8"
+      },
+      "meta": {
+        "size": 13,
+        "weight": "500",
+        "fill": "#94A3B8"
+      },
+      "quote": {
+        "size": 15,
+        "weight": "500",
+        "fill": "#F8FAFC"
+      },
+      "flags": {
+        "headerBar": false,
+        "heroOverlay": false,
+        "sectionNumbers": false,
+        "quoteMarker": false
+      }
+    },
+    {
+      "kind": "article",
+      "id": "QPb0Z",
+      "name": "04 科技 Light",
+      "family": "04",
+      "label": "科技",
+      "mode": "light",
+      "background": "#F0F4FF",
+      "surface": "#F0F4FF",
+      "text": "#1E293B",
+      "muted": "#334155",
+      "accent": "#1E293B",
+      "line": "#CBD5E1",
+      "radius": 20,
+      "gap": 24,
+      "padding": 28,
+      "hero": {
+        "kind": "image",
+        "fill": "url('./images/generated-1772579818128.png') center/cover no-repeat",
+        "height": 220
+      },
+      "title": {
+        "size": 28,
+        "weight": "800",
+        "fill": "#1E293B"
+      },
+      "intro": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#334155"
+      },
+      "heading": {
+        "size": 20,
+        "weight": "700",
+        "fill": "#1E293B"
+      },
+      "body": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#334155"
+      },
+      "meta": {
+        "size": 13,
+        "weight": "500",
+        "fill": "#334155"
+      },
+      "quote": {
+        "size": 15,
+        "weight": "500",
+        "fill": "#1E293B"
+      },
+      "flags": {
+        "headerBar": false,
+        "heroOverlay": false,
+        "sectionNumbers": false,
+        "quoteMarker": false
+      }
+    },
+    {
+      "kind": "article",
+      "id": "wiCwu",
+      "name": "05 生活 Dark",
+      "family": "05",
+      "label": "生活",
+      "mode": "dark",
+      "background": "#1A1512",
+      "surface": "#1A1512",
+      "text": "#FAF5F0",
+      "muted": "#A8A29E",
+      "accent": "#D6D3D1",
+      "line": "#CBD5E1",
+      "radius": 20,
+      "gap": 24,
+      "padding": 28,
+      "hero": {
+        "kind": "image",
+        "fill": "url('https://images.unsplash.com/photo-1771121789117-c881626f011b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI1ODAxMjF8&ixlib=rb-4.1.0&q=80&w=1080') center/cover no-repeat",
+        "height": 220
+      },
+      "title": {
+        "size": 26,
+        "weight": "700",
+        "fill": "#FAF5F0"
+      },
+      "intro": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#A8A29E"
+      },
+      "heading": {
+        "size": 20,
+        "weight": "700",
+        "fill": "#FAF5F0"
+      },
+      "body": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#A8A29E"
+      },
+      "meta": {
+        "size": 13,
+        "weight": "500",
+        "fill": "#A8A29E"
+      },
+      "quote": {
+        "size": 14,
+        "weight": "normal",
+        "fill": "#D6D3D1"
+      },
+      "flags": {
+        "headerBar": false,
+        "heroOverlay": false,
+        "sectionNumbers": false,
+        "quoteMarker": false
+      }
+    },
+    {
+      "kind": "article",
+      "id": "Tc2E9",
+      "name": "05 生活 Light",
+      "family": "05",
+      "label": "生活",
+      "mode": "light",
+      "background": "#FAFAFA",
+      "surface": "#FAFAFA",
+      "text": "#18181B",
+      "muted": "#3F3F46",
+      "accent": "#EC4899",
+      "line": "#CBD5E1",
+      "radius": 20,
+      "gap": 24,
+      "padding": 28,
+      "hero": {
+        "kind": "image",
+        "fill": "url('https://images.unsplash.com/photo-1767583880118-c79a2831042e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI1ODAwMjl8&ixlib=rb-4.1.0&q=80&w=1080') center/cover no-repeat",
+        "height": 220
+      },
+      "title": {
+        "size": 26,
+        "weight": "700",
+        "fill": "#18181B"
+      },
+      "intro": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#3F3F46"
+      },
+      "heading": {
+        "size": 20,
+        "weight": "700",
+        "fill": "#18181B"
+      },
+      "body": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#3F3F46"
+      },
+      "meta": {
+        "size": 13,
+        "weight": "500",
+        "fill": "#3F3F46"
+      },
+      "quote": {
+        "size": 48,
+        "weight": "700",
+        "fill": "#EC4899"
+      },
+      "flags": {
+        "headerBar": false,
+        "heroOverlay": false,
+        "sectionNumbers": false,
+        "quoteMarker": false
+      }
+    },
+    {
+      "kind": "article",
+      "id": "RK3dM",
+      "name": "06 典雅 Dark",
+      "family": "06",
+      "label": "典雅",
+      "mode": "dark",
+      "background": "#1C1917",
+      "surface": "#1C1917",
+      "text": "#FAFAF9",
+      "muted": "#A8A29E",
+      "accent": "#FAFAF9",
+      "line": "#CBD5E1",
+      "radius": 20,
+      "gap": 24,
+      "padding": 28,
+      "hero": {
+        "kind": "image",
+        "fill": "url('./images/generated-1772579834961.png') center/cover no-repeat",
+        "height": 220
+      },
+      "title": {
+        "size": 28,
+        "weight": "700",
+        "fill": "#FAFAF9"
+      },
+      "intro": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#A8A29E"
+      },
+      "heading": {
+        "size": 22,
+        "weight": "700",
+        "fill": "#FAFAF9"
+      },
+      "body": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#A8A29E"
+      },
+      "meta": {
+        "size": 13,
+        "weight": "normal",
+        "fill": "#78716C"
+      },
+      "quote": {
+        "size": 16,
+        "weight": "600",
+        "fill": "#FAFAF9"
+      },
+      "flags": {
+        "headerBar": false,
+        "heroOverlay": false,
+        "sectionNumbers": false,
+        "quoteMarker": false
+      }
+    },
+    {
+      "kind": "article",
+      "id": "zlQmy",
+      "name": "06 典雅 Light",
+      "family": "06",
+      "label": "典雅",
+      "mode": "light",
+      "background": "#FAFAF9",
+      "surface": "#FAFAF9",
+      "text": "#0C0A09",
+      "muted": "#44403C",
+      "accent": "#0C0A09",
+      "line": "#CBD5E1",
+      "radius": 20,
+      "gap": 24,
+      "padding": 28,
+      "hero": {
+        "kind": "image",
+        "fill": "url('./images/generated-1772579834961.png') center/cover no-repeat",
+        "height": 220
+      },
+      "title": {
+        "size": 28,
+        "weight": "700",
+        "fill": "#0C0A09"
+      },
+      "intro": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#44403C"
+      },
+      "heading": {
+        "size": 22,
+        "weight": "700",
+        "fill": "#0C0A09"
+      },
+      "body": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#44403C"
+      },
+      "meta": {
+        "size": 13,
+        "weight": "normal",
+        "fill": "#A8A29E"
+      },
+      "quote": {
+        "size": 16,
+        "weight": "600",
+        "fill": "#0C0A09"
+      },
+      "flags": {
+        "headerBar": false,
+        "heroOverlay": false,
+        "sectionNumbers": false,
+        "quoteMarker": false
+      }
+    },
+    {
+      "kind": "article",
+      "id": "AKs17",
+      "name": "07 粗犷 Dark",
+      "family": "07",
+      "label": "粗犷",
+      "mode": "dark",
+      "background": "#0F172A",
+      "surface": "#0F172A",
+      "text": "#F8FAFC",
+      "muted": "#94A3B8",
+      "accent": "#F8FAFC",
+      "line": "#CBD5E1",
+      "radius": 20,
+      "gap": 24,
+      "padding": 28,
+      "hero": {
+        "kind": "image",
+        "fill": "url('./images/generated-1772579997445.png') center/cover no-repeat",
+        "height": 220
+      },
+      "title": {
+        "size": 26,
+        "weight": "800",
+        "fill": "#F8FAFC"
+      },
+      "intro": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#94A3B8"
+      },
+      "heading": {
+        "size": 20,
+        "weight": "800",
+        "fill": "#F8FAFC"
+      },
+      "body": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#94A3B8"
+      },
+      "meta": {
+        "size": 13,
+        "weight": "500",
+        "fill": "#64748B"
+      },
+      "quote": {
+        "size": 15,
+        "weight": "700",
+        "fill": "#F8FAFC"
+      },
+      "flags": {
+        "headerBar": false,
+        "heroOverlay": false,
+        "sectionNumbers": false,
+        "quoteMarker": false
+      }
+    },
+    {
+      "kind": "article",
+      "id": "eLE4I",
+      "name": "07 粗犷 Light",
+      "family": "07",
+      "label": "粗犷",
+      "mode": "light",
+      "background": "#F8FAFC",
+      "surface": "#F8FAFC",
+      "text": "#020617",
+      "muted": "#334155",
+      "accent": "#F8FAFC",
+      "line": "#CBD5E1",
+      "radius": 20,
+      "gap": 24,
+      "padding": 28,
+      "hero": {
+        "kind": "image",
+        "fill": "url('./images/generated-1772579997445.png') center/cover no-repeat",
+        "height": 220
+      },
+      "title": {
+        "size": 26,
+        "weight": "800",
+        "fill": "#020617"
+      },
+      "intro": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#334155"
+      },
+      "heading": {
+        "size": 20,
+        "weight": "800",
+        "fill": "#020617"
+      },
+      "body": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#334155"
+      },
+      "meta": {
+        "size": 13,
+        "weight": "500",
+        "fill": "#94A3B8"
+      },
+      "quote": {
+        "size": 15,
+        "weight": "700",
+        "fill": "#F8FAFC"
+      },
+      "flags": {
+        "headerBar": false,
+        "heroOverlay": false,
+        "sectionNumbers": false,
+        "quoteMarker": false
+      }
+    },
+    {
+      "kind": "article",
+      "id": "X6VqH",
+      "name": "08 活泼 Dark",
+      "family": "08",
+      "label": "活泼",
+      "mode": "dark",
+      "background": "#1E1B4B",
+      "surface": "#1E1B4B",
+      "text": "#E0E7FF",
+      "muted": "#A5B4FC",
+      "accent": "#E0E7FF",
+      "line": "#CBD5E1",
+      "radius": 20,
+      "gap": 24,
+      "padding": 28,
+      "hero": {
+        "kind": "image",
+        "fill": "url('./images/generated-1772580131213.png') center/cover no-repeat",
+        "height": 220
+      },
+      "title": {
+        "size": 28,
+        "weight": "700",
+        "fill": "#E0E7FF"
+      },
+      "intro": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#A5B4FC"
+      },
+      "heading": {
+        "size": 21,
+        "weight": "700",
+        "fill": "#E0E7FF"
+      },
+      "body": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#A5B4FC"
+      },
+      "meta": {
+        "size": 13,
+        "weight": "600",
+        "fill": "#818CF8"
+      },
+      "quote": {
+        "size": 16,
+        "weight": "600",
+        "fill": "#E0E7FF"
+      },
+      "flags": {
+        "headerBar": false,
+        "heroOverlay": false,
+        "sectionNumbers": false,
+        "quoteMarker": false
+      }
+    },
+    {
+      "kind": "article",
+      "id": "ZwGhE",
+      "name": "08 活泼 Light",
+      "family": "08",
+      "label": "活泼",
+      "mode": "light",
+      "background": "#EEF2FF",
+      "surface": "#EEF2FF",
+      "text": "#1E1B4B",
+      "muted": "#4338CA",
+      "accent": "#1E1B4B",
+      "line": "#CBD5E1",
+      "radius": 20,
+      "gap": 24,
+      "padding": 28,
+      "hero": {
+        "kind": "image",
+        "fill": "url('./images/generated-1772580131213.png') center/cover no-repeat",
+        "height": 220
+      },
+      "title": {
+        "size": 28,
+        "weight": "700",
+        "fill": "#1E1B4B"
+      },
+      "intro": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#4338CA"
+      },
+      "heading": {
+        "size": 21,
+        "weight": "700",
+        "fill": "#1E1B4B"
+      },
+      "body": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#4338CA"
+      },
+      "meta": {
+        "size": 13,
+        "weight": "600",
+        "fill": "#6366F1"
+      },
+      "quote": {
+        "size": 16,
+        "weight": "600",
+        "fill": "#1E1B4B"
+      },
+      "flags": {
+        "headerBar": false,
+        "heroOverlay": false,
+        "sectionNumbers": false,
+        "quoteMarker": false
+      }
+    },
+    {
+      "kind": "article",
+      "id": "49JrE",
+      "name": "09 商务 Dark",
+      "family": "09",
+      "label": "商务",
+      "mode": "dark",
+      "background": "#020617",
+      "surface": "#020617",
+      "text": "#F8FAFC",
+      "muted": "#CBD5E1",
+      "accent": "#60A5FA",
+      "line": "#CBD5E1",
+      "radius": 20,
+      "gap": 24,
+      "padding": 28,
+      "hero": {
+        "kind": "gradient",
+        "fill": "linear-gradient(180deg, #0F172A 0%, #1E3A8A 60%, #1E40AF 100%)",
+        "height": 260
+      },
+      "title": {
+        "size": 28,
+        "weight": "700",
+        "fill": "#F8FAFC"
+      },
+      "intro": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#CBD5E1"
+      },
+      "heading": {
+        "size": 20,
+        "weight": "700",
+        "fill": "#F8FAFC"
+      },
+      "body": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#CBD5E1"
+      },
+      "meta": {
+        "size": 14,
+        "weight": "600",
+        "fill": "#F8FAFC"
+      },
+      "quote": {
+        "size": 14,
+        "weight": "500",
+        "fill": "#60A5FA"
+      },
+      "flags": {
+        "headerBar": false,
+        "heroOverlay": true,
+        "sectionNumbers": false,
+        "quoteMarker": false
+      }
+    },
+    {
+      "kind": "article",
+      "id": "e7KIB",
+      "name": "09 商务 Light",
+      "family": "09",
+      "label": "商务",
+      "mode": "light",
+      "background": "#F8FAFC",
+      "surface": "#F8FAFC",
+      "text": "#020617",
+      "muted": "#334155",
+      "accent": "#1E3A8A",
+      "line": "#CBD5E1",
+      "radius": 20,
+      "gap": 24,
+      "padding": 28,
+      "hero": {
+        "kind": "gradient",
+        "fill": "linear-gradient(180deg, #0F172A 0%, #1E3A8A 60%, #1E40AF 100%)",
+        "height": 260
+      },
+      "title": {
+        "size": 28,
+        "weight": "700",
+        "fill": "#020617"
+      },
+      "intro": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#334155"
+      },
+      "heading": {
+        "size": 20,
+        "weight": "700",
+        "fill": "#020617"
+      },
+      "body": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#334155"
+      },
+      "meta": {
+        "size": 14,
+        "weight": "600",
+        "fill": "#020617"
+      },
+      "quote": {
+        "size": 14,
+        "weight": "500",
+        "fill": "#1E3A8A"
+      },
+      "flags": {
+        "headerBar": false,
+        "heroOverlay": true,
+        "sectionNumbers": false,
+        "quoteMarker": false
+      }
+    },
+    {
+      "kind": "article",
+      "id": "stjEM",
+      "name": "10 艺术 Dark",
+      "family": "10",
+      "label": "艺术",
+      "mode": "dark",
+      "background": "#18181B",
+      "surface": "#18181B",
+      "text": "#FAFAFA",
+      "muted": "#D4D4D8",
+      "accent": "#F472B6",
+      "line": "#CBD5E1",
+      "radius": 20,
+      "gap": 24,
+      "padding": 28,
+      "hero": {
+        "kind": "color",
+        "fill": "#18181B",
+        "height": 280
+      },
+      "title": {
+        "size": 28,
+        "weight": "800",
+        "fill": "#FAFAFA"
+      },
+      "intro": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#D4D4D8"
+      },
+      "heading": {
+        "size": 32,
+        "weight": "800",
+        "fill": "#F472B6"
+      },
+      "body": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#D4D4D8"
+      },
+      "meta": {
+        "size": 14,
+        "weight": "700",
+        "fill": "#FAFAFA"
+      },
+      "quote": {
+        "size": 28,
+        "weight": "800",
+        "fill": "#F472B6"
+      },
+      "flags": {
+        "headerBar": false,
+        "heroOverlay": true,
+        "sectionNumbers": true,
+        "quoteMarker": true
+      }
+    },
+    {
+      "kind": "article",
+      "id": "rdHk7",
+      "name": "10 艺术 Light",
+      "family": "10",
+      "label": "艺术",
+      "mode": "light",
+      "background": "#FAFAFA",
+      "surface": "#FAFAFA",
+      "text": "#18181B",
+      "muted": "#3F3F46",
+      "accent": "#EC4899",
+      "line": "#CBD5E1",
+      "radius": 20,
+      "gap": 24,
+      "padding": 28,
+      "hero": {
+        "kind": "color",
+        "fill": "#18181B",
+        "height": 280
+      },
+      "title": {
+        "size": 28,
+        "weight": "800",
+        "fill": "#18181B"
+      },
+      "intro": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#3F3F46"
+      },
+      "heading": {
+        "size": 32,
+        "weight": "800",
+        "fill": "#EC4899"
+      },
+      "body": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#3F3F46"
+      },
+      "meta": {
+        "size": 14,
+        "weight": "700",
+        "fill": "#18181B"
+      },
+      "quote": {
+        "size": 28,
+        "weight": "800",
+        "fill": "#EC4899"
+      },
+      "flags": {
+        "headerBar": false,
+        "heroOverlay": true,
+        "sectionNumbers": true,
+        "quoteMarker": true
+      }
+    }
+  ],
+  "ctas": [
+    {
+      "kind": "cta",
+      "id": "Z7dEq",
+      "name": "CTA - Dark Gradient",
+      "family": "cta",
+      "label": "Dark Gradient",
+      "mode": "dark",
+      "background": "linear-gradient(160deg, #0F0A1E 0%, #1A1035 50%, #150D28 100%)",
+      "surface": "#1A1035",
+      "text": "#F0EAFF",
+      "muted": "#8B7DB0",
+      "accent": "#7C3AED",
+      "line": "#2D1B69",
+      "radius": 16,
+      "gap": 28,
+      "padding": 48,
+      "hero": {
+        "kind": "none",
+        "fill": "transparent",
+        "height": 0
+      },
+      "title": {
+        "size": 26,
+        "weight": "800",
+        "fill": "#F0EAFF"
+      },
+      "intro": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#8B7DB0"
+      },
+      "heading": {
+        "size": 20,
+        "weight": "normal",
+        "fill": "#FFFFFF"
+      },
+      "body": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#8B7DB0"
+      },
+      "meta": {
+        "size": 12,
+        "weight": "600",
+        "fill": "#FFFFFF"
+      },
+      "quote": {
+        "size": 14,
+        "weight": "500",
+        "fill": "#7C3AED"
+      },
+      "flags": {
+        "headerBar": false,
+        "heroOverlay": false,
+        "sectionNumbers": false,
+        "quoteMarker": false
+      }
+    },
+    {
+      "kind": "cta",
+      "id": "U5FfV",
+      "name": "CTA - Dark Minimal",
+      "family": "cta",
+      "label": "Dark Minimal",
+      "mode": "dark",
+      "background": "#0F0F0F",
+      "surface": "#1A1A1A",
+      "text": "#F0F0F0",
+      "muted": "#888888",
+      "accent": "#555555",
+      "line": "#2A2A2A",
+      "radius": 12,
+      "gap": 28,
+      "padding": 48,
+      "hero": {
+        "kind": "none",
+        "fill": "transparent",
+        "height": 0
+      },
+      "title": {
+        "size": 28,
+        "weight": "700",
+        "fill": "#F0F0F0"
+      },
+      "intro": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#888888"
+      },
+      "heading": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#888888"
+      },
+      "body": {
+        "size": 13,
+        "weight": "normal",
+        "fill": "#888888"
+      },
+      "meta": {
+        "size": 13,
+        "weight": "500",
+        "fill": "#60A5FA"
+      },
+      "quote": {
+        "size": 14,
+        "weight": "500",
+        "fill": "#555555"
+      },
+      "flags": {
+        "headerBar": false,
+        "heroOverlay": false,
+        "sectionNumbers": false,
+        "quoteMarker": false
+      }
+    },
+    {
+      "kind": "cta",
+      "id": "vj1H4",
+      "name": "CTA - Light Gradient",
+      "family": "cta",
+      "label": "Light Gradient",
+      "mode": "light",
+      "background": "linear-gradient(135deg, #F8FAFF 0%, #F0F0FF 50%, #FFF5F8 100%)",
+      "surface": "#FFFFFF",
+      "text": "#1A1A2E",
+      "muted": "#6B7280",
+      "accent": "#A78BFA",
+      "line": "#E0E0F0",
+      "radius": 16,
+      "gap": 28,
+      "padding": 48,
+      "hero": {
+        "kind": "none",
+        "fill": "transparent",
+        "height": 0
+      },
+      "title": {
+        "size": 26,
+        "weight": "800",
+        "fill": "#1A1A2E"
+      },
+      "intro": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#6B7280"
+      },
+      "heading": {
+        "size": 20,
+        "weight": "normal",
+        "fill": "#000000"
+      },
+      "body": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#6B7280"
+      },
+      "meta": {
+        "size": 12,
+        "weight": "600",
+        "fill": "#FFFFFF"
+      },
+      "quote": {
+        "size": 14,
+        "weight": "500",
+        "fill": "#A78BFA"
+      },
+      "flags": {
+        "headerBar": false,
+        "heroOverlay": false,
+        "sectionNumbers": false,
+        "quoteMarker": false
+      }
+    },
+    {
+      "kind": "cta",
+      "id": "YCqgA",
+      "name": "CTA - Light Minimal",
+      "family": "cta",
+      "label": "Light Minimal",
+      "mode": "light",
+      "background": "#FFFFFF",
+      "surface": "#F8F8F8",
+      "text": "#111111",
+      "muted": "#666666",
+      "accent": "#999999",
+      "line": "#E8E8E8",
+      "radius": 12,
+      "gap": 28,
+      "padding": 48,
+      "hero": {
+        "kind": "none",
+        "fill": "transparent",
+        "height": 0
+      },
+      "title": {
+        "size": 28,
+        "weight": "700",
+        "fill": "#111111"
+      },
+      "intro": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#666666"
+      },
+      "heading": {
+        "size": 15,
+        "weight": "normal",
+        "fill": "#666666"
+      },
+      "body": {
+        "size": 13,
+        "weight": "normal",
+        "fill": "#555555"
+      },
+      "meta": {
+        "size": 13,
+        "weight": "500",
+        "fill": "#3B82F6"
+      },
+      "quote": {
+        "size": 14,
+        "weight": "500",
+        "fill": "#999999"
+      },
+      "flags": {
+        "headerBar": false,
+        "heroOverlay": false,
+        "sectionNumbers": false,
+        "quoteMarker": false
+      }
+    },
+    {
+      "kind": "cta",
+      "id": "5hruL",
+      "name": "CTA - Tech Neon",
+      "family": "cta",
+      "label": "Tech Neon",
+      "mode": "light",
+      "background": "#0A0A0A",
+      "surface": "#0A0A0A",
+      "text": "#4ADE80",
+      "muted": "#4ADE8080",
+      "accent": "#4ADE80",
+      "line": "#1A3A2A",
+      "radius": 16,
+      "gap": 24,
+      "padding": 48,
+      "hero": {
+        "kind": "none",
+        "fill": "transparent",
+        "height": 0
+      },
+      "title": {
+        "size": 12,
+        "weight": "normal",
+        "fill": "#4ADE80"
+      },
+      "intro": {
+        "size": 14,
+        "weight": "normal",
+        "fill": "#4ADE8080"
+      },
+      "heading": {
+        "size": 22,
+        "weight": "700",
+        "fill": "#4ADE80"
+      },
+      "body": {
+        "size": 14,
+        "weight": "normal",
+        "fill": "#4ADE80"
+      },
+      "meta": {
+        "size": 13,
+        "weight": "normal",
+        "fill": "#4ADE8080"
+      },
+      "quote": {
+        "size": 14,
+        "weight": "normal",
+        "fill": "#4ADE80"
+      },
+      "flags": {
+        "headerBar": false,
+        "heroOverlay": false,
+        "sectionNumbers": false,
+        "quoteMarker": false
+      }
+    },
+    {
+      "kind": "cta",
+      "id": "wyyNI",
+      "name": "CTA - Warm Editorial",
+      "family": "cta",
+      "label": "Warm Editorial",
+      "mode": "light",
+      "background": "#FDF6EE",
+      "surface": "#FFFFFF",
+      "text": "#3D2E1E",
+      "muted": "#8B7355",
+      "accent": "#8B7355",
+      "line": "#E8DFD0",
+      "radius": 4,
+      "gap": 24,
+      "padding": 48,
+      "hero": {
+        "kind": "none",
+        "fill": "transparent",
+        "height": 0
+      },
+      "title": {
+        "size": 28,
+        "weight": "700",
+        "fill": "#3D2E1E"
+      },
+      "intro": {
+        "size": 14,
+        "weight": "normal",
+        "fill": "#8B7355"
+      },
+      "heading": {
+        "size": 14,
+        "weight": "normal",
+        "fill": "#8B7355"
+      },
+      "body": {
+        "size": 14,
+        "weight": "normal",
+        "fill": "#8B7355"
+      },
+      "meta": {
+        "size": 13,
+        "weight": "normal",
+        "fill": "#A08B6E"
+      },
+      "quote": {
+        "size": 14,
+        "weight": "normal",
+        "fill": "#8B7355"
+      },
+      "flags": {
+        "headerBar": false,
+        "heroOverlay": false,
+        "sectionNumbers": false,
+        "quoteMarker": false
+      }
+    }
+  ]
+}

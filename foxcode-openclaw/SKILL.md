@@ -288,11 +288,7 @@ foxcode-openclaw/
 
 ## Changelog
 
-### v1.2.4 (Current)
-- **Added**: Affiliate Links section with registration/API keys URLs
-- Always use affiliate URL when user asks for Foxcode links
-
-### v1.2.3
+### v1.2.3.1 (Current)
 - **Added**: Disclaimer - use only with knowledge of OpenClaw settings
 - **Added**: Rollback instructions for failure recovery
 - Author not responsible for any damage to setup

@@ -128,7 +128,8 @@ if [[ -f "$CONFIG_FILE" ]]; then
   "enabled": true,
   "env": {
     "WECHAT_APPID": "your-appid",
-    "WECHAT_SECRET": "your-secret"
+    "WECHAT_SECRET": "your-secret",
+    "WECHAT_DRAFT_MEDIA_ID": ""
   }
 }
 EOF
@@ -146,7 +147,8 @@ else
         "enabled": true,
         "env": {
           "WECHAT_APPID": "your-appid",
-          "WECHAT_SECRET": "your-secret"
+          "WECHAT_SECRET": "your-secret",
+          "WECHAT_DRAFT_MEDIA_ID": ""
         }
       }
     }
@@ -160,8 +162,9 @@ printf "\n"
 printf "${YELLOW}注意 / Note:${NC}\n"
 printf "  • WECHAT_APPID/SECRET 仅草稿上传需要，研究和写作不需要\n"
 printf "  • WECHAT_APPID/SECRET only needed for draft upload, not for research/writing\n"
+printf "  • WECHAT_DRAFT_MEDIA_ID 可选，用于更新已有草稿 / Optional for updating an existing draft\n"
 printf "  • 排版设计需要 Pencil MCP 服务 / Design templates require Pencil MCP server\n"
-printf "  • HTML 转换需要 md2wechat 技能 / HTML rendering needs md2wechat skill\n"
+printf "  • HTML 转换、官方图片上传、官方草稿保存都已内建 / HTML rendering, official image upload, and official draft save are built in\n"
 printf "\n"
 printf "安装路径 / Installed to: ${GREEN}%s${NC}\n" "$INSTALL_DIR"
 printf "文档 / Documentation: https://github.com/${REPO}/tree/main/research-to-wechat#readme\n"
