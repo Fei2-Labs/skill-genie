@@ -8,7 +8,7 @@ metadata:
     requires:
       anyBins: ["python3"]
     primaryEnv: "WECHAT_APPID"
-  version: "0.5.0"
+  version: "0.5.1"
   category: "content-generation"
   author: "Skill Genie"
   license: "MIT"
