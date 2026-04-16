@@ -152,6 +152,17 @@ Resolve WeChat draft delivery in this order:
 2. `L1 assisted-browser`: only use a browser when the account setup or draft inspection needs human help
 3. `L2 manual-handoff`: stop with exact file paths and required API fields when official delivery cannot proceed
 
+
+## Author Config (EXTEND.md)
+
+The renderer reads an optional `EXTEND.md` for author-specific CTA content and preferences. This keeps the skill generic — CTA text, QR codes, and blog URLs belong to the author, not the skill.
+
+Lookup order: project dir → `~/.config/research-to-wechat/` → `~/.research-to-wechat/`
+
+See [author-config.md](references/author-config.md) for the full format and field reference.
+
+When `EXTEND.md` is present with a `cta` section, the renderer appends a styled CTA block after the article body. When absent, no CTA is rendered.
+
 ## Style Resolution
 
 Resolve style in this order:

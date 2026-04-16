@@ -68,7 +68,7 @@ def load_article(path: str) -> ArticlePacket:
 
 def normalize_markdown_links(path: str) -> bool:
     original = read_text(path)
-    normalized = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r"\1 (\2)", original)
+    normalized = re.sub(r"(?<!!)\[([^\]]+)\]\(([^)]+)\)", r"\1 (\2)", original)
     if normalized == original:
         return False
     write_text(path, normalized)
