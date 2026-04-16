@@ -136,7 +136,6 @@ This skill executes every stage itself:
 - source ingest via bundled fetch script, browser tools, and PDF inspection
 - markdown polish via normalization rules in this skill
 - inline visual planning and cover direction via native article analysis
-- article design via optional Pencil MCP access to `design.pen`
 - design catalog compile via `python3 "${SKILL_DIR}/scripts/wechat_delivery.py" design-catalog`
 - WeChat HTML rendering via `python3 "${SKILL_DIR}/scripts/wechat_delivery.py" render`
 - image upload via `python3 "${SKILL_DIR}/scripts/wechat_delivery.py" upload-images`
@@ -176,7 +175,6 @@ Use the full style system in [style-engine.md](references/style-engine.md).
 Visual rendering is decided by:
 - `styleMode`
 - `structureFrame`
-- design selection from `design.pen` when Pencil MCP is available
 - `light` or `dark` output mode
 
 ## Execution
@@ -186,15 +184,42 @@ Run the article through these phases:
 2. source packet, brief, and strategic clarification
 3. research architecture with structured question lattice
 4. research merge and evidence ledger
-5. frame-routed master draft with normalization checklist and writing self-check
-6. refinement, visual strategy, image evaluation, and optional design selection
-7. native WeChat HTML rendering, image upload, draft save, and manifest
-8. optional multi-platform content generation and distribution
+5. frame-routed master draft with normalization checklist, writing self-check, and **machine-verified Chinese de-AI scan** (Phase 5 must not proceed without running these):
+   ```bash
+   # negation-contrast patterns (must be 0 hits)
+   grep -n '不是.*而是\|不仅.*而且\|不只.*更\|不再.*而是\|已经不是' article-formatted.md
+   # em-dash count (≤5 in body)
+   grep -c '——' article-formatted.md
+   # exclamation marks (must be 0)
+   grep -c '！' article-formatted.md
+   ```
+6. **微信敏感词合规检查**（⛔ 必须通过才能继续）：用 `wechat-compliance-check` 扫描 `article-formatted.md`，有命中则改写后重新扫描，直到零违规。
+7. refinement, visual strategy, and image evaluation
+8. native WeChat HTML rendering via `wechat_delivery.py render`, image upload, draft save, and manifest.
 
-Phase 8 only executes when the user explicitly requests it.
+   **Image upload rules:**
+   - If `imgs/cdn-urls.json` already exists from a previous upload, **skip re-uploading unchanged images**. Only upload new or modified files (compare filename + file size/mtime).
+   - `wechatqr.png` (CTA QR code) must reuse the existing CDN URL from project-level `images/wechatqr.png` or a previous `cdn-urls.json`. Never re-upload the same QR code per article.
+   - After upload, always merge new CDN URLs into the existing `cdn-urls.json` (not overwrite).
+
+   **Draft save rules:**
+   - If `manifest.json` already contains a `media_id`, pass `--media-id` to `save-draft` to **update the existing draft**. Never create a duplicate.
+   - If a duplicate draft was accidentally created, delete it via API (`draft/delete`) immediately and keep only the original `media_id`.
+   - `manifest.json` is the single source of truth for `media_id`.
+
+   **Before draft save, run HTML compliance check** (must all pass):
+   ```bash
+   grep -c 'class=' article.html          # must be 0
+   grep -c '<style' article.html          # must be 0
+   grep -c '<a href' article.html         # must be 0
+   # outermost <section> must have background
+   python3 -c "import re;h=open('article.html').read();m=re.search(r'<section[^>]*>',h);print('OK' if m and 'background' in m.group() else 'FAIL')"
+   ```
+9. optional multi-platform content generation and distribution
+
+Phase 9 only executes when the user explicitly requests it.
 
 Use the execution contract in [execution-contract.md](references/execution-contract.md).
-Use the design guide in [design-guide.md](references/design-guide.md) for article design selection.
 Use the platform copy specs in [platform-copy.md](references/platform-copy.md) for Phase 8.
 
 ## Done Condition
@@ -210,7 +235,9 @@ The skill is complete only when all of these hold:
 - every image placeholder was evaluated against placement criteria before generation
 - every generated or selected image passed the two-tier quality check
 - markdown and HTML agree on title, summary, cover, and image paths
+- HTML contains zero `class=` attributes, zero `<style>` tags, zero `<a href>` links, and outermost `<section>` has explicit `background`
 - `manifest.json` agrees with the actual output set and draft state
 - the article does not overclaim research effort or authorship
+- `wechat-compliance-check` returned zero violations on the final markdown
 - the workflow can stop safely at the highest-quality completed artifact if a later handoff fails
 - if Phase 8 was triggered, platform copies follow [platform-copy.md](references/platform-copy.md) and manifest includes their output entries
