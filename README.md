@@ -32,6 +32,7 @@ Most personal automation fails because the best methods live in scattered notes.
 - [`research-to-wechat`](./research-to-wechat): End-to-end article orchestration that turns topics, URLs, and transcripts into researched Markdown, visual assets, WeChat-ready HTML, and a saved draft.
 - [`wechat-compliance-check`](./wechat-compliance-check): Scan WeChat articles for 100+ sensitive words across 8 categories (VPN tools, political, reverse-engineering, grey market, etc.) and auto-rewrite violations before publishing.
 - [`aegis-protocol`](./aegis-protocol): High-confidence code security review workflow for changed code, using modern threat-informed methodologies with strict false-positive filtering.
+- [`linuxdo-application`](./linuxdo-application): Craft high-pass-rate, de-AI'd Chinese applications (小作文) for Linux.do registration through adaptive survey and rule-aware text generation.
 
 ## Skill layout
 
@@ -91,6 +92,7 @@ Each skill folder should contain:
 - [`research-to-wechat`](./research-to-wechat): 面向公众号内容生产的端到端文章编排 skill，可把选题、链接和字幕转成深度研究文章、配图、HTML 与草稿箱结果
 - [`wechat-compliance-check`](./wechat-compliance-check): 扫描公众号文章中 8 大类 100+ 敏感词（翻墙工具、政治敏感、逆向破解、灰产等），自动改写为安全表述
 - [`aegis-protocol`](./aegis-protocol): 高置信度代码安全审查工作流，基于现代威胁建模方法论，严格过滤误报
+- [`linuxdo-application`](./linuxdo-application): 通过自适应问卷和规则感知生成，为 Linux.do 注册撰写高通过率、去 AI 化的中文申请小作文
 
 ## 技能结构
 
@@ -150,6 +152,7 @@ Each skill folder should contain:
 - [`research-to-wechat`](./research-to-wechat): トピック、URL、字幕から調査済みMarkdown、ビジュアル、WeChat向けHTML、下書き保存までをつなぐ記事オーケストレーションスキル
 - [`wechat-compliance-check`](./wechat-compliance-check): WeChat記事の8カテゴリ100+センシティブワードをスキャンし、公開前に自動書き換え
 - [`aegis-protocol`](./aegis-protocol): 変更コードの高信頼性セキュリティレビューワークフロー、脅威モデリングベースの手法で誤検知を厳格にフィルタリング
+- [`linuxdo-application`](./linuxdo-application): アダプティブ調査とルール認識テキスト生成により、Linux.do登録用の高合格率・脱AI中国語申請文を作成
 
 ## スキル構成
 
