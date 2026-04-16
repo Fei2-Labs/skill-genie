@@ -202,17 +202,88 @@ Rules:
 - authentication: official `access_token` from `stable_token`
 - returned mapping replaces local paths in the render step
 
+### Pre-Draft Checklist
+
+Every item must pass before calling `save-draft`. Run checks via terminal, not by memory.
+
+**Content quality:**
+```bash
+# 1. Banned words (project AGENTS list — paste full BANNED var from project AGENTS)
+grep -nE "$BANNED" article-formatted.md || echo "✅ 禁用词通过"
+
+# 2. AI sentence patterns
+grep -n '不是.*而是\|不仅.*而且\|不只.*更\|不再.*而是' article-formatted.md && echo "❌ 否定排比" || echo "✅ 否定排比通过"
+
+# 3. Dash count (body ≤5)
+grep -c '——' article-formatted.md
+
+# 4. Exclamation marks (must be 0)
+grep -c '！' article-formatted.md
+
+# 5. WeChat compliance (sensitive words)
+# Run wechat-compliance-check skill scan; ALWAYS hits must be fixed, CONTEXT hits need human judgment
+```
+
+**HTML integrity:**
+```bash
+# 6. No class attributes
+grep -c 'class=' article.html | xargs -I{} test {} -eq 0 && echo "✅ no class" || echo "❌ class= found"
+
+# 7. No <style> tags
+grep -c '<style' article.html | xargs -I{} test {} -eq 0 && echo "✅ no style" || echo "❌ <style> found"
+
+# 8. No <a href> links
+grep -c '<a href' article.html | xargs -I{} test {} -eq 0 && echo "✅ no links" || echo "❌ <a href> found"
+
+# 9. Outer section has background
+python3 -c "import re;h=open('article.html').read();m=re.search(r'<section[^>]*>',h);print('✅ background' if m and 'background' in m.group() else '❌ outer section missing background')"
+```
+
+**Assets:**
+```bash
+# 10. Cover image exists and is correct size
+python3 -c "from PIL import Image;i=Image.open('imgs/cover.png');print(f'✅ cover {i.size}' if i.size==(900,383) else f'❌ cover wrong size: {i.size}')"
+
+# 11. All inline images exist
+ls -la imgs/inline-*.png
+
+# 12. Upload map exists and all CDN URLs are populated
+python3 -c "import json;m=json.load(open('upload-map.json'));assert all(v.startswith('http') for v in m.values());print(f'✅ {len(m)} images mapped')"
+
+# 13. HTML references CDN URLs, not local paths
+grep -c 'imgs/' article.html | xargs -I{} test {} -eq 0 && echo "✅ no local paths" || echo "❌ local image paths remain"
+```
+
+**Draft parameters:**
+```bash
+# 14. Frontmatter has required fields
+python3 -c "
+import re
+md=open('article-formatted.md').read()
+for f in ['title','author','digest','coverImage']:
+    assert f in md, f'❌ missing {f}'
+print('✅ frontmatter complete')
+"
+
+# 15. Cover image will be passed explicitly
+# save-draft MUST include --cover-image imgs/cover.png
+```
+
+Any failure → fix and re-check before proceeding to save-draft.
+
 ### Save Draft
 
 Create or update the draft with:
 ```bash
-python3 "${SKILL_DIR}/scripts/wechat_delivery.py" save-draft --html article.html --markdown article-formatted.md --appid "$WECHAT_APPID" --secret "$WECHAT_SECRET"
+python3 "${SKILL_DIR}/scripts/wechat_delivery.py" save-draft --html article.html --markdown article-formatted.md --cover-image imgs/cover.png --appid "$WECHAT_APPID" --secret "$WECHAT_SECRET"
 ```
 
 To update an existing draft instead of creating a new one:
 ```bash
-python3 "${SKILL_DIR}/scripts/wechat_delivery.py" save-draft --html article.html --markdown article-formatted.md --appid "$WECHAT_APPID" --secret "$WECHAT_SECRET" --media-id "$WECHAT_DRAFT_MEDIA_ID"
+python3 "${SKILL_DIR}/scripts/wechat_delivery.py" save-draft --html article.html --markdown article-formatted.md --cover-image imgs/cover.png --appid "$WECHAT_APPID" --secret "$WECHAT_SECRET" --media-id "$WECHAT_DRAFT_MEDIA_ID"
 ```
+
+`--cover-image` is mandatory. Omitting it results in a draft without a cover.
 
 Rules:
 - obtain `access_token` from `https://api.weixin.qq.com/cgi-bin/stable_token`
