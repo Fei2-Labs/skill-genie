@@ -13,8 +13,10 @@ from _wechat_delivery_shared import compact_html, load_article, pick_meta
 def render_article(markdown_path: str, output_path: str, image_map: dict[str, str], design: str, color_mode: str, design_path: str) -> dict[str, str]:
     packet = load_article(markdown_path)
     profile = load_profile(packet.meta, design, color_mode, design_path)
+    author_cfg = load_author_config(markdown_path)
     blocks = render_blocks(packet.body.splitlines(), profile, image_map, bool(pick_meta(packet.meta, "title")))
-    document = wrap_document(packet.meta, blocks, profile, image_map)
+    cta_block = render_cta(author_cfg, profile, image_map)
+    document = wrap_document(packet.meta, blocks + cta_block, profile, image_map)
     Path(output_path).write_text(document, encoding="utf-8")
     return {"html": output_path, "title": pick_meta(packet.meta, "title"), "colorMode": str(profile["mode"]), "designId": str(profile["id"]), "designName": str(profile["name"]), "ctaId": str(profile["cta"]["id"])}
 
@@ -64,9 +66,23 @@ def consume_code(lines: list[str], index: int, profile: dict[str, object]) -> tu
         chunk.append(lines[index])
         index += 1
     label = marker[3:].strip()
-    lead = f'<p style="margin:0 0 8px;color:{profile["accent"]};font-size:12px;">{html.escape(label)}</p>' if label else ""
-    block = f'<section style="margin:16px 0;padding:18px;background:{profile["surface"]};border:1px solid {profile["line"]};border-radius:{profile["radius"]}px;">{lead}<pre style="margin:0;white-space:pre-wrap;overflow-wrap:anywhere;color:{profile["text"]};"><code>{html.escape(chr(10).join(chunk))}</code></pre></section>'
+    lead = f'<p style="margin:0 0 8px;color:{profile["accent"]};font-size:12px;font-family:Menlo,Monaco,Consolas,monospace;">{html.escape(label)}</p>' if label else ""
+    code_bg = _code_bg(profile)
+    code_fg = _code_fg(profile)
+    block = f'<section style="margin:16px 0;padding:16px 18px;background:{code_bg};border:1px solid {profile["line"]};border-radius:{min(int(profile["radius"]), 10)}px;overflow-x:auto;">{lead}<pre style="margin:0;white-space:pre-wrap;overflow-wrap:anywhere;font-family:Menlo,Monaco,Consolas,monospace;font-size:13px;line-height:1.6;color:{code_fg};"><code>{html.escape(chr(10).join(chunk))}</code></pre></section>'
     return block, min(index + 1, len(lines))
+
+
+def _code_bg(profile: dict[str, object]) -> str:
+    if profile["mode"] == "dark":
+        return "#020617"
+    return "#F8FAFC"
+
+
+def _code_fg(profile: dict[str, object]) -> str:
+    if profile["mode"] == "dark":
+        return "#4ADE80"
+    return "#1E293B"
 
 
 def consume_heading(line: str, index: int, profile: dict[str, object], has_title: bool, state: dict[str, int]) -> tuple[str, int]:
@@ -78,15 +94,17 @@ def consume_heading(line: str, index: int, profile: dict[str, object], has_title
         state["sections"] += 1
         kicker = f'<p style="margin:0 0 6px;color:{profile["accent"]};font-size:12px;font-weight:700;">{state["sections"]:02d}</p>'
     text = inline_markup(line[raw:].strip())
-    block = f'<section style="margin:26px 0 12px;">{kicker}<h{level} style="margin:0;color:{profile["text"]};font-size:{size}px;line-height:1.35;">{text}</h{level}></section>'
+    border = f"padding-bottom:10px;border-bottom:1px solid {profile['line']};" if level <= 3 else ""
+    margin_top = "36px" if level <= 3 else "26px"
+    block = f'<section style="margin:{margin_top} 0 14px;">{kicker}<h{level} style="margin:0;color:{profile["text"]};font-size:{size}px;font-weight:700;line-height:1.35;{border}">{text}</h{level}></section>'
     return block, index + 1
 
 
 def render_image(line: str, index: int, profile: dict[str, object], image_map: dict[str, str]) -> tuple[str, int]:
     alt, src = image_line(line)
     target = image_map.get(src, src)
-    caption = f'<p style="margin:10px 0 0;color:{profile["muted"]};font-size:13px;">{html.escape(alt)}</p>' if alt else ""
-    block = f'<section style="margin:22px 0;"><img src="{html.escape(target)}" alt="{html.escape(alt)}" style="display:block;width:100%;border-radius:{profile["radius"]}px;" loading="lazy" />{caption}</section>'
+    caption = f'<p style="margin:8px 0 0;color:{profile["muted"]};font-size:12px;text-align:center;">{html.escape(alt)}</p>' if alt else ""
+    block = f'<section style="margin:20px 0;"><img src="{html.escape(target)}" alt="{html.escape(alt)}" style="display:block;width:100%;border-radius:{min(int(profile["radius"]), 12)}px;" loading="lazy" />{caption}</section>'
     return block, index + 1
 
 
@@ -161,7 +179,7 @@ def block_break(lines: list[str], index: int) -> bool:
 
 def inline_markup(text: str) -> str:
     escaped = html.escape(text)
-    escaped = re.sub(r"`([^`]+)`", r"<code>\1</code>", escaped)
+    escaped = re.sub(r"`([^`]+)`", r'<code style="background:rgba(0,0,0,0.3);padding:2px 6px;border-radius:4px;font-family:Menlo,Monaco,Consolas,monospace;font-size:0.9em;">\1</code>', escaped)
     escaped = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", escaped)
     escaped = re.sub(r"\*([^*]+)\*", r"<em>\1</em>", escaped)
     return re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r"\1 (\2)", escaped)
@@ -186,3 +204,86 @@ def separator_row(row: list[str]) -> bool:
 
 def split_row(line: str) -> list[str]:
     return [cell.strip() for cell in line.strip().strip("|").split("|")]
+
+
+def load_author_config(markdown_path: str) -> dict[str, object]:
+    """Load EXTEND.md from project dir, ~/.config/research-to-wechat, or ~/.research-to-wechat."""
+    project = Path(markdown_path).resolve().parent
+    candidates = [
+        project / "EXTEND.md",
+        project.parent / "EXTEND.md",
+        Path.home() / ".config" / "research-to-wechat" / "EXTEND.md",
+        Path.home() / ".research-to-wechat" / "EXTEND.md",
+    ]
+    for path in candidates:
+        if path.is_file():
+            return _parse_extend(path.read_text(encoding="utf-8"))
+    return {}
+
+
+def _parse_extend(text: str) -> dict[str, object]:
+    if not text.startswith("---"):
+        return {}
+    parts = text.split("---", 2)
+    if len(parts) < 3:
+        return {}
+    raw = parts[1].strip()
+    result: dict[str, object] = {}
+    current_section = ""
+    for line in raw.splitlines():
+        stripped = line.rstrip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        if not stripped.startswith((" ", "\t")) and ":" in stripped:
+            key, val = stripped.split(":", 1)
+            val = val.strip()
+            if not val:
+                current_section = key.strip()
+                result[current_section] = {}
+            else:
+                result[key.strip()] = _yaml_val(val)
+        elif current_section and isinstance(result.get(current_section), dict) and ":" in stripped:
+            key, val = stripped.strip().split(":", 1)
+            result[current_section][key.strip()] = _yaml_val(val.strip())
+    return result
+
+
+def _yaml_val(v: str) -> object:
+    v = v.strip()
+    if v.lower() in ("true", "yes"):
+        return True
+    if v.lower() in ("false", "no"):
+        return False
+    if len(v) >= 2 and v[0] == v[-1] and v[0] in ("'", '"'):
+        return v[1:-1]
+    return v
+
+
+def render_cta(author_cfg: dict[str, object], profile: dict[str, object], image_map: dict[str, str]) -> str:
+    cta = author_cfg.get("cta")
+    if not isinstance(cta, dict) or cta.get("enabled") is False:
+        return ""
+    heading = str(cta.get("heading", ""))
+    body = str(cta.get("body", ""))
+    footer = str(cta.get("footer", ""))
+    blog_url = str(cta.get("blog_url", ""))
+    interactions = str(cta.get("interactions", ""))
+    qr_src = str(cta.get("qr_image", ""))
+    qr_url = image_map.get(qr_src, image_map.get(f"imgs/{qr_src}", qr_src))
+    parts = []
+    if heading:
+        parts.append(f'<p style="margin:0 0 16px;font-size:16px;color:{profile["text"]};font-weight:600;">{html.escape(heading)}</p>')
+    if qr_url:
+        parts.append(f'<section style="margin:0 0 16px;"><img src="{html.escape(qr_url)}" alt="QR" style="display:block;width:120px;margin:0 auto;border-radius:8px;" /></section>')
+    if body:
+        parts.append(f'<p style="margin:0 0 12px;font-size:14px;color:{profile["muted"]};line-height:1.7;">{html.escape(body)}</p>')
+    if footer:
+        parts.append(f'<p style="margin:0 0 16px;font-size:13px;color:{profile["muted"]};opacity:0.7;">{html.escape(footer)}</p>')
+    if blog_url:
+        parts.append(f'<section style="margin:0 0 12px;padding:10px 16px;background:{profile["background"]};border-radius:6px;display:inline-block;"><p style="margin:0;font-size:13px;color:{profile["muted"]};">无删减全文请移步 {html.escape(blog_url)}</p></section>')
+    if interactions:
+        parts.append(f'<p style="margin:12px 0 0;font-size:13px;color:{profile["muted"]};opacity:0.7;">{html.escape(interactions)}</p>')
+    if not parts:
+        return ""
+    inner = "".join(parts)
+    return f'<section style="margin:40px 0 20px;padding:28px 20px;background:{profile["surface"]};border-radius:{min(int(profile["radius"]), 12)}px;text-align:center;">{inner}</section>'

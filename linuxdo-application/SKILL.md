@@ -144,6 +144,8 @@ After final output, confirm:
 
 | Skill | Use When |
 |-------|----------|
-| wechat-compliance-check | Need to check Chinese content for platform compliance |
-| psychology-master | Need deeper user profiling during survey |
 | humanizer-zh | Additional de-AI processing for Chinese text |
+| psychology-master | Deeper user profiling during survey |
+| wechat-compliance-check | Need to check Chinese content for platform compliance |
+
+**Always run `openskills list` before starting** to discover and load any relevant skills that can enhance the application writing process.
