@@ -285,6 +285,8 @@ python3 "${SKILL_DIR}/scripts/wechat_delivery.py" save-draft --html article.html
 
 `--cover-image` is mandatory. Omitting it results in a draft without a cover.
 
+**Draft replacement rule**: When re-creating a draft (e.g. to fix a missing cover), delete the old draft first via `/cgi-bin/draft/delete` before creating a new one. Never leave duplicate drafts. The `/cgi-bin/draft/update` API does **not** update `thumb_media_id`, so cover fixes always require delete + create.
+
 Rules:
 - obtain `access_token` from `https://api.weixin.qq.com/cgi-bin/stable_token`
 - upload the cover image with `/cgi-bin/material/add_material`
