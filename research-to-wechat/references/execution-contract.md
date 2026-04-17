@@ -118,6 +118,13 @@ Requirements:
 - 3 to 6 planned visual insertion points
 - temporary visual markers written as `![图片X](TBD)` on isolated lines
 - frontmatter must include `digest`, `structureFrame`, and `disclosure`
+
+Source attribution rules:
+- when the source is a forum post or community discussion, treat it as **topic inspiration only** — write an independent article on the topic, do not narrate the forum event ("某论坛出现了一个帖子")
+- never include forum usernames, post numbers, or reply counts in the article body
+- absorb community viewpoints into the author's own analysis ("换个角度看", "一个普遍的体感是") instead of quoting anonymous users ("有人说", "一个人的原话是")
+- the source URL belongs in the references section only, not in the narrative
+- no numbered markdown lists — WeChat wraps them in `<ol>` causing double numbering; use inline text ("第一步...第二步...") or continuous short paragraphs instead
 - article must end with `## 参考链接` or `## References`
 
 Apply the normalization checklist before refinement:
@@ -225,8 +232,11 @@ Every item must pass before calling `save-draft`. Run checks via terminal, not b
 # 1. Banned words (project AGENTS list — paste full BANNED var from project AGENTS)
 grep -nE "$BANNED" article-formatted.md || echo "✅ 禁用词通过"
 
-# 2. AI sentence patterns
-grep -n '不是.*而是\|不仅.*而且\|不只.*更\|不再.*而是' article-formatted.md && echo "❌ 否定排比" || echo "✅ 否定排比通过"
+# 2. AI sentence patterns — negation forms (MUST catch ALL variants, not just pairs)
+grep -n '不是\|不只\|不再\|而非\|而是' article-formatted.md && echo "❌ 否定句式命中 — 逐条检查，改写为正面陈述" || echo "✅ 否定句式通过"
+# Every hit must be reviewed. Acceptable only in direct quotes or factual negation (e.g. "不需要 API").
+# Unacceptable: "不是 A，而是 B" / "不是 A 造成的" / headings with 不是 / "而非" / "不再是"
+# Rewrite method: say B directly, delete A.
 
 # 3. Dash count (body ≤5)
 grep -c '——' article-formatted.md
