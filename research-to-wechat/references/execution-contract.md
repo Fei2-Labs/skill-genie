@@ -165,6 +165,17 @@ If Pencil MCP is unavailable:
 
 ## Phase 7: Native WeChat Delivery
 
+### Project AGENTS Compliance (mandatory before any delivery step)
+
+Before rendering or uploading, read the project's `AGENTS.md` (or the file it points to, e.g. `../AGENTS-wechat.md`) and verify the article against every applicable rule. Walk through each section of the project AGENTS file and confirm compliance:
+
+1. Read the project AGENTS file in full
+2. For each rule section (Writing Style, HTML Hard Rules, Typography, Image Rules, CTA Rule, Article End Structure, etc.), check the current article/HTML against it
+3. Log any violations found
+4. Fix all violations before proceeding to render
+
+This step catches project-specific rules that the skill's own checklist may not cover (e.g. project-specific banned words, CTA templates, font requirements, dark mode defaults, typography constraints like no nested lists).
+
 Before delivery, run:
 ```bash
 python3 "${SKILL_DIR}/scripts/wechat_delivery.py" check
@@ -298,6 +309,26 @@ print('✅ frontmatter complete')
 
 # 20. Cover image will be passed explicitly
 # save-draft MUST include --cover-image imgs/cover.png
+```
+
+Any failure → fix and re-check before proceeding to save-draft.
+
+**Project AGENTS compliance:**
+```bash
+# 21. Read project AGENTS file and verify every rule section
+# Walk through each section of the project AGENTS.md (or file it references):
+#   - File Conventions: directory naming, image location
+#   - Default Strategy: dark/light mode, cover generation
+#   - Layout & Theme: 375px mobile, CTA matching
+#   - Article End Structure: 参考链接 → CTA order
+#   - CTA Rule: template text, QR image, blog URL, interactions
+#   - HTML Hard Rules: inline style, no class, section nesting, dark bg
+#   - Image Rules: upload endpoint, img sizing, QR width
+#   - Typography: no title in body, font family, no nested lists, refs text-align:left
+#   - Writing Style: hook opening, meta info, transitions, analysis not translation
+#   - AI 句式禁令: negation pairs, dash limit, exclamation marks
+#   - Workflow step 3: banned words grep, AI pattern grep, compliance check
+# Any violation → fix before save-draft.
 ```
 
 Any failure → fix and re-check before proceeding to save-draft.
