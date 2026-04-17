@@ -188,6 +188,8 @@ The output HTML must satisfy:
 - no flexbox or grid
 - explicit dark background on the outer wrapper and key inner containers
 - title, author, digest, cover, and inline images aligned with markdown/frontmatter
+- reference links section: every `<section>` and `<p>` must have `text-align:left` (WeChat's justify stretches character spacing on short lines)
+- no numbered markdown lists (`1.` `2.` etc.) — WeChat wraps them in `<ol>` causing double numbering; use inline text ("第一步...第二步...") instead
 
 ### Upload Images
 
@@ -201,6 +203,7 @@ Rules:
 - multipart field name: `media`
 - authentication: official `access_token` from `stable_token`
 - returned mapping replaces local paths in the render step
+- **upload-map must include ALL images referenced in the HTML**: inline images, cover image (`imgs/cover.png`), and QR code (`wechatqr.png`). Missing any image results in broken local paths in the final HTML.
 
 ### Pre-Draft Checklist
 
@@ -252,11 +255,39 @@ python3 -c "import json;m=json.load(open('upload-map.json'));assert all(v.starts
 
 # 13. HTML references CDN URLs, not local paths
 grep -c 'imgs/' article.html | xargs -I{} test {} -eq 0 && echo "✅ no local paths" || echo "❌ local image paths remain"
+
+# 14. Upload map includes cover + QR (not just inline images)
+python3 -c "import json;m=json.load(open('upload-map.json'));missing=[k for k in ['imgs/cover.png','wechatqr.png'] if k not in m];print('❌ missing: '+str(missing)) if missing else print('✅ cover+QR in map')"
+
+# 15. No bare wechatqr.png in HTML
+grep -c '"wechatqr.png"' article.html | xargs -I{} test {} -eq 0 && echo "✅ QR is CDN" || echo "❌ bare wechatqr.png"
+```
+
+**WeChat rendering:**
+```bash
+# 16. Reference links section has text-align:left (prevents justify spacing)
+python3 -c "
+import re
+h=open('article.html').read()
+idx=h.find('参考链接')
+if idx<0: print('⚠️ no references section')
+else:
+    after=h[idx:idx+2000]
+    p_tags=re.findall(r'<p style=\"([^\"]+)\"',after)
+    bad=[i for i,s in enumerate(p_tags) if 'text-align:left' not in s and 'text-align:center' not in s]
+    print('❌ refs missing text-align:left on p tags: '+str(bad)) if bad else print('✅ refs left-aligned')
+"
+
+# 17. No numbered lists (WeChat renders double numbering)
+grep -c '^[0-9]\.' article-formatted.md | xargs -I{} test {} -eq 0 && echo "✅ no numbered lists" || echo "❌ numbered lists found — convert to inline text"
+
+# 18. No forum usernames or specific post references (unless explicitly requested)
+grep -cE '@[a-zA-Z]|linux\.do 上 [a-zA-Z]' article-formatted.md | xargs -I{} test {} -eq 0 && echo "✅ no usernames" || echo "❌ forum usernames found"
 ```
 
 **Draft parameters:**
 ```bash
-# 14. Frontmatter has required fields
+# 19. Frontmatter has required fields
 python3 -c "
 import re
 md=open('article-formatted.md').read()
@@ -265,7 +296,7 @@ for f in ['title','author','digest','coverImage']:
 print('✅ frontmatter complete')
 "
 
-# 15. Cover image will be passed explicitly
+# 20. Cover image will be passed explicitly
 # save-draft MUST include --cover-image imgs/cover.png
 ```
 
