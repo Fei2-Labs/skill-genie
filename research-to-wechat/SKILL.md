@@ -195,6 +195,14 @@ Run the article through these phases:
    ```
 6. **微信敏感词合规检查**（⛔ 必须通过才能继续）：用 `wechat-compliance-check` 扫描 `article-formatted.md`，有命中则改写后重新扫描，直到零违规。
 7. refinement, visual strategy, and image evaluation
+
+   **⛔ Pre-delivery compliance gate (BLOCKING — must execute before Phase 8):**
+   Long sessions cause attention decay on early-loaded rules. Before proceeding to HTML rendering and draft save, you MUST:
+   1. **Re-read the project's AGENTS file** (`cat` the file, do not rely on memory). For WeChat projects this is `../AGENTS-wechat.md` or the path specified in `AGENTS.md`.
+   2. **Walk every rule in the AGENTS file line by line** and verify the current article/HTML against it. Check file location, typography, HTML constraints, CTA, image rules — every single one.
+   3. Output a checklist to the terminal with ✅/❌ per rule. Any ❌ must be fixed before continuing.
+   This step exists because context-window attention decay will cause you to forget rules loaded at session start. Do not skip it. Do not check from memory.
+
 8. native WeChat HTML rendering via `wechat_delivery.py render`, image upload, draft save, and manifest.
 
    **Image upload rules:**
@@ -215,6 +223,30 @@ Run the article through these phases:
    # outermost <section> must have background
    python3 -c "import re;h=open('article.html').read();m=re.search(r'<section[^>]*>',h);print('OK' if m and 'background' in m.group() else 'FAIL')"
    ```
+
+   **Known issue: `render` collapses newlines inside `<code>` blocks.**
+   The renderer converts markdown fenced code blocks into single-line `<code>` content, stripping all `\n` characters. Multi-line code will display as one long line.
+   Detection: `python3 -c "import re;h=open('article.html').read();codes=[c for c in re.findall(r'<code>(.*?)</code>',h,re.DOTALL) if len(c)>80 and '<br' not in c];print(f'{len(codes)} collapsed code blocks' if codes else 'OK')"` 
+   Fix: extract code blocks from the source markdown (which preserves newlines), HTML-escape them, replace `\n` with `<br/>`, and substitute back into the rendered HTML. **WeChat ignores literal `\n` in HTML — only `<br/>` produces visible line breaks.** This must run after `render` and before `save-draft`.
+
+   **Known issue: `render` outputs `<thead>` without dark background.**
+   In dark mode, table headers render with browser-default white/transparent background, making header text invisible. Fix: add `background:#1E293B` (or the design's surface color) to `<tr>` and `<th>` inside `<thead>`. Also ensure `<td>` has explicit `background` matching the page background.
+
+   **Known issue: `render` duplicates ordered list numbering.**
+   Markdown `1. 2. 3.` becomes `<ol><li>1. text</li>` — the `<ol>` auto-numbers AND the literal `1.` prefix remains. Fix: strip the leading `N. ` from each `<li>` content.
+
+   **Known issue: `render` keeps the H1/H2 title in the HTML body.**
+   WeChat article titles are set via the draft API `title` field, not in the HTML body. The renderer copies the markdown `# title` into an `<h2>`. Per WeChat typography rules, this must be removed. Fix: delete the `<section>` containing the `<h2>` that matches the draft title.
+
+   **Known issue: `--upload-map` may not replace all image paths.**
+   After rendering with `--upload-map`, verify that zero `src="imgs/"` local paths remain. If any survive, do a string replace pass in post-processing. Detection: `grep -c 'src="imgs/' article.html` must be 0.
+
+   **Known issue: reference link section has oversized letter-spacing on mobile.**
+   The body `line-height:1.9` and `font-size:15px` cause long URLs in the reference section to spread out on mobile. Fix: override the reference section `<p>` tags with `font-size:13px;line-height:1.6;word-break:break-all;text-align:left`.
+
+   **File path rule: always follow the project's AGENTS file for output directory.**
+   This skill defaults to `research-to-wechat/YYYY-MM-DD-<slug>/`. If the project AGENTS specifies a different convention (e.g. `YYYY-MM-DD-<slug>/` at project root), the project rule overrides this skill's default. Check the project AGENTS before creating the workspace directory.
+
 9. optional multi-platform content generation and distribution
 
 Phase 9 only executes when the user explicitly requests it.
