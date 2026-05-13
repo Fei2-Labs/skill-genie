@@ -10,7 +10,7 @@ allowed-tools:
   - Glob
   - Grep
 metadata:
-  version: 1.1.0
+  version: 1.2.1
   category: session-memory
   triggers:
     - "handoff"
@@ -29,10 +29,34 @@ Use this skill when the user says "handoff", "summarize this session", "create a
 Produce a precise handoff document and write it to a file. Do not ask the user questions — derive everything from conversation history and git state.
 
 If the user provides arguments, treat them as the intended focus of the next session and prioritize that focus in **Goal**, **Current State**, and **Next Steps**.
+If the user says "update handoff" or similar, update the most recent handoff file in place instead of creating a new one.
+
+This skill writes the artifact. Use `handoff-receiver` when the task is to continue execution from an existing handoff.
 
 ---
 
-## Step 1: Gather facts from git
+## Step 1: Determine output path
+
+1. If `.trellis/` exists in the working directory → write to `.trellis/handoffs/YYYY-MM-DD-HH-MM.md`
+2. Else if `docs/` exists in the working directory → write to `docs/handoffs/YYYY-MM-DD-HH-MM.md`
+3. Otherwise → write to `handoff.md` in the project root
+
+```bash
+# Check for trellis
+if [ -d ".trellis" ]; then
+  mkdir -p .trellis/handoffs
+  echo ".trellis/handoffs/$(date +%Y-%m-%d-%H-%M).md"
+elif [ -d "docs" ]; then
+  mkdir -p docs/handoffs
+  echo "docs/handoffs/$(date +%Y-%m-%d-%H-%M).md"
+else
+  echo "handoff.md"
+fi
+```
+
+---
+
+## Step 2: Gather facts from git
 
 Run these commands to get objective facts. Do not skip any.
 
@@ -53,7 +77,7 @@ Use results to populate the **Files Changed** and **Commands Run** sections.
 
 ---
 
-## Step 2: Extract from conversation
+## Step 3: Extract from conversation
 
 Review the full conversation to extract:
 
@@ -65,27 +89,11 @@ Review the full conversation to extract:
 | **Errors** | Any tool errors, failed commands, stack traces mentioned |
 | **Decisions** | Choices made between options, trade-offs accepted, scope cuts |
 | **Next Steps** | Unfinished work, items explicitly deferred, follow-ups named |
+| **History** | Commit hashes and branch/state changes that matter to the next session |
 
 Be precise. Prefer concrete facts over summaries. Include file paths and line numbers where known.
 
 Avoid duplicating content already captured in other artifacts (PRDs, plans, ADRs, issues, commits, diffs). Reference those artifacts by path or URL in the relevant sections instead of repeating long content.
-
----
-
-## Step 3: Determine output path
-
-1. If `.trellis/` exists in the working directory → write to `.trellis/handoffs/YYYY-MM-DD-HH-MM.md`
-2. Otherwise → write to `handoff.md` in the project root
-
-```bash
-# Check for trellis
-if [ -d ".trellis" ]; then
-  mkdir -p .trellis/handoffs
-  echo ".trellis/handoffs/$(date +%Y-%m-%d-%H-%M).md"
-else
-  echo "handoff.md"
-fi
-```
 
 ---
 
@@ -125,6 +133,17 @@ Use this exact template. Fill every section — write "none" if a section is gen
 |---------|---------|
 | `npm run build` | ✓ passed |
 | `git push origin main` | ✗ rejected — no upstream set |
+
+---
+
+## History
+
+Summarize the commit and branch history that matters for the next session.
+
+Include:
+- recent commit hashes
+- branch rewrites or force-pushes
+- merges, rebases, or resets that changed the working line of development
 
 ---
 
