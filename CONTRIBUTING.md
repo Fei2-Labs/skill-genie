@@ -5,7 +5,7 @@ Thanks for your interest in contributing! We welcome new skills that help agents
 ## How to Contribute
 
 1. **Fork** this repository
-2. **Create** your skill in `.agents/skills/your-skill-name/`
+2. **Create** your skill in `oz-skills/.agents/skills/your-skill-name/`
 3. **Test** it locally (see below)
 4. **Submit** a pull request
 
@@ -14,7 +14,7 @@ Thanks for your interest in contributing! We welcome new skills that help agents
 Each skill is a folder containing a `SKILL.md` file:
 
 ```
-.agents/skills/
+oz-skills/.agents/skills/
 └── your-skill-name/
     └── SKILL.md
 ```
@@ -25,7 +25,7 @@ Skills follow the [Agent Skills](https://agentskills.io) standard format.
 
 Before submitting:
 
-1. Copy your skill folder to `~/.agents/skills/` or a test project's `.agents/skills/`
+1. Copy your skill folder to `~/.agents/skills/` or a test project's `oz-skills/.agents/skills/`
 2. Interact with a Warp agent on a relevant task
 3. Verify the agent follows your skill's guidance
 
