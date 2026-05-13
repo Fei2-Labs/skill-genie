@@ -31,8 +31,41 @@ Most personal automation fails because the best methods live in scattered notes.
 - [`foxcode-openclaw`](./foxcode-openclaw): Configure Foxcode AI models in OpenClaw with interactive setup, status monitoring, and validation tools. Supports 5 endpoints and 3 Claude models.
 - [`research-to-wechat`](./research-to-wechat): End-to-end article orchestration that turns topics, URLs, and transcripts into researched Markdown, visual assets, WeChat-ready HTML, and a saved draft.
 - [`wechat-compliance-check`](./wechat-compliance-check): Scan WeChat articles for 100+ sensitive words across 8 categories (VPN tools, political, reverse-engineering, grey market, etc.) and auto-rewrite violations before publishing.
+- [`session-handoff`](./session-handoff): Summarize the current session into a precise handoff file — goals, files changed, commands run, errors, decisions, and next steps. Writes to `.trellis/handoffs/` or `handoff.md`.
 - [`aegis-protocol`](./aegis-protocol): High-confidence code security review workflow for changed code, using modern threat-informed methodologies with strict false-positive filtering.
-- [`linuxdo-application`](./linuxdo-application): Craft high-pass-rate, de-AI'd Chinese applications (小作文) for Linux.do registration through adaptive survey and rule-aware text generation.
+- [`wordpress-vps-install`](./wordpress-vps-install): Fresh-VPS WordPress bootstrap workflow for container setup, DB wiring, WP-CLI install, and public-site verification.
+- [`live-site-recovery`](./live-site-recovery): Diagnose and repair a live WordPress site that is stuck in 404, install, or misrouted states; use when a production site needs routing fixes, WP-CLI bootstrap, volume alignment, or install retry logic.
+
+## skillgenie CLI
+
+Install and manage skills across Claude Code and OpenClaw from this repo.
+
+```bash
+# List available skills
+./skillgenie list
+
+# Show install status per runtime
+./skillgenie status
+
+# Install one skill (auto-detects runtimes)
+./skillgenie install research-to-wechat
+
+# Install to a specific runtime
+./skillgenie install research-to-wechat --claude      # Claude Code only
+./skillgenie install research-to-wechat --openclaw    # OpenClaw only
+./skillgenie install research-to-wechat --global      # both
+
+# Install all skills
+./skillgenie install --all --global
+
+# Preview without executing
+./skillgenie install --all --dry-run
+
+# Update (re-install) a skill
+./skillgenie update close-loop
+```
+
+Backends: Claude Code uses `openskills` (must be installed); OpenClaw uses direct file copy.
 
 ## Skill layout
 

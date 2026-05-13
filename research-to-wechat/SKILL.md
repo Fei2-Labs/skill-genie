@@ -227,7 +227,7 @@ Run the article through these phases:
    **Known issue: `render` collapses newlines inside `<code>` blocks.**
    The renderer converts markdown fenced code blocks into single-line `<code>` content, stripping all `\n` characters. Multi-line code will display as one long line.
    Detection: `python3 -c "import re;h=open('article.html').read();codes=[c for c in re.findall(r'<code>(.*?)</code>',h,re.DOTALL) if len(c)>80 and '<br' not in c];print(f'{len(codes)} collapsed code blocks' if codes else 'OK')"` 
-   Fix: extract code blocks from the source markdown (which preserves newlines), HTML-escape them, replace `\n` with `<br/>`, and substitute back into the rendered HTML. **WeChat ignores literal `\n` in HTML — only `<br/>` produces visible line breaks.** This must run after `render` and before `save-draft`.
+   Fix: extract code blocks from the source markdown (which preserves newlines), HTML-escape them, replace `\n` with `<br/>`, and substitute back into the rendered HTML. **WeChat ignores literal `\n` in HTML — only `<br/>` produces visible line breaks.** When HTML-escaping code content, only escape `&`, `<`, `>`, and `"`. **Do NOT escape single quotes** (`'` → `&#x27;`) — WeChat renders the entity literally as `&#x27;` instead of `'`. This must run after `render` and before `save-draft`.
 
    **Known issue: `render` outputs `<thead>` without dark background.**
    In dark mode, table headers render with browser-default white/transparent background, making header text invisible. Fix: add `background:#1E293B` (or the design's surface color) to `<tr>` and `<th>` inside `<thead>`. Also ensure `<td>` has explicit `background` matching the page background.
