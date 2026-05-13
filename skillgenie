@@ -1,0 +1,291 @@
+#!/usr/bin/env python3
+"""
+skillgenie — Skill manager for the skill-genie repo.
+
+Usage:
+  skillgenie list
+  skillgenie status
+  skillgenie install <skill>|--all [--claude|-cc] [--openclaw|-oc] [--global|-g] [--dry-run]
+  skillgenie update  <skill>|--all [--claude|-cc] [--openclaw|-oc] [--global|-g] [--dry-run]
+
+Targets:
+  --claude / -cc     Install into Claude Code  (~/.claude/skills/)   via openskills
+  --openclaw / -oc   Install into OpenClaw     (~/.openclaw/skills/) via file copy
+  --global / -g      Both targets
+  (no flag)          Auto-detect: all runtimes found on this machine
+
+Install backends:
+  Claude Code  →  openskills install <GITHUB_REPO>/<skill> --global
+  OpenClaw     →  shutil.copytree  →  ~/.openclaw/skills/<skill>/
+"""
+
+import argparse
+import os
+import re
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+# ── Config ────────────────────────────────────────────────────────────────────
+
+GITHUB_REPO   = "Fei2-Labs/skill-genie"
+REPO_ROOT     = Path(__file__).parent.resolve()
+CLAUDE_DIR    = Path.home() / ".claude" / "skills"
+OPENCLAW_DIR  = Path.home() / ".openclaw" / "skills"
+
+SKIP_DIRS = {".git", ".tmp-claude-code-security-review-ref", "__pycache__", "node_modules"}
+
+# ── Helpers ───────────────────────────────────────────────────────────────────
+
+RESET  = "\033[0m"
+BOLD   = "\033[1m"
+GREEN  = "\033[32m"
+YELLOW = "\033[33m"
+RED    = "\033[31m"
+CYAN   = "\033[36m"
+DIM    = "\033[2m"
+
+def ok(msg):   print(f"  {GREEN}✓{RESET} {msg}")
+def warn(msg): print(f"  {YELLOW}⚠{RESET} {msg}")
+def err(msg):  print(f"  {RED}✗{RESET} {msg}", file=sys.stderr)
+def info(msg): print(f"  {CYAN}→{RESET} {msg}")
+def dry(msg):  print(f"  {DIM}[dry-run]{RESET} {msg}")
+
+
+def parse_frontmatter(skill_md: Path) -> dict:
+    """Extract YAML frontmatter fields (name, description) without a YAML dep."""
+    text = skill_md.read_text(errors="replace")
+    m = re.match(r"^---\n(.*?)\n---", text, re.DOTALL)
+    if not m:
+        return {}
+    front = m.group(1)
+
+    result = {}
+    # name
+    nm = re.search(r"^name:\s*(.+)", front, re.MULTILINE)
+    if nm:
+        result["name"] = nm.group(1).strip().strip('"').strip("'")
+
+    # description — may be a plain string or a block scalar (|, >)
+    dm = re.search(r"^description:\s*(.+)", front, re.MULTILINE)
+    if dm:
+        val = dm.group(1).strip()
+        if val not in ("|", ">"):
+            result["description"] = val.strip('"').strip("'")
+        else:
+            # Grab the indented block that follows
+            block_m = re.search(
+                r"^description:\s*[|>]\n((?:[ \t]+.+\n?)+)", front, re.MULTILINE
+            )
+            if block_m:
+                lines = [l.strip() for l in block_m.group(1).splitlines()]
+                result["description"] = " ".join(lines)
+    return result
+
+
+def all_skills() -> list[str]:
+    """Return sorted list of skill folder names in this repo."""
+    names = []
+    for entry in sorted(REPO_ROOT.iterdir()):
+        if entry.is_dir() and entry.name not in SKIP_DIRS and not entry.name.startswith("."):
+            if (entry / "SKILL.md").exists():
+                names.append(entry.name)
+    return names
+
+
+def detect_targets() -> list[str]:
+    """Return targets present on this machine."""
+    targets = ["claude"]  # openskills is always the backend; doesn't require a local dir check
+    if OPENCLAW_DIR.parent.exists():  # ~/.openclaw exists
+        targets.append("openclaw")
+    return targets
+
+
+def resolve_targets(args) -> list[str]:
+    flags = []
+    if getattr(args, "global", False):
+        flags = ["claude", "openclaw"]
+    else:
+        if getattr(args, "claude", False):
+            flags.append("claude")
+        if getattr(args, "openclaw", False):
+            flags.append("openclaw")
+    return flags if flags else detect_targets()
+
+# ── Commands ──────────────────────────────────────────────────────────────────
+
+def cmd_list(_args):
+    skills = all_skills()
+    print(f"\n{BOLD}Available skills{RESET} ({len(skills)} total)\n")
+    for name in skills:
+        skill_md = REPO_ROOT / name / "SKILL.md"
+        meta = parse_frontmatter(skill_md)
+        desc = meta.get("description", "")
+        if len(desc) > 90:
+            desc = desc[:87] + "..."
+        print(f"  {CYAN}{name:<32}{RESET} {DIM}{desc}{RESET}")
+    print()
+
+
+def cmd_status(_args):
+    skills = all_skills()
+    targets = [
+        ("Claude Code", CLAUDE_DIR),
+        ("OpenClaw",    OPENCLAW_DIR),
+    ]
+
+    print(f"\n{BOLD}Skill status{RESET}\n")
+    header = f"  {'Skill':<32}" + "".join(f"  {name:<14}" for name, _ in targets)
+    print(header)
+    print("  " + "-" * (32 + 16 * len(targets)))
+
+    for skill in skills:
+        row = f"  {skill:<32}"
+        for _, base in targets:
+            installed = (base / skill / "SKILL.md").exists()
+            mark = f"{GREEN}✓ installed{RESET}" if installed else f"{DIM}–{RESET}"
+            row += f"  {mark:<14}"
+        print(row)
+    print()
+
+
+def install_to_claude(skill: str, dry: bool):
+    source = f"{GITHUB_REPO}/{skill}"
+    cmd = ["openskills", "install", source, "--global", "--yes"]
+    info(f"claude  ← openskills install {source} --global")
+    if dry:
+        return True
+    result = subprocess.run(cmd, capture_output=False)
+    return result.returncode == 0
+
+
+def install_to_openclaw(skill: str, is_dry: bool):
+    src  = REPO_ROOT / skill
+    dest = OPENCLAW_DIR / skill
+    info(f"openclaw ← {src} → {dest}")
+    if is_dry:
+        return True
+    try:
+        if dest.exists():
+            shutil.rmtree(dest)
+        shutil.copytree(src, dest)
+        return True
+    except Exception as e:
+        err(str(e))
+        return False
+
+
+def install_skill(skill: str, targets: list[str], is_dry: bool) -> bool:
+    print(f"\n{BOLD}{skill}{RESET}")
+    success = True
+    for target in targets:
+        if target == "claude":
+            r = install_to_claude(skill, is_dry)
+        elif target == "openclaw":
+            r = install_to_openclaw(skill, is_dry)
+        else:
+            warn(f"Unknown target: {target}")
+            r = False
+        if r:
+            ok(target)
+        else:
+            err(f"{target} failed")
+            success = False
+    return success
+
+
+def cmd_install(args):
+    targets  = resolve_targets(args)
+    is_dry   = args.dry_run
+    is_all   = args.all
+    skills   = all_skills() if is_all else [args.skill] if args.skill else []
+
+    if not skills:
+        err("Specify a skill name or use --all")
+        sys.exit(1)
+
+    # Validate skill names
+    available = set(all_skills())
+    for s in skills:
+        if s not in available:
+            err(f"Unknown skill: {s}  (run 'skillgenie list' to see available skills)")
+            sys.exit(1)
+
+    verb = "update" if getattr(args, "_update", False) else "install"
+    label = f"{DIM}[dry-run]{RESET} " if is_dry else ""
+    print(f"\n{label}{BOLD}{verb.capitalize()}{RESET} → targets: {', '.join(targets)}")
+
+    failed = []
+    for skill in skills:
+        if not install_skill(skill, targets, is_dry):
+            failed.append(skill)
+
+    print()
+    if failed:
+        err(f"Failed: {', '.join(failed)}")
+        sys.exit(1)
+    else:
+        ok(f"Done ({len(skills)} skill{'s' if len(skills) != 1 else ''})")
+
+
+def cmd_update(args):
+    args._update = True
+    cmd_install(args)
+
+# ── CLI wiring ────────────────────────────────────────────────────────────────
+
+def main():
+    parser = argparse.ArgumentParser(
+        prog="skillgenie",
+        description="Skill manager for the skill-genie repo.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+examples:
+  skillgenie list
+  skillgenie status
+  skillgenie install research-to-wechat
+  skillgenie install research-to-wechat --openclaw
+  skillgenie install --all --global
+  skillgenie install --all --dry-run
+  skillgenie update close-loop --claude
+        """,
+    )
+
+    sub = parser.add_subparsers(dest="command", required=True)
+
+    # list
+    sub.add_parser("list", help="List available skills in this repo")
+
+    # status
+    sub.add_parser("status", help="Show install status per runtime")
+
+    # shared flags for install / update
+    def add_target_flags(p):
+        p.add_argument("skill", nargs="?", help="Skill name (omit with --all)")
+        p.add_argument("--all",      action="store_true", help="All skills")
+        g = p.add_mutually_exclusive_group()
+        g.add_argument("--global", "-g",   action="store_true", dest="global",   help="All detected runtimes")
+        g.add_argument("--claude", "-cc",  action="store_true", dest="claude",   help="Claude Code only (~/.claude/skills/)")
+        g.add_argument("--openclaw", "-oc",action="store_true", dest="openclaw", help="OpenClaw only (~/.openclaw/skills/)")
+        p.add_argument("--dry-run", action="store_true", help="Show actions without executing")
+
+    p_install = sub.add_parser("install", help="Install skill(s)")
+    add_target_flags(p_install)
+
+    p_update = sub.add_parser("update", help="Update (re-install) skill(s)")
+    add_target_flags(p_update)
+
+    args = parser.parse_args()
+
+    dispatch = {
+        "list":    cmd_list,
+        "status":  cmd_status,
+        "install": cmd_install,
+        "update":  cmd_update,
+    }
+    dispatch[args.command](args)
+
+
+if __name__ == "__main__":
+    main()
