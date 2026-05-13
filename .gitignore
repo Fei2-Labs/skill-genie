@@ -1,6 +1,8 @@
 .windsurfrules
 AGENTS.md
 .DS_Store
+__pycache__/
+*.pyc
 ai-csuite/ai-csuite-framework-prd.md
 /.tmp-claude-code-security-review-ref
 *.zip
