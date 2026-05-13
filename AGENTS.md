@@ -25,9 +25,6 @@ All skills are stored in the `.agents/skills/` directory. Each skill has its own
 └── ...
 ```
 
-For the mirrored `oz-skills` upstream content, sync only `oz-skills/.agents/skills/` and no other files from the upstream repository.
-Do not copy or mirror upstream `oz-skills` metadata, docs, or other repository files into this repo unless explicitly asked.
-
 ## Skill File Format
 
 Each skill must have a `SKILL.md` file with this structure:
@@ -98,7 +95,6 @@ description: Verb-first summary of what this skill does. Use when the user asks 
 When working in this repository:
 
 - **One skill per directory** in `.agents/skills/`
-- **Upstream mirror scope** is limited to `oz-skills/.agents/skills/` only
 - **Use kebab-case** for skill directory names (e.g., `docs-update`, `deployment-workflow`)
 - **Each skill must have** a `SKILL.md` file with proper frontmatter
 - **Keep descriptions concise** - they help agents decide when to load the skill
