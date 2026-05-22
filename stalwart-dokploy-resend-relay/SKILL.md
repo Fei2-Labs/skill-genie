@@ -163,6 +163,8 @@ sudo certbot certonly --standalone -d mail.<domain> --non-interactive --agree-to
 
 Then import the cert into Stalwart certificate store and set as `defaultCertificateId`.
 
+If the UI create form rejects the PEM with `No certificates found in PEM`, create the certificate through the JMAP `x:Certificate/set` endpoint instead, using the leaf certificate PEM and private key, then set `x:SystemSettings.defaultCertificateId` to the created certificate object ID and restart Stalwart so 465/993 pick up the new cert.
+
 Verify:
 
 ```bash
@@ -271,6 +273,7 @@ If direct outbound delivery remains blocked and Stalwart queue is not healthy, t
 2. TLS cert mismatch/self-signed
 - Cause: default cert still active
 - Fix: import LE cert and set default certificate in `x:SystemSettings`
+- If the UI errors with `No certificates found in PEM`, use JMAP `x:Certificate/set` with the leaf PEM + private key, then restart Stalwart
 
 3. External send fails, queue error `Network unreachable (os error 101)`
 - Cause: blocked outbound 25

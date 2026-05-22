@@ -1,9 +1,12 @@
-company_name: SampleCo
-product: AI workflow assistant for SMB teams
+company_name: Kompany
+product: AI runtime for solo founders (RPG-styled real business simulation, goal -> weekly exec plan, multi-agent debate, cost ledger)
 stage: solo
-arr_or_mrr: MRR 0
+arr_or_mrr: ~10 paying source-code customers (one-time), MRR ~0
 runway_months: 12
 team_size: 1
 constraints:
-  - bootstrapped
-  - no hiring budget
+  - bootstrapped, vibe coding, no time budget (right > fast)
+  - Apache-2.0 already adopted, repo public (Fei2-Labs/Kompany)
+  - 10 early paid users bought primarily for source code access -> fairness obligation
+  - YC application targeted; need growth + revenue narrative
+  - moat hypothesis: curated founder workflows + hosted Cloud ops, NOT engine code
