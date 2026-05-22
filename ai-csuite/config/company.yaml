@@ -1,9 +1,10 @@
 company_name: SampleCo
-product: AI workflow assistant for SMB teams
+product: AI workflow assistant for SMB teams (template - replace with your own)
 stage: solo
 arr_or_mrr: MRR 0
 runway_months: 12
 team_size: 1
 constraints:
-  - bootstrapped
-  - no hiring budget
+  - bootstrapped, no hiring budget
+  - single maintainer, correctness over speed
+  - open-source core, paid hosted tier hypothesis
