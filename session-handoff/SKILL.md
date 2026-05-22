@@ -10,7 +10,7 @@ allowed-tools:
   - Glob
   - Grep
 metadata:
-  version: 1.2.1
+  version: 1.5.0
   category: session-memory
   triggers:
     - "handoff"
@@ -35,24 +35,43 @@ This skill writes the artifact. Use `handoff-receiver` when the task is to conti
 
 ---
 
-## Step 1: Determine output path
+## Step 1: Determine output path and index files
 
 1. If `.trellis/` exists in the working directory → write to `.trellis/handoffs/YYYY-MM-DD-HH-MM.md`
 2. Else if `docs/` exists in the working directory → write to `docs/handoffs/YYYY-MM-DD-HH-MM.md`
 3. Otherwise → write to `handoff.md` in the project root
+4. If the handoff directory is not the project root, maintain `<handoff-dir>/CURRENT` as the active pointer
+5. Maintain `<handoff-dir>/INDEX.md` as the compact handoff index
 
 ```bash
-# Check for trellis
 if [ -d ".trellis" ]; then
   mkdir -p .trellis/handoffs
-  echo ".trellis/handoffs/$(date +%Y-%m-%d-%H-%M).md"
+  HANDOFF_DIR=".trellis/handoffs"
 elif [ -d "docs" ]; then
   mkdir -p docs/handoffs
-  echo "docs/handoffs/$(date +%Y-%m-%d-%H-%M).md"
+  HANDOFF_DIR="docs/handoffs"
 else
-  echo "handoff.md"
+  HANDOFF_DIR="."
 fi
+if [ "$HANDOFF_DIR" = "." ]; then
+  HANDOFF_PATH="handoff.md"
+  CURRENT_PATH="CURRENT"
+  INDEX_PATH="INDEX.md"
+else
+  HANDOFF_PATH="$HANDOFF_DIR/$(date +%Y-%m-%d-%H-%M).md"
+  CURRENT_PATH="$HANDOFF_DIR/CURRENT"
+  INDEX_PATH="$HANDOFF_DIR/INDEX.md"
+fi
+printf '%s\n%s\n%s\n' "$HANDOFF_PATH" "$CURRENT_PATH" "$INDEX_PATH"
 ```
+
+Before creating a new handoff, if `CURRENT` points to an existing active handoff, update that file:
+
+- `status: paused`
+- `updated_at: <now>`
+
+Do not rewrite handoffs already marked `done` or `superseded`.
+Use `superseded` only when you are explicitly replacing the same work stream.
 
 ---
 
@@ -102,6 +121,17 @@ Avoid duplicating content already captured in other artifacts (PRDs, plans, ADRs
 Use this exact template. Fill every section — write "none" if a section is genuinely empty.
 
 ```markdown
+---
+status: open
+created_at: YYYY-MM-DD HH:MM
+updated_at: YYYY-MM-DD HH:MM
+taken_over_at:
+taken_over_by:
+superseded_by:
+source_handoff:
+stream_note:
+---
+
 # Session Handoff
 
 **Date**: YYYY-MM-DD HH:MM  
@@ -188,7 +218,27 @@ Include:
 
 ---
 
-## Step 5: Confirm to user
+## Step 5: Update pointer and index
+
+Write the final handoff path into `CURRENT`.
+Then update `INDEX.md` with one row per tracked handoff:
+
+| Path | Status | Updated | Goal |
+|------|--------|---------|------|
+| `.trellis/handoffs/2026-05-22-13-10-search.md` | `open` | `2026-05-22 13:10` | `Document the search feature handoff flow` |
+
+Rules:
+
+- keep rows stable and append-only when possible
+- update only minimal metadata: `path`, `status`, `updated_at`, short goal summary
+- never duplicate full handoff bodies inside the index
+- preserve `paused`, `done`, and `superseded` rows for historical routing
+
+`handoff-receiver` should read `CURRENT` and `INDEX.md` first. It should not scan the directory in the common case.
+
+---
+
+## Step 6: Confirm to user
 
 After writing the file, output exactly:
 
@@ -212,3 +262,18 @@ Do not output the full file contents in chat — the file is the artifact. The i
 - Do not write vague entries like "various files updated" — be specific.
 - Do not skip the git commands — they provide objective ground truth.
 - Do not create a new handoff if the user says "update handoff" — overwrite the most recent one.
+- Do not leave multiple active handoffs without updating `CURRENT`.
+
+## Example
+
+If the handoff directory contains:
+
+- `CURRENT` → `.trellis/handoffs/2026-05-22-12-40-open-core.md`
+- `.trellis/handoffs/2026-05-22-12-21-onboarding.md` with no `status`
+
+and you create `.trellis/handoffs/2026-05-22-13-10-search.md`, then:
+
+- `2026-05-22-12-40-open-core.md` becomes `status: paused`
+- `2026-05-22-12-21-onboarding.md` remains untouched until indexed
+- `CURRENT` moves to `2026-05-22-13-10-search.md`
+- `INDEX.md` contains one row for each known stream

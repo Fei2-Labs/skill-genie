@@ -29,8 +29,9 @@ Most personal automation fails because the best methods live in scattered notes.
 - [`close-loop`](./close-loop): End-of-session ship-and-memory workflow with autonomous strategy selection (`safe`, `balanced`, `openclaw`/`adaptive`), ALMA-inspired evaluation, and machine-readable JSON output.
 - [`ai-csuite`](./ai-csuite): Script-backed AI executive debate workflow that generates stage-aware strategic recommendations, CEO briefs, and decision artifacts.
 - [`foxcode-openclaw`](./foxcode-openclaw): Configure Foxcode AI models in OpenClaw with interactive setup, status monitoring, and validation tools. Supports 5 endpoints and 3 Claude models.
+- [`handoff`](./handoff): Create a compact handoff with tracked lifecycle metadata, `CURRENT` pointer routing, and `INDEX.md` summaries for low-cost continuation.
 - [`handoff-receiver`](./handoff-receiver): Resume work from a prior handoff by validating repo state, reconciling context, and continuing the next actionable step safely.
-- [`session-handoff`](./session-handoff): Summarize the current session into a precise handoff file — goals, files changed, commands run, errors, decisions, and next steps. Writes to `.trellis/handoffs/` or `handoff.md`.
+- [`session-handoff`](./session-handoff): Summarize the current session into a precise handoff file with tracked states, `CURRENT` pointer routing, and `INDEX.md` metadata for low-token continuation.
 - [`research-to-wechat`](./research-to-wechat): End-to-end article orchestration that turns topics, URLs, and transcripts into researched Markdown, visual assets, WeChat-ready HTML, and a saved draft.
 - [`wechat-compliance-check`](./wechat-compliance-check): Scan WeChat articles for 100+ sensitive words across 8 categories (VPN tools, political, reverse-engineering, grey market, etc.) and auto-rewrite violations before publishing.
 - [`aegis-protocol`](./aegis-protocol): High-confidence code security review workflow for changed code, using modern threat-informed methodologies with strict false-positive filtering.
@@ -126,8 +127,9 @@ Each skill folder should contain:
 - [`close-loop`](./close-loop): 会话结束时的交付和记忆工作流，包含自主策略选择
 - [`ai-csuite`](./ai-csuite): 脚本支持的 AI 高管辩论工作流
 - [`foxcode-openclaw`](./foxcode-openclaw): 在 OpenClaw 中配置 Foxcode AI 模型，支持交互式设置、状态监控和验证工具
+- [`handoff`](./handoff): 生成轻量 handoff，并维护状态元数据、`CURRENT` 指针与 `INDEX.md` 摘要，便于低成本续接
 - [`handoff-receiver`](./handoff-receiver): 通过验证仓库状态、对齐上下文并继续下一步，安全接手上一轮 handoff
-- [`session-handoff`](./session-handoff): 将当前会话整理为精确的 handoff 文件，包含目标、变更文件、命令、错误、决策与下一步
+- [`session-handoff`](./session-handoff): 将当前会话整理为精确的 handoff 文件，并维护状态、`CURRENT` 指针与 `INDEX.md`，便于低 token 成本续接
 - [`research-to-wechat`](./research-to-wechat): 面向公众号内容生产的端到端文章编排 skill，可把选题、链接和字幕转成深度研究文章、配图、HTML 与草稿箱结果
 - [`wechat-compliance-check`](./wechat-compliance-check): 扫描公众号文章中 8 大类 100+ 敏感词（翻墙工具、政治敏感、逆向破解、灰产等），自动改写为安全表述
 - [`aegis-protocol`](./aegis-protocol): 高置信度代码安全审查工作流，基于现代威胁建模方法论，严格过滤误报
@@ -193,8 +195,9 @@ Each skill folder should contain:
 - [`close-loop`](./close-loop): 自律戦略選択を備えたセッション終了時のシップ＆メモリワークフロー
 - [`ai-csuite`](./ai-csuite): ステージ対応の戦略的推奨、CEOブリーフ、決定アーティファクトを生成するスクリプト支援AI経営陣討論ワークフロー
 - [`foxcode-openclaw`](./foxcode-openclaw): インタラクティブセットアップ、ステータス監視、検証ツールを備えたOpenClawでのFoxcode AIモデル設定
+- [`handoff`](./handoff): 状態メタデータ、`CURRENT` ポインタ、`INDEX.md` 要約を維持しながら軽量 handoff を作成
 - [`handoff-receiver`](./handoff-receiver): 過去の handoff を検証しながら安全に引き継ぎ、次の実行ステップへ進めるワークフロー
-- [`session-handoff`](./session-handoff): 現在のセッションを、目的・変更ファイル・実行コマンド・エラー・決定・次の手順を含む handoff に要約
+- [`session-handoff`](./session-handoff): 現在のセッションを精密な handoff に要約し、状態・`CURRENT`・`INDEX.md` を維持して低コストに再開できるようにする
 - [`research-to-wechat`](./research-to-wechat): トピック、URL、字幕から調査済みMarkdown、ビジュアル、WeChat向けHTML、下書き保存までをつなぐ記事オーケストレーションスキル
 - [`wechat-compliance-check`](./wechat-compliance-check): WeChat記事の8カテゴリ100+センシティブワードをスキャンし、公開前に自動書き換え
 - [`aegis-protocol`](./aegis-protocol): 変更コードの高信頼性セキュリティレビューワークフロー、脅威モデリングベースの手法で誤検知を厳格にフィルタリング
