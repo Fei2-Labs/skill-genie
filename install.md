@@ -30,9 +30,10 @@ cd ~/skill-genie
 ```
 
 This will:
-1. Symlink global rules to your agent's config directory
+1. Symlink global agent rules to your agent's config directory (Kiro, Claude Code, Codex)
 2. Sync skills from `skills.yaml` into `~/.agent/skills/`
-3. Link the `skillgenie` CLI to your PATH
+3. Detect optional tools (e.g. trellis) and link their skills
+4. Link the `skillgenie` CLI to your PATH
 
 ## Modes
 
