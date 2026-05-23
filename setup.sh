@@ -255,3 +255,9 @@ fi
 
 echo ""
 echo "✅ Done. All rules and skills are in place."
+
+# ── 7. Zsh completions ────────────────────────────────────────────────────────
+if [[ -f "$DOTFILES_DIR/completions/_skillgenie" ]]; then
+  mkdir -p "$HOME/.zsh/completions"
+  ln -sf "$DOTFILES_DIR/completions/_skillgenie" "$HOME/.zsh/completions/_skillgenie"
+fi
