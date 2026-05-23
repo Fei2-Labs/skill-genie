@@ -10,12 +10,35 @@ CODEX_FILE="$HOME/.config/codex/instructions.md"
 SKILLGENIE_BIN_PATH=""
 
 FULL=false
-if [[ "${1:-}" == "--full" ]]; then
-  FULL=true
+COPY_MODE=false
+
+for arg in "$@"; do
+  case "$arg" in
+    --full) FULL=true ;;
+    --copy) COPY_MODE=true ;;
+  esac
+done
+
+if $FULL; then
   echo "⚠ Full mode: ~/.agents/skills/ will be cleared and rebuilt."
   read -p "Continue? [y/N] " confirm
   [[ "$confirm" =~ ^[Yy]$ ]] || exit 0
 fi
+
+if $COPY_MODE; then
+  echo "ℹ Copy mode: skills will be copied (not symlinked)"
+fi
+
+# Helper: link or copy a skill directory to a destination
+install_skill() {
+  local src="$1" dest="$2"
+  if $COPY_MODE; then
+    rm -rf "$dest"
+    cp -R "$src" "$dest"
+  else
+    ln -sfn "$src" "$dest"
+  fi
+}
 
 # ── 1. Kiro: symlink individual rule files ────────────────────────────────────
 echo "→ Setting up Kiro rules..."
@@ -54,7 +77,7 @@ SKILLGENIE_PATH="$DOTFILES_DIR/skills"
 for skill_dir in "$SKILLGENIE_PATH"/*/; do
   skill_name="$(basename "$skill_dir")"
   [[ -f "$skill_dir/SKILL.md" ]] || continue
-  ln -sf "$skill_dir" "$SKILLS_DEST/$skill_name"
+  install_skill "$skill_dir" "$SKILLS_DEST/$skill_name"
 done
 echo "  ✓ Local skills linked from skill-genie"
 
@@ -62,8 +85,8 @@ echo "  ✓ Local skills linked from skill-genie"
 CACHE_DIR="$HOME/.cache/skill-genie-remotes"
 mkdir -p "$CACHE_DIR"
 
-python3 - "$DOTFILES_DIR/skills.yaml" "$CACHE_DIR" "$SKILLS_DEST" <<'PYTHON'
-import sys, os, subprocess
+python3 - "$DOTFILES_DIR/skills.yaml" "$CACHE_DIR" "$SKILLS_DEST" "$COPY_MODE" <<'PYTHON'
+import sys, os, subprocess, shutil
 from pathlib import Path
 
 try:
@@ -75,6 +98,7 @@ except ImportError:
 manifest = Path(sys.argv[1])
 cache_dir = Path(sys.argv[2])
 dest = Path(sys.argv[3])
+copy_mode = sys.argv[4] == "true"
 
 data = yaml.safe_load(manifest.read_text())
 remotes = data.get("remote", [])
@@ -97,8 +121,13 @@ for entry in remotes:
         skill_path = repo_dir / base_path / skill if base_path else repo_dir / skill
         if skill_path.is_dir():
             link = dest / skill_name
-            link.unlink(missing_ok=True)
-            link.symlink_to(skill_path)
+            if copy_mode:
+                if link.exists() or link.is_symlink():
+                    shutil.rmtree(link, ignore_errors=True)
+                shutil.copytree(skill_path, link, symlinks=True)
+            else:
+                link.unlink(missing_ok=True)
+                link.symlink_to(skill_path)
         else:
             print(f"  ⚠ Not found: {repo}/{skill}")
 
@@ -113,7 +142,7 @@ if command -v trellis &>/dev/null; then
   TRELLIS_SKILLS="$(npm root -g)/@mindfoldhq/trellis/dist/templates/codex/skills"
   if [[ -d "$TRELLIS_SKILLS" ]]; then
     for skill in start brainstorm check check-cross-layer update-spec before-dev break-loop finish-work; do
-      [[ -d "$TRELLIS_SKILLS/$skill" ]] && ln -sf "$TRELLIS_SKILLS/$skill" "$SKILLS_DEST/$skill"
+      [[ -d "$TRELLIS_SKILLS/$skill" ]] && install_skill "$TRELLIS_SKILLS/$skill" "$SKILLS_DEST/$skill"
     done
     echo "  ✓ trellis skills linked"
   else
@@ -142,7 +171,7 @@ link_to_native() {
     real_skill="$(readlink -f "$skill" 2>/dev/null || echo "$skill")"
     [[ -d "$real_skill" ]] || continue
     [[ -f "$real_skill/SKILL.md" ]] || continue
-    ln -sfn "$real_skill" "$native_dir/$skill_name" 2>/dev/null || true
+    install_skill "$real_skill" "$native_dir/$skill_name" 2>/dev/null || true
   done
   linked_agents="$linked_agents $agent_name"
 }
