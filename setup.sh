@@ -49,26 +49,34 @@ if [[ ! -f "$DOTFILES_DIR/skills.yaml" ]]; then
 fi
 
 # ── 1. Kiro: symlink individual rule files ────────────────────────────────────
-echo "→ Setting up Kiro rules..."
-mkdir -p "$KIRO_DIR"
-for f in "$RULES_DIR"/*.md; do
-  ln -sf "$f" "$KIRO_DIR/$(basename "$f")"
-done
-echo "  ✓ Kiro: symlinked $(ls "$RULES_DIR"/*.md | wc -l | tr -d ' ') rule files"
+if command -v kiro &>/dev/null || [[ -d "$KIRO_DIR" ]]; then
+  echo "→ Setting up Kiro rules..."
+  mkdir -p "$KIRO_DIR"
+  for f in "$RULES_DIR"/*.md; do
+    ln -sf "$f" "$KIRO_DIR/$(basename "$f")"
+  done
+  echo "  ✓ Kiro: symlinked $(ls "$RULES_DIR"/*.md | wc -l | tr -d ' ') rule files"
+fi
 
 # ── 2. Claude Code: concatenate rules into single file ────────────────────────
-echo "→ Setting up Claude Code rules..."
-mkdir -p "$(dirname "$CLAUDE_FILE")"
-cat "$RULES_DIR"/router.md "$RULES_DIR"/session-sync.md \
-    "$RULES_DIR"/workflow-tools.md "$RULES_DIR"/stack-and-deployment.md \
-    "$RULES_DIR"/external-tools.md > "$CLAUDE_FILE"
-echo "  ✓ Claude Code: $CLAUDE_FILE"
+if command -v claude &>/dev/null || [[ -d "$HOME/.claude" ]]; then
+  echo "→ Setting up Claude Code rules..."
+  mkdir -p "$(dirname "$CLAUDE_FILE")"
+  cat "$RULES_DIR"/router.md "$RULES_DIR"/session-sync.md \
+      "$RULES_DIR"/workflow-tools.md "$RULES_DIR"/stack-and-deployment.md \
+      "$RULES_DIR"/external-tools.md > "$CLAUDE_FILE"
+  echo "  ✓ Claude Code: $CLAUDE_FILE"
+fi
 
 # ── 3. Codex: concatenate rules into single file ──────────────────────────────
-echo "→ Setting up Codex rules..."
-mkdir -p "$(dirname "$CODEX_FILE")"
-cp "$CLAUDE_FILE" "$CODEX_FILE"
-echo "  ✓ Codex: $CODEX_FILE"
+if command -v codex &>/dev/null || [[ -d "$HOME/.config/codex" ]]; then
+  echo "→ Setting up Codex rules..."
+  mkdir -p "$(dirname "$CODEX_FILE")"
+  cat "$RULES_DIR"/router.md "$RULES_DIR"/session-sync.md \
+      "$RULES_DIR"/workflow-tools.md "$RULES_DIR"/stack-and-deployment.md \
+      "$RULES_DIR"/external-tools.md > "$CODEX_FILE"
+  echo "  ✓ Codex: $CODEX_FILE"
+fi
 
 # ── 4. Skills: sync from manifest ────────────────────────────────────────────
 echo "→ Syncing skills..."
