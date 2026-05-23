@@ -40,6 +40,14 @@ install_skill() {
   fi
 }
 
+# Ensure skills.yaml exists
+if [[ ! -f "$DOTFILES_DIR/skills.yaml" ]]; then
+  if [[ -f "$DOTFILES_DIR/skills.yaml.example" ]]; then
+    cp "$DOTFILES_DIR/skills.yaml.example" "$DOTFILES_DIR/skills.yaml"
+    echo "ℹ Created skills.yaml from example. Edit it to customize your remote skills."
+  fi
+fi
+
 # ── 1. Kiro: symlink individual rule files ────────────────────────────────────
 echo "→ Setting up Kiro rules..."
 mkdir -p "$KIRO_DIR"
