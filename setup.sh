@@ -6,7 +6,7 @@ RULES_DIR="$DOTFILES_DIR/rules"
 SKILLS_DEST="$HOME/.agents/skills"
 KIRO_DIR="$HOME/.kiro/steering"
 CLAUDE_FILE="$HOME/.claude/CLAUDE.md"
-CODEX_FILE="$HOME/.config/codex/instructions.md"
+CODEX_FILE="$HOME/.codex/AGENTS.md"
 SKILLGENIE_BIN_PATH=""
 
 FULL=false
@@ -98,7 +98,7 @@ if command -v claude &>/dev/null || [[ -d "$HOME/.claude" ]]; then
 fi
 
 # ── 3. Codex: concatenate rules into single file ──────────────────────────────
-if command -v codex &>/dev/null || [[ -d "$HOME/.config/codex" ]]; then
+if command -v codex &>/dev/null || [[ -d "$HOME/.codex" ]]; then
   echo "→ Setting up Codex rules..."
   mkdir -p "$(dirname "$CODEX_FILE")"
   cat "$RULES_DIR"/router.md "$RULES_DIR"/session-sync.md \
