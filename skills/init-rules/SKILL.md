@@ -40,6 +40,12 @@ Ask the user these questions ONE AT A TIME. After each answer, move to the next.
 
 ## Output
 
+Before writing, if `rules/` already contains `.md` files, back them up:
+```bash
+mv rules/ rules.bak.$(date +%Y%m%d%H%M)/
+mkdir rules/
+```
+
 After collecting answers, generate these files in the skill-genie `rules/` directory:
 
 - `rules/router.md` — Universal top-level rules
