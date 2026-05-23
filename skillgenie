@@ -16,7 +16,7 @@ Targets:
   (no flag)          Auto-detect: all runtimes found on this machine
 
 Install backends:
-  Claude Code  →  symlink to ~/.agent/skills/<skill>/
+  Claude Code  →  symlink to ~/.agents/skills/<skill>/
   OpenClaw     →  shutil.copytree  →  ~/.openclaw/skills/<skill>/
 """
 
@@ -96,7 +96,7 @@ def all_skills() -> list[str]:
 
 def detect_targets() -> list[str]:
     """Return targets present on this machine."""
-    targets = ["claude"]  # always available; uses symlink to ~/.agent/skills/
+    targets = ["claude"]  # always available; uses symlink to ~/.agents/skills/
     if OPENCLAW_DIR.parent.exists():  # ~/.openclaw exists
         targets.append("openclaw")
     return targets

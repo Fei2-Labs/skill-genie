@@ -1,5 +1,5 @@
 # Skills manifest — all sources declared here
-# Run `setup.sh` to sync everything to ~/.agent/skills/
+# Run `setup.sh` to sync everything to ~/.agents/skills/
 
 # Local skills: all dirs with SKILL.md in this repo are auto-included.
 
