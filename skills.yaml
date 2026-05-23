@@ -38,6 +38,20 @@ remote:
     pick:
       - ui-ux-pro-max
 
+# Optional: only installed if the tool is detected on this machine
+optional:
+  - tool: trellis
+    source: npm:@mindfoldhq/trellis/dist/templates/codex/skills
+    pick:
+      - start
+      - brainstorm
+      - check
+      - check-cross-layer
+      - update-spec
+      - before-dev
+      - break-loop
+      - finish-work
+
 # Bundled skills (installed via registry, managed by .bundled_manifest)
 # These are auto-installed and not tracked in this manifest.
 # To reset: setup.sh --full will clear and reinstall from this file only.
