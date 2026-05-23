@@ -29,6 +29,20 @@ if $COPY_MODE; then
   echo "ℹ Copy mode: skills will be copied (not symlinked)"
 fi
 
+# ── 0. Backup existing configs (first run only) ──────────────────────────────
+BACKUP_DIR="$HOME/.skill-genie-backup"
+if [[ ! -d "$BACKUP_DIR" ]]; then
+  echo "→ Backing up existing configs to $BACKUP_DIR..."
+  mkdir -p "$BACKUP_DIR"
+  [[ -d "$HOME/.kiro/steering" ]] && cp -R "$HOME/.kiro/steering" "$BACKUP_DIR/kiro-steering" 2>/dev/null
+  [[ -f "$HOME/.claude/CLAUDE.md" ]] && cp "$HOME/.claude/CLAUDE.md" "$BACKUP_DIR/CLAUDE.md" 2>/dev/null
+  [[ -d "$HOME/.claude/skills" ]] && cp -R "$HOME/.claude/skills" "$BACKUP_DIR/claude-skills" 2>/dev/null
+  [[ -f "$HOME/.config/codex/instructions.md" ]] && cp "$HOME/.config/codex/instructions.md" "$BACKUP_DIR/codex-instructions.md" 2>/dev/null
+  [[ -d "$HOME/.codex/skills" ]] && cp -R "$HOME/.codex/skills" "$BACKUP_DIR/codex-skills" 2>/dev/null
+  [[ -d "$HOME/.agents/skills" ]] && cp -R "$HOME/.agents/skills" "$BACKUP_DIR/agents-skills" 2>/dev/null
+  echo "  ✓ Backup saved (restore with: cp -R $BACKUP_DIR/* ~/)"
+fi
+
 # Helper: link or copy a skill directory to a destination
 install_skill() {
   local src="$1" dest="$2"
