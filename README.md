@@ -82,7 +82,7 @@ Rules and skills are only installed for agents detected on your machine.
 |-------|-----------|-------|--------|
 | Kiro | `kiro` in PATH or `~/.kiro/` exists | `~/.kiro/steering/*.md` | `~/.agents/skills/` |
 | Claude Code | `claude` in PATH or `~/.claude/` exists | `~/.claude/CLAUDE.md` | `~/.claude/skills/` |
-| Codex | `codex` in PATH or `~/.config/codex/` exists | `~/.config/codex/instructions.md` | `~/.codex/skills/` |
+| Codex | `codex` in PATH or `~/.codex/` exists | `~/.codex/AGENTS.md` | `~/.codex/skills/` |
 | Gemini Antigravity | `antigravity` in PATH | — | `~/.gemini/antigravity/skills/` |
 | Cursor | `cursor` in PATH | — | `~/.cursor/skills/` |
 | GitHub Copilot | `gh` in PATH + `~/.github/` exists | — | `~/.github/skills/` |
