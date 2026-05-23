@@ -1,65 +1,99 @@
-# Skill Genie
+# 🧞 Skill Genie
 
-AI agent environment in one repo: skills, global rules, project templates, and a setup script.
+Your AI agent environment, in one repo. Skills, rules, templates, and a single command to set it all up.
 
-## Quick start
+## Why
+
+Every AI coding agent (Claude Code, Codex, Kiro, Cursor, Gemini) has its own config location, its own skills format, its own way of loading rules. You end up with scattered configs across machines that drift apart.
+
+Skill Genie fixes this:
+- **One repo** — all your skills, rules, and templates version-controlled together
+- **One command** — `./setup.sh` distributes everything to the right places
+- **Every agent** — native path support for Codex, Claude Code, Gemini Antigravity, Cursor, and GitHub Copilot
+
+## Quick Start
 
 ```bash
 git clone https://github.com/Fei2-Labs/skill-genie.git ~/skill-genie
-~/skill-genie/setup.sh
+cd ~/skill-genie
+./setup.sh
 ```
+
+That's it. Your agent environment is ready.
+
+## What Gets Installed
+
+| What | Where |
+|------|-------|
+| Agent rules | `~/.kiro/steering/`, `~/.claude/CLAUDE.md`, `~/.config/codex/instructions.md` |
+| Skills | `~/.agents/skills/` + native paths (`~/.codex/skills/`, `~/.claude/skills/`, etc.) |
+| CLI tool | `skillgenie` in your PATH |
 
 ## Modes
 
-| Command | Behavior |
-|---------|----------|
-| `./setup.sh` | Safe — adds/updates skills without removing existing ones |
-| `./setup.sh --full` | Full rebuild — clears `~/.agents/skills/` and reinstalls from manifest only |
-
-> If you already have skills in `~/.agents/skills/`, the default mode won't touch them. Use `--full` for a clean slate.
+```bash
+./setup.sh          # Safe: adds/updates, never deletes existing skills
+./setup.sh --full   # Clean slate: clears and rebuilds from manifest
+```
 
 ## Structure
 
 ```
-skills/             → Reusable AI agent skills (each with SKILL.md)
-rules/              → Global agent behavior rules (split by topic)
-templates/          → Project AGENTS.md templates
-skills.yaml         → Third-party skill sources (editable config)
-skillgenie          → CLI: list, read, install, status
-setup.sh            → One-command environment setup
+skills/         Reusable AI agent skills (each with SKILL.md)
+rules/          Global agent behavior rules (split by topic)
+templates/      Project AGENTS.md starters for different stacks
+skills.yaml     Third-party skill sources (edit this to customize)
+skillgenie      CLI tool for listing and reading skills
+setup.sh        One-command environment setup
 ```
-
-## Agent compatibility
-
-| Agent | How rules are loaded |
-|-------|---------------------|
-| Kiro | Symlinks individual files to `~/.kiro/steering/` |
-| Claude Code | Concatenates into `~/.claude/CLAUDE.md` |
-| Codex | Concatenates into `~/.config/codex/instructions.md` |
 
 ## skillgenie CLI
 
 ```bash
-skillgenie list              # List available skills
-skillgenie read <name>       # Print a skill's SKILL.md
-skillgenie install <name>    # Install to detected runtimes
-skillgenie install --all     # Install all skills
-skillgenie status            # Show install status per runtime
+skillgenie list            # List all skills in this repo
+skillgenie read <name>     # Print a skill's full instructions
+skillgenie status          # Show install status per runtime
+skillgenie install <name>  # Install a specific skill
+skillgenie install --all   # Install all skills
 ```
 
-## What's included
+## Customization
 
-- **Skills** — Reusable task instructions for AI agents (local + third-party)
-- **Rules** — Global behavior configuration for Kiro, Claude Code, Codex
-- **Templates** — Project-level AGENTS.md starters for different tech stacks
-- **CLI** — `skillgenie` for discovering and reading skills
+Edit `skills.yaml` to add or remove third-party sources:
 
-## Skills sources
+```yaml
+remote:
+  - repo: owner/repo-name
+    path: path/to/skills
+    pick:
+      - skill-folder-name
+```
 
-1. **Local** — Skills in this repo (dirs with `SKILL.md`)
-2. **Remote** — Third-party repos declared in `skills.yaml`
-3. **Bundled** — Registry-installed skills (not managed here)
+Optional tool-detected skills (like Trellis) are auto-linked when the tool is present on your machine.
+
+## Agent Compatibility
+
+| Agent | Rules | Skills |
+|-------|-------|--------|
+| Kiro | `~/.kiro/steering/*.md` (individual files) | `~/.agents/skills/` |
+| Claude Code | `~/.claude/CLAUDE.md` (concatenated) | `~/.claude/skills/` |
+| Codex | `~/.config/codex/instructions.md` (concatenated) | `~/.codex/skills/` |
+| Gemini Antigravity | — | `~/.gemini/antigravity/skills/` |
+| Cursor | — | `~/.cursor/skills/` |
+| GitHub Copilot | — | `~/.github/skills/` |
+
+## Agent-Driven Install
+
+Tell your agent:
+
+```
+Read https://raw.githubusercontent.com/Fei2-Labs/skill-genie/main/install.md and follow the instructions.
+```
 
 ## License
 
 MIT © Feifei Kosonen
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=Fei2-Labs/skill-genie&type=Date)](https://star-history.com/#Fei2-Labs/skill-genie&Date)
