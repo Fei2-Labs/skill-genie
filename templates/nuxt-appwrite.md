@@ -72,7 +72,7 @@ npx opensrc <owner>/<repo>      # GitHub repo (e.g., npx opensrc vercel/ai)
 <!-- opensrc:end -->
 ## Shared Skills (OpenSkills)
 - use local Skills first otherwise shared Skills
-- Shared Skills are stored globally in: ~/.agent/skills
+- Shared Skills are stored globally in: ~/.agents/skills
 - Do NOT expect skills to be preloaded. When a task matches a skill, load it on demand:
 1) Discover available Skills, locally first otherwise shared Skill:
    - Run: openskills list

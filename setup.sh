@@ -3,7 +3,7 @@ set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 RULES_DIR="$DOTFILES_DIR/rules"
-SKILLS_DEST="$HOME/.agent/skills"
+SKILLS_DEST="$HOME/.agents/skills"
 KIRO_DIR="$HOME/.kiro/steering"
 CLAUDE_FILE="$HOME/.claude/CLAUDE.md"
 CODEX_FILE="$HOME/.config/codex/instructions.md"
@@ -12,7 +12,7 @@ SKILLGENIE_BIN_PATH=""
 FULL=false
 if [[ "${1:-}" == "--full" ]]; then
   FULL=true
-  echo "⚠ Full mode: ~/.agent/skills/ will be cleared and rebuilt."
+  echo "⚠ Full mode: ~/.agents/skills/ will be cleared and rebuilt."
   read -p "Continue? [y/N] " confirm
   [[ "$confirm" =~ ^[Yy]$ ]] || exit 0
 fi

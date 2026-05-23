@@ -31,7 +31,7 @@ cd ~/skill-genie
 
 This will:
 1. Symlink global agent rules to your agent's config directory (Kiro, Claude Code, Codex)
-2. Sync skills from `skills.yaml` into `~/.agent/skills/`
+2. Sync skills from `skills.yaml` into `~/.agents/skills/`
 3. Detect optional tools (e.g. trellis) and link their skills
 4. Link the `skillgenie` CLI to your PATH
 
@@ -40,7 +40,7 @@ This will:
 | Command | Behavior |
 |---------|----------|
 | `./setup.sh` | Safe — adds/updates without removing existing skills |
-| `./setup.sh --full` | Full rebuild — clears `~/.agent/skills/` first |
+| `./setup.sh --full` | Full rebuild — clears `~/.agents/skills/` first |
 
 ## Agent-Specific Setup
 
@@ -58,9 +58,9 @@ After running `setup.sh`, rules are at `~/.config/codex/instructions.md`. Skills
 
 ### Other Agents
 
-Skills are in `~/.agent/skills/<name>/SKILL.md`. Any agent that can read files can use them directly:
+Skills are in `~/.agents/skills/<name>/SKILL.md`. Any agent that can read files can use them directly:
 ```bash
-cat ~/.agent/skills/<name>/SKILL.md
+cat ~/.agents/skills/<name>/SKILL.md
 ```
 
 ## Customization
@@ -88,7 +88,7 @@ skillgenie status            # Show install status per runtime
 ## Uninstall
 
 ```bash
-rm -rf ~/skill-genie ~/.agent/skills ~/.cache/skill-genie-remotes
+rm -rf ~/skill-genie ~/.agents/skills ~/.cache/skill-genie-remotes
 # Remove symlinks:
 rm -f ~/.kiro/steering/router.md ~/.kiro/steering/session-sync.md \
       ~/.kiro/steering/workflow-tools.md ~/.kiro/steering/stack-and-deployment.md \

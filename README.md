@@ -14,9 +14,9 @@ git clone https://github.com/Fei2-Labs/skill-genie.git ~/skill-genie
 | Command | Behavior |
 |---------|----------|
 | `./setup.sh` | Safe — adds/updates skills without removing existing ones |
-| `./setup.sh --full` | Full rebuild — clears `~/.agent/skills/` and reinstalls from manifest only |
+| `./setup.sh --full` | Full rebuild — clears `~/.agents/skills/` and reinstalls from manifest only |
 
-> If you already have skills in `~/.agent/skills/`, the default mode won't touch them. Use `--full` for a clean slate.
+> If you already have skills in `~/.agents/skills/`, the default mode won't touch them. Use `--full` for a clean slate.
 
 ## Structure
 
