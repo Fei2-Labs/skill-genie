@@ -41,10 +41,13 @@ Ask the user these questions ONE AT A TIME. After each answer, move to the next.
 ## Output
 
 Before writing, if `rules/` already contains `.md` files:
-1. Read all existing rule files and note their content
+1. Read all existing rule files fully — understand the user's current preferences and intent
 2. Back them up: `mv rules/ rules.bak.$(date +%Y%m%d%H%M)/ && mkdir rules/`
-3. When generating new rules, **merge** the user's existing rules with new answers — keep any existing rules that don't conflict with new answers, and only replace/add where the user gave a different preference
-4. If unsure whether to keep or replace a rule, ask the user: "You currently have [rule]. Keep it or replace with [new]?"
+3. When generating new rules, compare the user's new answers against their existing rules:
+   - **No conflict**: Keep the existing rule as-is in the new output
+   - **Conflict detected**: Explain the conflict to the user, suggest which version is better and why, then ask which to use
+   - **New rule with no existing equivalent**: Add it
+4. The goal is to produce rules that reflect the user's FULL intent — both what they said in this interview AND what they previously established
 
 After collecting answers, generate these files in the skill-genie `rules/` directory:
 
