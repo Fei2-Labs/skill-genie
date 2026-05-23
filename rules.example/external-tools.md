@@ -1,6 +1,4 @@
-# External tools and skills
+# external tools
 
-- When a task matches a skill, load it with `skillgenie read <name>`.
-- To list available skills: `skillgenie list`.
-- Never invent skill names.
-- When the user names a specific tool, check if it exists (`which <tool>`) before using it.
+<!-- Generate with: skillgenie read init-rules -->
+
