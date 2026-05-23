@@ -1,33 +1,57 @@
 # Skill Genie
 
-Personal AI agent skills for use with [OpenSkills](https://github.com/warpdotdev/oz-skills).
+AI agent environment in one repo: skills, global rules, project templates, and a setup script.
 
-## Skills
-
-- **aegis-protocol** — Security review protocol
-- **ai-csuite** — AI C-suite advisor
-- **close-loop** — Session memory snapshot before context limit
-- **foxcode-openclaw** — Foxcode AI model config for OpenClaw
-- **handoff** — Compact conversation handoff
-- **handoff-receiver** — Receive and resume a handoff
-- **linuxdo-application** — Linux.do application helper
-- **npm-publish** — npm package publishing workflow
-- **omnidebug-autopilot** — Automated debugging
-- **psychology-master** — Human psychology expertise
-- **refactor-agents-md** — Refactor AGENTS.md files
-- **research-to-wechat** — Research to WeChat article pipeline
-- **session-handoff** — Full session handoff with context
-- **skillgenie** — Skill management
-- **stalwart-dokploy-resend-relay** — Email relay setup
-- **wechat-compliance-check** — WeChat content compliance
-- **wordpress-vps-install** — WordPress VPS installation
-
-## Usage
+## Quick start
 
 ```bash
-openskills list
-openskills read <skill_name>
+git clone https://github.com/Fei2-Labs/skill-genie.git ~/skill-genie
+~/skill-genie/setup.sh
 ```
+
+## Modes
+
+| Command | Behavior |
+|---------|----------|
+| `./setup.sh` | Safe — adds/updates skills without removing existing ones |
+| `./setup.sh --full` | Full rebuild — clears `~/.agent/skills/` and reinstalls from manifest only |
+
+> If you already have skills in `~/.agent/skills/`, the default mode won't touch them. Use `--full` for a clean slate.
+
+## Structure
+
+```
+skills (each dir)   → Personal skills with SKILL.md
+rules/              → Global agent behavior rules (split by topic)
+templates/          → Project AGENTS.md templates
+skills.yaml         → Third-party skill sources
+skillgenie          → CLI: list, read, install, status
+setup.sh            → One-command environment setup
+```
+
+## Agent compatibility
+
+| Agent | How rules are loaded |
+|-------|---------------------|
+| Kiro | Symlinks individual files to `~/.kiro/steering/` |
+| Claude Code | Concatenates into `~/.claude/CLAUDE.md` |
+| Codex | Concatenates into `~/.config/codex/instructions.md` |
+
+## skillgenie CLI
+
+```bash
+skillgenie list              # List available skills
+skillgenie read <name>       # Print a skill's SKILL.md
+skillgenie install <name>    # Install to detected runtimes
+skillgenie install --all     # Install all skills
+skillgenie status            # Show install status per runtime
+```
+
+## Skills sources
+
+1. **Local** — Skills in this repo (dirs with `SKILL.md`)
+2. **Remote** — Third-party repos declared in `skills.yaml`
+3. **Bundled** — Registry-installed skills (not managed here)
 
 ## License
 
