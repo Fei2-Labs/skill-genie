@@ -23,11 +23,11 @@ That's it. Your agent environment is ready.
 
 ## What Gets Installed
 
-| What | Where |
-|------|-------|
-| Agent rules | `~/.kiro/steering/`, `~/.claude/CLAUDE.md`, `~/.config/codex/instructions.md` |
-| Skills | `~/.agents/skills/` + native paths (`~/.codex/skills/`, `~/.claude/skills/`, etc.) |
-| CLI tool | `skillgenie` in your PATH |
+| What | Where | Condition |
+|------|-------|-----------|
+| Agent rules | Agent-specific config dirs | Only for detected agents |
+| Skills | `~/.agents/skills/` + native agent paths | Only for detected agents |
+| CLI tool | `skillgenie` in PATH | Always |
 
 ## Modes
 
@@ -75,14 +75,16 @@ Your `skills.yaml` is gitignored — it won't be overwritten by updates.
 
 ## Agent Compatibility
 
-| Agent | Rules | Skills |
-|-------|-------|--------|
-| Kiro | `~/.kiro/steering/*.md` (individual files) | `~/.agents/skills/` |
-| Claude Code | `~/.claude/CLAUDE.md` (concatenated) | `~/.claude/skills/` |
-| Codex | `~/.config/codex/instructions.md` (concatenated) | `~/.codex/skills/` |
-| Gemini Antigravity | — | `~/.gemini/antigravity/skills/` |
-| Cursor | — | `~/.cursor/skills/` |
-| GitHub Copilot | — | `~/.github/skills/` |
+Rules and skills are only installed for agents detected on your machine.
+
+| Agent | Detection | Rules | Skills |
+|-------|-----------|-------|--------|
+| Kiro | `kiro` in PATH or `~/.kiro/` exists | `~/.kiro/steering/*.md` | `~/.agents/skills/` |
+| Claude Code | `claude` in PATH or `~/.claude/` exists | `~/.claude/CLAUDE.md` | `~/.claude/skills/` |
+| Codex | `codex` in PATH or `~/.config/codex/` exists | `~/.config/codex/instructions.md` | `~/.codex/skills/` |
+| Gemini Antigravity | `antigravity` in PATH | — | `~/.gemini/antigravity/skills/` |
+| Cursor | `cursor` in PATH | — | `~/.cursor/skills/` |
+| GitHub Copilot | `gh` in PATH + `~/.github/` exists | — | `~/.github/skills/` |
 
 ## Agent-Driven Install
 
