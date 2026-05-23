@@ -30,35 +30,48 @@ cd ~/skill-genie
 ```
 
 This will:
-1. Symlink global agent rules to your agent's config directory (Kiro, Claude Code, Codex)
-2. Sync skills from `skills.yaml` into `~/.agents/skills/`
-3. Detect optional tools (e.g. trellis) and link their skills
-4. Link the `skillgenie` CLI to your PATH
+1. Detect which agents are installed on your machine
+2. Install global rules only for detected agents
+3. Sync skills from `skills.yaml` into detected agent paths
+4. Detect optional tools (e.g. trellis) and link their skills
+5. Link the `skillgenie` CLI to your PATH
 
 ## Modes
 
 | Command | Behavior |
 |---------|----------|
-| `./setup.sh` | Safe — adds/updates without removing existing skills |
-| `./setup.sh --full` | Full rebuild — clears `~/.agents/skills/` first |
+| `./setup.sh` | Symlink mode (default): fast, edits sync instantly |
+| `./setup.sh --copy` | Copy mode: copies files, no dependency on source paths |
+| `./setup.sh --full` | Clean slate + symlink |
+| `./setup.sh --full --copy` | Clean slate + copy |
 
 ## Agent-Specific Setup
 
+`setup.sh` auto-detects installed agents. Only detected agents get configured:
+
 ### Claude Code
 
-After running `setup.sh`, rules are at `~/.claude/CLAUDE.md`. Skills are available via `skillgenie list` and `skillgenie read <name>`.
+Detected if `claude` is in PATH or `~/.claude/` exists. Rules written to `~/.claude/CLAUDE.md`, skills to `~/.claude/skills/`.
 
 ### Kiro
 
-After running `setup.sh`, rules are symlinked as individual files in `~/.kiro/steering/`. Skills are available via `skillgenie list` and `skillgenie read <name>`.
+Detected if `kiro` is in PATH or `~/.kiro/` exists. Rules symlinked to `~/.kiro/steering/`, skills to `~/.agents/skills/`.
 
 ### Codex
 
-After running `setup.sh`, rules are at `~/.config/codex/instructions.md`. Skills are available via `skillgenie list` and `skillgenie read <name>`.
+Detected if `codex` is in PATH or `~/.config/codex/` exists. Rules written to `~/.config/codex/instructions.md`, skills to `~/.codex/skills/`.
+
+### Gemini Antigravity
+
+Detected if `antigravity` is in PATH. Skills to `~/.gemini/antigravity/skills/`.
+
+### Cursor
+
+Detected if `cursor` is in PATH. Skills to `~/.cursor/skills/`.
 
 ### Other Agents
 
-Skills are in `~/.agents/skills/<name>/SKILL.md`. Any agent that can read files can use them directly:
+Skills are also available at `~/.agents/skills/<name>/SKILL.md`. Any agent that can read files can use them directly:
 ```bash
 cat ~/.agents/skills/<name>/SKILL.md
 ```
