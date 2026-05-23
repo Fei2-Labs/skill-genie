@@ -49,7 +49,7 @@ if $FULL; then
 fi
 
 # 4a. Local skills (in this repo)
-SKILLGENIE_PATH="$DOTFILES_DIR"
+SKILLGENIE_PATH="$DOTFILES_DIR/skills"
 
 for skill_dir in "$SKILLGENIE_PATH"/*/; do
   skill_name="$(basename "$skill_dir")"
