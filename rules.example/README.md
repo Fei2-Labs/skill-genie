@@ -1,28 +1,34 @@
 # Rules
 
-This directory contains example agent rule files. Copy to `rules/` and customize:
+Your personalized agent rules go here. Two ways to set them up:
 
+## Option 1: Let your agent generate them (recommended)
+
+Tell your agent:
+```
+skillgenie read init-rules
+```
+It will ask you a few questions and generate your rules automatically.
+
+## Option 2: Manual
+
+Copy the starter files and edit them yourself:
 ```bash
-cp -r rules.example/ rules/
+cp rules.example/router.md rules/
+cp rules.example/session-sync.md rules/
+cp rules.example/workflow-tools.md rules/
+cp rules.example/stack-and-deployment.md rules/
+cp rules.example/external-tools.md rules/
 ```
 
-## File structure
+## Files
 
 | File | Purpose |
 |------|---------|
-| `router.md` | Minimal top-level rules (always loaded) |
-| `session-sync.md` | Session start, git sync, handoff behavior |
-| `workflow-tools.md` | Tool preferences, debugging, verification |
-| `stack-and-deployment.md` | Tech stack, deployment, project structure |
-| `external-tools.md` | Third-party tools, skills discovery |
+| `router.md` | Top-level universal rules |
+| `session-sync.md` | Session start, git sync |
+| `workflow-tools.md` | Tool preferences, debugging |
+| `stack-and-deployment.md` | Tech stack, deployment |
+| `external-tools.md` | Skills and external tools |
 
-## How they're loaded
-
-- **Kiro**: Each file is symlinked individually to `~/.kiro/steering/`
-- **Claude Code / Codex**: All files are concatenated into a single rules file
-
-## Tips
-
-- Keep each file focused on one topic
-- Rules should be universal (not project-specific) — project rules belong in AGENTS.md
-- Total size across all files ideally under 4KB to minimize context usage
+After editing, run `./setup.sh` to apply.

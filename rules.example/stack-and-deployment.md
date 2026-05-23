@@ -1,8 +1,4 @@
-# Stack and deployment
+# stack and deployment
 
-Add your default tech stack and deployment conventions here. Example:
+<!-- Generate with: skillgenie read init-rules -->
 
-- Frontend: (your framework)
-- Backend: (your framework)
-- Deployment: (your platform)
-- Package manager: (npm/pnpm/yarn)
