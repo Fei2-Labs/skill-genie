@@ -1,0 +1,26 @@
+#compdef skillgenie
+
+_skillgenie() {
+  local -a commands
+  commands=(
+    'list:List available skills'
+    'read:Read a skill SKILL.md'
+    'status:Show install status per runtime'
+    'install:Install skill(s)'
+    'update:Update (re-install) skill(s)'
+  )
+
+  if (( CURRENT == 2 )); then
+    _describe 'command' commands
+  elif (( CURRENT == 3 )); then
+    case "${words[2]}" in
+      read|install|update)
+        local -a skills
+        skills=($(skillgenie list 2>/dev/null | grep -oP '^\s+\S+' | tr -d ' '))
+        _describe 'skill' skills
+        ;;
+    esac
+  fi
+}
+
+_skillgenie
