@@ -123,7 +123,27 @@ else
   echo "  – trellis not found, skipping"
 fi
 
-# ── 5. skillgenie CLI ─────────────────────────────────────────────────────────
+# ── 5. Native agent skill paths ──────────────────────────────────────────────
+echo "→ Linking skills to native agent paths..."
+NATIVE_PATHS=(
+  "$HOME/.codex/skills"
+  "$HOME/.claude/skills"
+  "$HOME/.gemini/antigravity/skills"
+  "$HOME/.cursor/skills"
+  "$HOME/.github/skills"
+)
+
+for native_dir in "${NATIVE_PATHS[@]}"; do
+  mkdir -p "$native_dir"
+  for skill in "$SKILLS_DEST"/*/; do
+    skill_name="$(basename "$skill")"
+    [[ -f "$skill/SKILL.md" ]] || [[ -L "$skill" ]] || continue
+    ln -sf "$skill" "$native_dir/$skill_name" 2>/dev/null || true
+  done
+done
+echo "  ✓ Skills linked to: ~/.codex, ~/.claude, ~/.gemini, ~/.cursor, ~/.github"
+
+# ── 6. skillgenie CLI ─────────────────────────────────────────────────────────
 echo "→ Linking skillgenie to PATH..."
 SKILLGENIE_BIN="$DOTFILES_DIR/skillgenie"
 if [[ -f "$SKILLGENIE_BIN" ]]; then
