@@ -40,11 +40,11 @@ Ask the user these questions ONE AT A TIME. After each answer, move to the next.
 
 ## Output
 
-Before writing, if `rules/` already contains `.md` files, back them up:
-```bash
-mv rules/ rules.bak.$(date +%Y%m%d%H%M)/
-mkdir rules/
-```
+Before writing, if `rules/` already contains `.md` files:
+1. Read all existing rule files and note their content
+2. Back them up: `mv rules/ rules.bak.$(date +%Y%m%d%H%M)/ && mkdir rules/`
+3. When generating new rules, **merge** the user's existing rules with new answers — keep any existing rules that don't conflict with new answers, and only replace/add where the user gave a different preference
+4. If unsure whether to keep or replace a rule, ask the user: "You currently have [rule]. Keep it or replace with [new]?"
 
 After collecting answers, generate these files in the skill-genie `rules/` directory:
 
