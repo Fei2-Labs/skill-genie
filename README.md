@@ -34,10 +34,12 @@ That's it. Your agent environment is ready.
 ## Modes
 
 ```bash
-./setup.sh              # Symlink mode (default): fast, edits sync instantly
-./setup.sh --copy       # Copy mode: copies files, no dependency on source paths
-./setup.sh --full       # Clean slate + symlink
-./setup.sh --full --copy # Clean slate + copy
+./setup.sh                # Full setup: rules + skills (symlink)
+./setup.sh --copy         # Full setup: rules + skills (copy files)
+./setup.sh --rules-only   # Only update rules
+./setup.sh --skills-only  # Only update skills
+./setup.sh --full         # Clean slate + symlink
+./setup.sh --full --copy  # Clean slate + copy
 ```
 
 ## Structure
@@ -86,6 +88,17 @@ Rules and skills are only installed for agents detected on your machine.
 | Gemini Antigravity | `antigravity` in PATH | — | `~/.gemini/antigravity/skills/` |
 | Cursor | `cursor` in PATH | — | `~/.cursor/skills/` |
 | GitHub Copilot | `gh` in PATH + `~/.github/` exists | — | `~/.github/skills/` |
+
+## Tab Completion (zsh)
+
+`setup.sh` installs zsh completions automatically. If tab completion doesn't work, add to `~/.zshrc`:
+
+```bash
+fpath=(~/.zsh/completions $fpath)
+autoload -Uz compinit && compinit
+```
+
+Then restart your terminal. Supports: `skillgenie <tab>` for commands, `skillgenie read <tab>` for skill names.
 
 ## Agent-Driven Install
 
