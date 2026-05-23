@@ -135,10 +135,16 @@ NATIVE_PATHS=(
 
 for native_dir in "${NATIVE_PATHS[@]}"; do
   mkdir -p "$native_dir"
+  real_native="$(readlink -f "$native_dir" 2>/dev/null || echo "$native_dir")"
+  real_dest="$(readlink -f "$SKILLS_DEST" 2>/dev/null || echo "$SKILLS_DEST")"
+  # Skip if this native dir is the same as our primary skills dest
+  [[ "$real_native" == "$real_dest" ]] && continue
   for skill in "$SKILLS_DEST"/*/; do
     skill_name="$(basename "$skill")"
-    [[ -f "$skill/SKILL.md" ]] || [[ -L "$skill" ]] || continue
-    ln -sf "$skill" "$native_dir/$skill_name" 2>/dev/null || true
+    real_skill="$(readlink -f "$skill" 2>/dev/null || echo "$skill")"
+    [[ -d "$real_skill" ]] || continue
+    [[ -f "$real_skill/SKILL.md" ]] || continue
+    ln -sfn "$real_skill" "$native_dir/$skill_name" 2>/dev/null || true
   done
 done
 echo "  ✓ Skills linked to: ~/.codex, ~/.claude, ~/.gemini, ~/.cursor, ~/.github"
