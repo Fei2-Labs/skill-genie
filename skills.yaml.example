@@ -8,16 +8,16 @@ remote:
   - repo: mattpocock/skills
     path: skills
     pick:
-      - deprecated/design-an-interface
       - personal/edit-article
+      - personal/obsidian-vault
       - misc/git-guardrails-claude-code
       - misc/migrate-to-shoehorn
-      - personal/obsidian-vault
-      - deprecated/qa
-      - deprecated/request-refactor-plan
       - misc/scaffold-exercises
       - misc/setup-pre-commit
-      - deprecated/ubiquitous-language
+      - engineering/diagnose
+      - engineering/tdd
+      - engineering/zoom-out
+      - productivity/grill-me
 
   - repo: warpdotdev/oz-skills
     path: .agents/skills
