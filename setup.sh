@@ -88,20 +88,25 @@ sync_remote() {
 }
 
 # Matt Pocock
-sync_remote "mattpocock/dotfiles" "skills" \
-  "engineering/design-an-interface" "personal/edit-article" \
+# Matt Pocock
+sync_remote "mattpocock/skills" "skills" \
+  "deprecated/design-an-interface" "personal/edit-article" \
   "misc/git-guardrails-claude-code" "misc/migrate-to-shoehorn" \
   "personal/obsidian-vault" "deprecated/qa" \
   "deprecated/request-refactor-plan" "misc/scaffold-exercises" \
-  "misc/setup-pre-commit" "engineering/ubiquitous-language"
+  "misc/setup-pre-commit" "deprecated/ubiquitous-language"
 
 # Warp oz-skills
-sync_remote "warpdotdev/oz-skills" "" \
+sync_remote "warpdotdev/oz-skills" ".agents/skills" \
   "analysis-artifacts" "ci-fix" "create-pull-request" \
   "dbt-model-index" "docs-update" "github-bug-report-triage" \
   "github-issue-dedupe" "scheduler" "seo-aeo-audit" \
   "slack-qa-investigate" "terraform-style-check" \
   "web-accessibility-audit" "web-performance-audit"
+
+# ui-ux-pro-max
+sync_remote "nextlevelbuilder/ui-ux-pro-max-skill" ".claude/skills" \
+  "ui-ux-pro-max"
 
 echo "  ✓ Remote skills synced"
 
