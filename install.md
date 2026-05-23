@@ -1,11 +1,11 @@
 # Skill Genie Install Guide
 
-Skill Genie gives coding agents access to a curated set of AI skills, global rules, and project templates through a single setup command.
+Skill Genie sets up your AI coding agent environment: skills, global rules, and project templates — in one command.
 
 ## Copy This Prompt
 
 ```text
-I want you to install Skill Genie for managing AI agent skills.
+I want you to set up my AI agent environment with Skill Genie (skills, rules, and templates).
 Read the official install guide here: https://raw.githubusercontent.com/Fei2-Labs/skill-genie/main/install.md
 Use only the section for your current client.
 Before cloning repos or writing config files, summarize the exact commands you plan to run and ask me to confirm.
