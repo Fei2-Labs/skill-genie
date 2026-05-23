@@ -1,0 +1,40 @@
+# Skills manifest — all sources declared here
+# Run `setup.sh` to sync everything to ~/.agent/skills/
+
+# Local skills: all dirs with SKILL.md in this repo are auto-included.
+
+# Third-party skills
+remote:
+  - repo: mattpocock/dotfiles
+    path: skills
+    pick:
+      - engineering/design-an-interface
+      - personal/edit-article
+      - misc/git-guardrails-claude-code
+      - misc/migrate-to-shoehorn
+      - personal/obsidian-vault
+      - deprecated/qa
+      - deprecated/request-refactor-plan
+      - misc/scaffold-exercises
+      - misc/setup-pre-commit
+      - engineering/ubiquitous-language
+
+  - repo: warpdotdev/oz-skills
+    pick:
+      - analysis-artifacts
+      - ci-fix
+      - create-pull-request
+      - dbt-model-index
+      - docs-update
+      - github-bug-report-triage
+      - github-issue-dedupe
+      - scheduler
+      - seo-aeo-audit
+      - slack-qa-investigate
+      - terraform-style-check
+      - web-accessibility-audit
+      - web-performance-audit
+
+# Bundled skills (installed via registry, managed by .bundled_manifest)
+# These are auto-installed and not tracked in this manifest.
+# To reset: setup.sh --full will clear and reinstall from this file only.
