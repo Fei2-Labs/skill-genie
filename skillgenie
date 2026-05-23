@@ -30,7 +30,7 @@ from pathlib import Path
 # ── Config ────────────────────────────────────────────────────────────────────
 
 GITHUB_REPO   = "Fei2-Labs/skill-genie"
-REPO_ROOT     = Path(os.path.realpath(__file__)).parent
+REPO_ROOT     = Path(os.path.realpath(__file__)).parent / "skills"
 CLAUDE_DIR    = Path.home() / ".claude" / "skills"
 OPENCLAW_DIR  = Path.home() / ".openclaw" / "skills"
 
