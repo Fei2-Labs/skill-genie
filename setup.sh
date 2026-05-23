@@ -11,11 +11,15 @@ SKILLGENIE_BIN_PATH=""
 
 FULL=false
 COPY_MODE=false
+RULES_ONLY=false
+SKILLS_ONLY=false
 
 for arg in "$@"; do
   case "$arg" in
     --full) FULL=true ;;
     --copy) COPY_MODE=true ;;
+    --rules-only) RULES_ONLY=true ;;
+    --skills-only) SKILLS_ONLY=true ;;
   esac
 done
 
@@ -72,6 +76,8 @@ if [[ ! -d "$RULES_DIR" ]] || [[ -z "$(ls "$RULES_DIR"/*.md 2>/dev/null)" ]]; th
 fi
 
 # ── 1. Kiro: symlink individual rule files ────────────────────────────────────
+if ! $SKILLS_ONLY; then
+
 if command -v kiro &>/dev/null || [[ -d "$KIRO_DIR" ]]; then
   echo "→ Setting up Kiro rules..."
   mkdir -p "$KIRO_DIR"
@@ -101,7 +107,11 @@ if command -v codex &>/dev/null || [[ -d "$HOME/.config/codex" ]]; then
   echo "  ✓ Codex: $CODEX_FILE"
 fi
 
+fi # end !SKILLS_ONLY
+
 # ── 4. Skills: sync from manifest ────────────────────────────────────────────
+if ! $RULES_ONLY; then
+
 echo "→ Syncing skills..."
 mkdir -p "$SKILLS_DEST"
 
@@ -226,6 +236,8 @@ if [[ -z "$linked_agents" ]]; then
 else
   echo "  ✓ Skills linked to:$linked_agents"
 fi
+
+fi # end !RULES_ONLY
 
 # ── 6. skillgenie CLI ─────────────────────────────────────────────────────────
 echo "→ Linking skillgenie to PATH..."
