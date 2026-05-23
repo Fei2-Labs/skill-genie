@@ -32,19 +32,21 @@ That's it. Your agent environment is ready.
 ## Modes
 
 ```bash
-./setup.sh          # Safe: adds/updates, never deletes existing skills
-./setup.sh --full   # Clean slate: clears and rebuilds from manifest
+./setup.sh              # Symlink mode (default): fast, edits sync instantly
+./setup.sh --copy       # Copy mode: copies files, no dependency on source paths
+./setup.sh --full       # Clean slate + symlink
+./setup.sh --full --copy # Clean slate + copy
 ```
 
 ## Structure
 
 ```
-skills/         Reusable AI agent skills (each with SKILL.md)
-rules/          Global agent behavior rules (split by topic)
-templates/      Project AGENTS.md starters for different stacks
-skills.yaml     Third-party skill sources (edit this to customize)
-skillgenie      CLI tool for listing and reading skills
-setup.sh        One-command environment setup
+skills/             Reusable AI agent skills (each with SKILL.md)
+rules/              Global agent behavior rules (split by topic)
+templates/          Project AGENTS.md starters for different stacks
+skills.yaml.example Third-party skill sources template (copy to skills.yaml to customize)
+skillgenie          CLI tool for listing and reading skills
+setup.sh            One-command environment setup
 ```
 
 ## skillgenie CLI
@@ -59,7 +61,7 @@ skillgenie install --all   # Install all skills
 
 ## Customization
 
-Edit `skills.yaml` to add or remove third-party sources:
+On first run, `setup.sh` creates `skills.yaml` from `skills.yaml.example`. Edit your local `skills.yaml` to add or remove third-party sources:
 
 ```yaml
 remote:
@@ -69,7 +71,7 @@ remote:
       - skill-folder-name
 ```
 
-Optional tool-detected skills (like Trellis) are auto-linked when the tool is present on your machine.
+Your `skills.yaml` is gitignored — it won't be overwritten by updates.
 
 ## Agent Compatibility
 
