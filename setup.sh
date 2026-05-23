@@ -110,6 +110,24 @@ sync_remote "nextlevelbuilder/ui-ux-pro-max-skill" ".claude/skills" \
 
 echo "  ✓ Remote skills synced"
 
+# ── 4c. Optional skills (only if tool is installed) ───────────────────────────
+echo "→ Checking optional tool skills..."
+
+# Trellis
+if command -v trellis &>/dev/null; then
+  TRELLIS_SKILLS="$(npm root -g)/@mindfoldhq/trellis/dist/templates/codex/skills"
+  if [[ -d "$TRELLIS_SKILLS" ]]; then
+    for skill in start brainstorm check check-cross-layer update-spec before-dev break-loop finish-work; do
+      [[ -d "$TRELLIS_SKILLS/$skill" ]] && ln -sf "$TRELLIS_SKILLS/$skill" "$SKILLS_DEST/$skill"
+    done
+    echo "  ✓ trellis skills linked"
+  else
+    echo "  ⚠ trellis installed but skills path not found"
+  fi
+else
+  echo "  – trellis not found, skipping"
+fi
+
 # ── 5. skillgenie CLI ─────────────────────────────────────────────────────────
 echo "→ Linking skillgenie to PATH..."
 SKILLGENIE_BIN="$DOTFILES_DIR/skillgenie"
