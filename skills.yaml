@@ -6,8 +6,9 @@
 # Third-party skills
 remote:
   - repo: mattpocock/skills
+    path: skills
     pick:
-      - engineering/design-an-interface
+      - deprecated/design-an-interface
       - personal/edit-article
       - misc/git-guardrails-claude-code
       - misc/migrate-to-shoehorn
@@ -16,9 +17,10 @@ remote:
       - deprecated/request-refactor-plan
       - misc/scaffold-exercises
       - misc/setup-pre-commit
-      - engineering/ubiquitous-language
+      - deprecated/ubiquitous-language
 
   - repo: warpdotdev/oz-skills
+    path: .agents/skills
     pick:
       - analysis-artifacts
       - ci-fix
@@ -35,6 +37,7 @@ remote:
       - web-performance-audit
 
   - repo: nextlevelbuilder/ui-ux-pro-max-skill
+    path: .claude/skills
     pick:
       - ui-ux-pro-max
 

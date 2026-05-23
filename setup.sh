@@ -58,57 +58,52 @@ for skill_dir in "$SKILLGENIE_PATH"/*/; do
 done
 echo "  ✓ Local skills linked from skill-genie"
 
-# 4b. Remote skills (clone repos and symlink picked skills)
-CACHE_DIR="$HOME/.cache/dotfiles-skills"
+# 4b. Remote skills (read from skills.yaml)
+CACHE_DIR="$HOME/.cache/skill-genie-remotes"
 mkdir -p "$CACHE_DIR"
 
-sync_remote() {
-  local repo="$1" path="${2:-}" shift_args=("${@:3}")
-  local repo_dir="$CACHE_DIR/$(echo "$repo" | tr '/' '_')"
+python3 - "$DOTFILES_DIR/skills.yaml" "$CACHE_DIR" "$SKILLS_DEST" <<'PYTHON'
+import sys, os, subprocess
+from pathlib import Path
 
-  if [[ ! -d "$repo_dir" ]]; then
-    echo "  Cloning $repo..."
-    git clone --depth 1 "https://github.com/$repo.git" "$repo_dir" 2>/dev/null
-  else
-    git -C "$repo_dir" pull --quiet 2>/dev/null || true
-  fi
+try:
+    import yaml
+except ImportError:
+    print("  ⚠ pyyaml not installed, skipping remote skills (pip3 install pyyaml)")
+    sys.exit(0)
 
-  for skill in "${shift_args[@]}"; do
-    local skill_name="$(basename "$skill")"
-    local skill_path="$repo_dir"
-    [[ -n "$path" ]] && skill_path="$skill_path/$path"
-    skill_path="$skill_path/$skill"
+manifest = Path(sys.argv[1])
+cache_dir = Path(sys.argv[2])
+dest = Path(sys.argv[3])
 
-    if [[ -d "$skill_path" ]]; then
-      ln -sf "$skill_path" "$SKILLS_DEST/$skill_name"
-    else
-      echo "  ⚠ Not found: $repo/$skill"
-    fi
-  done
-}
+data = yaml.safe_load(manifest.read_text())
+remotes = data.get("remote", [])
 
-# Matt Pocock
-# Matt Pocock
-sync_remote "mattpocock/skills" "skills" \
-  "deprecated/design-an-interface" "personal/edit-article" \
-  "misc/git-guardrails-claude-code" "misc/migrate-to-shoehorn" \
-  "personal/obsidian-vault" "deprecated/qa" \
-  "deprecated/request-refactor-plan" "misc/scaffold-exercises" \
-  "misc/setup-pre-commit" "deprecated/ubiquitous-language"
+for entry in remotes:
+    repo = entry["repo"]
+    base_path = entry.get("path", "")
+    picks = entry.get("pick", [])
+    repo_dir = cache_dir / repo.replace("/", "_")
 
-# Warp oz-skills
-sync_remote "warpdotdev/oz-skills" ".agents/skills" \
-  "analysis-artifacts" "ci-fix" "create-pull-request" \
-  "dbt-model-index" "docs-update" "github-bug-report-triage" \
-  "github-issue-dedupe" "scheduler" "seo-aeo-audit" \
-  "slack-qa-investigate" "terraform-style-check" \
-  "web-accessibility-audit" "web-performance-audit"
+    if not repo_dir.exists():
+        print(f"  Cloning {repo}...")
+        subprocess.run(["git", "clone", "--depth", "1", f"https://github.com/{repo}.git", str(repo_dir)],
+                       capture_output=True)
+    else:
+        subprocess.run(["git", "-C", str(repo_dir), "pull", "--quiet"], capture_output=True)
 
-# ui-ux-pro-max
-sync_remote "nextlevelbuilder/ui-ux-pro-max-skill" ".claude/skills" \
-  "ui-ux-pro-max"
+    for skill in picks:
+        skill_name = os.path.basename(skill)
+        skill_path = repo_dir / base_path / skill if base_path else repo_dir / skill
+        if skill_path.is_dir():
+            link = dest / skill_name
+            link.unlink(missing_ok=True)
+            link.symlink_to(skill_path)
+        else:
+            print(f"  ⚠ Not found: {repo}/{skill}")
 
-echo "  ✓ Remote skills synced"
+print("  ✓ Remote skills synced")
+PYTHON
 
 # ── 4c. Optional skills (only if tool is installed) ───────────────────────────
 echo "→ Checking optional tool skills..."
