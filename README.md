@@ -1,5 +1,7 @@
 # 🧞 Skill Genie
 
+> ⚠️ **WARNING**: This setup modifies agent configuration files on your system (`~/.claude/`, `~/.codex/`, `~/.kiro/`, `~/.agents/`, etc.). **Back up your existing configs before running `setup.sh`.** This is a personal configuration repo — provided as-is with no warranty. The author is not responsible for any data loss, broken configs, or unintended side effects. Use at your own risk.
+
 Your AI agent environment, in one repo. Skills, rules, and a single command to set it all up.
 
 ## Why
