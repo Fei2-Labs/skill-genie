@@ -30,7 +30,7 @@ from pathlib import Path
 # ── Config ────────────────────────────────────────────────────────────────────
 
 GITHUB_REPO   = "Fei2-Labs/skill-genie"
-REPO_ROOT     = Path(__file__).parent.resolve()
+REPO_ROOT     = Path(os.path.realpath(__file__)).parent
 CLAUDE_DIR    = Path.home() / ".claude" / "skills"
 OPENCLAW_DIR  = Path.home() / ".openclaw" / "skills"
 
@@ -126,6 +126,22 @@ def cmd_list(_args):
             desc = desc[:87] + "..."
         print(f"  {CYAN}{name:<32}{RESET} {DIM}{desc}{RESET}")
     print()
+
+
+def cmd_read(args):
+    skill = args.skill
+    skill_md = REPO_ROOT / skill / "SKILL.md"
+    if not skill_md.exists():
+        global_path = Path.home() / ".agent" / "skills" / skill / "SKILL.md"
+        if global_path.exists():
+            skill_md = global_path
+        else:
+            err(f"Unknown skill: {skill}")
+            sys.exit(1)
+    print(f"Reading: {skill}")
+    print(f"Base directory: {skill_md.parent}\n")
+    print(skill_md.read_text(errors="replace"))
+    print(f"\nSkill read: {skill}")
 
 
 def cmd_status(_args):
@@ -257,6 +273,10 @@ examples:
     # list
     sub.add_parser("list", help="List available skills in this repo")
 
+    # read
+    p_read = sub.add_parser("read", help="Read a skill's SKILL.md content")
+    p_read.add_argument("skill", help="Skill name")
+
     # status
     sub.add_parser("status", help="Show install status per runtime")
 
@@ -280,6 +300,7 @@ examples:
 
     dispatch = {
         "list":    cmd_list,
+        "read":    cmd_read,
         "status":  cmd_status,
         "install": cmd_install,
         "update":  cmd_update,
