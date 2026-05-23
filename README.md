@@ -21,10 +21,10 @@ git clone https://github.com/Fei2-Labs/skill-genie.git ~/skill-genie
 ## Structure
 
 ```
-skills (each dir)   → Personal skills with SKILL.md
+skills/             → Reusable AI agent skills (each with SKILL.md)
 rules/              → Global agent behavior rules (split by topic)
 templates/          → Project AGENTS.md templates
-skills.yaml         → Third-party skill sources
+skills.yaml         → Third-party skill sources (editable config)
 skillgenie          → CLI: list, read, install, status
 setup.sh            → One-command environment setup
 ```
@@ -46,6 +46,13 @@ skillgenie install <name>    # Install to detected runtimes
 skillgenie install --all     # Install all skills
 skillgenie status            # Show install status per runtime
 ```
+
+## What's included
+
+- **Skills** — Reusable task instructions for AI agents (local + third-party)
+- **Rules** — Global behavior configuration for Kiro, Claude Code, Codex
+- **Templates** — Project-level AGENTS.md starters for different tech stacks
+- **CLI** — `skillgenie` for discovering and reading skills
 
 ## Skills sources
 
