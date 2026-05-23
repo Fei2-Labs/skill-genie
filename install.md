@@ -59,7 +59,7 @@ Detected if `kiro` is in PATH or `~/.kiro/` exists. Rules symlinked to `~/.kiro/
 
 ### Codex
 
-Detected if `codex` is in PATH or `~/.config/codex/` exists. Rules written to `~/.config/codex/instructions.md`, skills to `~/.codex/skills/`.
+Detected if `codex` is in PATH or `~/.codex/` exists. Rules written to `~/.codex/AGENTS.md`, skills to `~/.codex/skills/`.
 
 ### Gemini Antigravity
 
