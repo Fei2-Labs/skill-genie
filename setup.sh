@@ -123,31 +123,41 @@ else
   echo "  – trellis not found, skipping"
 fi
 
-# ── 5. Native agent skill paths ──────────────────────────────────────────────
-echo "→ Linking skills to native agent paths..."
-NATIVE_PATHS=(
-  "$HOME/.codex/skills"
-  "$HOME/.claude/skills"
-  "$HOME/.gemini/antigravity/skills"
-  "$HOME/.cursor/skills"
-  "$HOME/.github/skills"
-)
+# ── 5. Native agent skill paths (only if agent is installed) ──────────────────
+echo "→ Linking skills to detected agent paths..."
 
-for native_dir in "${NATIVE_PATHS[@]}"; do
+linked_agents=""
+
+link_to_native() {
+  local native_dir="$1" agent_name="$2"
   mkdir -p "$native_dir"
+  local real_native real_dest
   real_native="$(readlink -f "$native_dir" 2>/dev/null || echo "$native_dir")"
   real_dest="$(readlink -f "$SKILLS_DEST" 2>/dev/null || echo "$SKILLS_DEST")"
-  # Skip if this native dir is the same as our primary skills dest
-  [[ "$real_native" == "$real_dest" ]] && continue
+  # Already points to primary skills dir
+  [[ "$real_native" == "$real_dest" ]] && linked_agents="$linked_agents $agent_name(✓)" && return
   for skill in "$SKILLS_DEST"/*/; do
+    local skill_name real_skill
     skill_name="$(basename "$skill")"
     real_skill="$(readlink -f "$skill" 2>/dev/null || echo "$skill")"
     [[ -d "$real_skill" ]] || continue
     [[ -f "$real_skill/SKILL.md" ]] || continue
     ln -sfn "$real_skill" "$native_dir/$skill_name" 2>/dev/null || true
   done
-done
-echo "  ✓ Skills linked to: ~/.codex, ~/.claude, ~/.gemini, ~/.cursor, ~/.github"
+  linked_agents="$linked_agents $agent_name"
+}
+
+command -v codex &>/dev/null && link_to_native "$HOME/.codex/skills" "codex" || true
+command -v claude &>/dev/null && link_to_native "$HOME/.claude/skills" "claude" || true
+command -v antigravity &>/dev/null && link_to_native "$HOME/.gemini/antigravity/skills" "antigravity" || true
+command -v cursor &>/dev/null && link_to_native "$HOME/.cursor/skills" "cursor" || true
+command -v gh &>/dev/null && [[ -d "$HOME/.github" ]] && link_to_native "$HOME/.github/skills" "copilot" || true
+
+if [[ -z "$linked_agents" ]]; then
+  echo "  – No additional agents detected, skipping"
+else
+  echo "  ✓ Skills linked to:$linked_agents"
+fi
 
 # ── 6. skillgenie CLI ─────────────────────────────────────────────────────────
 echo "→ Linking skillgenie to PATH..."
