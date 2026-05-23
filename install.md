@@ -40,8 +40,12 @@ This will:
 
 | Command | Behavior |
 |---------|----------|
-| `./setup.sh` | Symlink mode (default): fast, edits sync instantly |
-| `./setup.sh --copy` | Copy mode: copies files, no dependency on source paths |
+| `./setup.sh` | Full setup: rules + skills (symlink, default) |
+| `./setup.sh --copy` | Full setup: rules + skills (copy files) |
+| `./setup.sh --rules-only` | Only update rules |
+| `./setup.sh --skills-only` | Only update skills |
+| `./setup.sh --full` | Clean slate + symlink |
+| `./setup.sh --full --copy` | Clean slate + copy |
 | `./setup.sh --full` | Clean slate + symlink |
 | `./setup.sh --full --copy` | Clean slate + copy |
 
