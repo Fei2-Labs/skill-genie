@@ -5,8 +5,7 @@
 
 # Third-party skills
 remote:
-  - repo: mattpocock/dotfiles
-    path: skills
+  - repo: mattpocock/skills
     pick:
       - engineering/design-an-interface
       - personal/edit-article
@@ -34,6 +33,10 @@ remote:
       - terraform-style-check
       - web-accessibility-audit
       - web-performance-audit
+
+  - repo: nextlevelbuilder/ui-ux-pro-max-skill
+    pick:
+      - ui-ux-pro-max
 
 # Bundled skills (installed via registry, managed by .bundled_manifest)
 # These are auto-installed and not tracked in this manifest.
