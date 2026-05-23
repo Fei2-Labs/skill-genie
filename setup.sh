@@ -48,6 +48,15 @@ if [[ ! -f "$DOTFILES_DIR/skills.yaml" ]]; then
   fi
 fi
 
+# Ensure rules/ exists
+if [[ ! -d "$RULES_DIR" ]] || [[ -z "$(ls "$RULES_DIR"/*.md 2>/dev/null)" ]]; then
+  if [[ -d "$DOTFILES_DIR/rules.example" ]]; then
+    mkdir -p "$RULES_DIR"
+    cp "$DOTFILES_DIR/rules.example"/*.md "$RULES_DIR/"
+    echo "ℹ Created rules/ from examples. Edit them to customize your agent rules."
+  fi
+fi
+
 # ── 1. Kiro: symlink individual rule files ────────────────────────────────────
 if command -v kiro &>/dev/null || [[ -d "$KIRO_DIR" ]]; then
   echo "→ Setting up Kiro rules..."
