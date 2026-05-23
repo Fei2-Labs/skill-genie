@@ -1,9 +1,12 @@
 ---
 name: init-rules
 description: Interactively generate personalized agent rules. Asks about tech stack, work style, and preferences, then writes customized rule files. Use when user says "init rules", "set up my rules", or "configure agent rules".
+requires: Fei2-Labs/skill-genie
 ---
 
 # Init Rules
+
+> **Requires [Skill Genie](https://github.com/Fei2-Labs/skill-genie)**. This skill generates rule files for the skill-genie `rules/` directory. Install skill-genie first, then run this skill.
 
 Generate personalized agent rule files through a short interview.
 
