@@ -1,13 +1,13 @@
 # 🧞 Skill Genie
 
-Your AI agent environment, in one repo. Skills, rules, templates, and a single command to set it all up.
+Your AI agent environment, in one repo. Skills, rules, and a single command to set it all up.
 
 ## Why
 
 Every AI coding agent (Claude Code, Codex, Kiro, Cursor, Gemini) has its own config location, its own skills format, its own way of loading rules. You end up with scattered configs across machines that drift apart.
 
 Skill Genie fixes this:
-- **One repo** — all your skills, rules, and templates version-controlled together
+- **One repo** — all your skills and rules version-controlled together
 - **One command** — `./setup.sh` distributes everything to the right places
 - **Every agent** — native path support for Codex, Claude Code, Gemini Antigravity, Cursor, and GitHub Copilot
 
@@ -42,9 +42,8 @@ That's it. Your agent environment is ready.
 
 ```
 skills/             Reusable AI agent skills (each with SKILL.md)
-rules/              Global agent behavior rules (split by topic)
-templates/          Project AGENTS.md starters for different stacks
-skills.yaml.example Third-party skill sources template (copy to skills.yaml to customize)
+rules.example/      Example agent rules (copy to rules/ and customize)
+skills.yaml.example Third-party skill sources (copy to skills.yaml to customize)
 skillgenie          CLI tool for listing and reading skills
 setup.sh            One-command environment setup
 ```
