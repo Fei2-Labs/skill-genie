@@ -78,18 +78,20 @@ Your `skills.yaml` is gitignored — it won't be overwritten by updates.
 
 ## Agent Compatibility
 
-Rules and skills are only installed for agents detected on your machine.
+Rules and skills are only installed for agents detected on your machine. Rules are symlinked — edit once, all agents see the change immediately.
 
 | Agent | Detection | Rules | Skills |
 |-------|-----------|-------|--------|
-| Kiro | `kiro` in PATH or `~/.kiro/` exists | `~/.kiro/steering/*.md` | `~/.agents/skills/` |
-| Claude Code | `claude` in PATH or `~/.claude/` exists | `~/.claude/CLAUDE.md` | `~/.claude/skills/` |
-| Codex | `codex` in PATH or `~/.codex/` exists | `~/.codex/AGENTS.md` | `~/.codex/skills/` |
-| Windsurf | `~/.codeium/windsurf/` exists | `~/.codeium/windsurf/memories/global_rules.md` | `~/.codeium/windsurf/skills/` |
-| Windsurf Next | `~/.codeium/windsurf-next/` exists | `~/.codeium/windsurf-next/memories/global_rules.md` | `~/.codeium/windsurf-next/skills/` |
+| Kiro | `kiro` in PATH or `~/.kiro/` exists | `~/.kiro/steering/*.md` (all topic files) | `~/.agents/skills/` |
+| Claude Code | `claude` in PATH or `~/.claude/` exists | `~/.claude/CLAUDE.md` → `router.md` | `~/.claude/skills/` |
+| Codex | `codex` in PATH or `~/.codex/` exists | `~/.codex/AGENTS.md` → `router.md` | `~/.codex/skills/` |
+| Windsurf | `~/.codeium/windsurf/` exists | `~/.codeium/windsurf/memories/global_rules.md` → `router.md` | `~/.codeium/windsurf/skills/` |
+| Windsurf Next | `~/.codeium/windsurf-next/` exists | `~/.codeium/windsurf-next/memories/global_rules.md` → `router.md` | `~/.codeium/windsurf-next/skills/` |
 | Gemini Antigravity | `antigravity` in PATH | — | `~/.gemini/antigravity/skills/` |
 | Cursor | `cursor` in PATH | — | `~/.cursor/skills/` |
 | GitHub Copilot | `gh` in PATH + `~/.github/` exists | — | `~/.github/skills/` |
+
+Topic rule files (session-sync, workflow-tools, etc.) are installed to `~/.agents/rules/` and loaded on demand via `cat` when the agent needs them. This keeps context small.
 
 ## Tab Completion (zsh)
 
