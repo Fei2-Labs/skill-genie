@@ -95,28 +95,28 @@ if command -v kiro &>/dev/null || [[ -d "$KIRO_DIR" ]]; then
   echo "  ✓ Kiro: symlinked $(ls "$RULES_DIR"/*.md | wc -l | tr -d ' ') rule files"
 fi
 
-# ── 2. Claude Code: write router rules ────────────────────────────────────────
+# ── 2. Claude Code: symlink router rules ──────────────────────────────────────
 if command -v claude &>/dev/null || [[ -d "$HOME/.claude" ]]; then
   echo "→ Setting up Claude Code rules..."
   mkdir -p "$(dirname "$CLAUDE_FILE")"
-  cp "$RULES_DIR"/router.md "$CLAUDE_FILE"
+  ln -sf "$RULES_DIR/router.md" "$CLAUDE_FILE"
   echo "  ✓ Claude Code: $CLAUDE_FILE"
 fi
 
-# ── 3. Codex: write router rules ─────────────────────────────────────────────
+# ── 3. Codex: symlink router rules ───────────────────────────────────────────
 if command -v codex &>/dev/null || [[ -d "$HOME/.codex" ]]; then
   echo "→ Setting up Codex rules..."
   mkdir -p "$(dirname "$CODEX_FILE")"
-  cp "$RULES_DIR"/router.md "$CODEX_FILE"
+  ln -sf "$RULES_DIR/router.md" "$CODEX_FILE"
   echo "  ✓ Codex: $CODEX_FILE"
 fi
 
-# ── 3b. Windsurf: write router rules ─────────────────────────────────────────
+# ── 3b. Windsurf: symlink router rules ───────────────────────────────────────
 WINDSURF_RULES="$HOME/.codeium/windsurf/memories/global_rules.md"
 if [[ -d "$HOME/.codeium/windsurf" ]]; then
   echo "→ Setting up Windsurf rules..."
   mkdir -p "$(dirname "$WINDSURF_RULES")"
-  cp "$RULES_DIR"/router.md "$WINDSURF_RULES"
+  ln -sf "$RULES_DIR/router.md" "$WINDSURF_RULES"
   echo "  ✓ Windsurf: $WINDSURF_RULES"
 fi
 
@@ -124,7 +124,7 @@ WINDSURF_NEXT_RULES="$HOME/.codeium/windsurf-next/memories/global_rules.md"
 if [[ -d "$HOME/.codeium/windsurf-next" ]]; then
   echo "→ Setting up Windsurf Next rules..."
   mkdir -p "$(dirname "$WINDSURF_NEXT_RULES")"
-  cp "$RULES_DIR"/router.md "$WINDSURF_NEXT_RULES"
+  ln -sf "$RULES_DIR/router.md" "$WINDSURF_NEXT_RULES"
   echo "  ✓ Windsurf Next: $WINDSURF_NEXT_RULES"
 fi
 
