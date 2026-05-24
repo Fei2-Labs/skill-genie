@@ -230,6 +230,8 @@ command -v claude &>/dev/null && link_to_native "$HOME/.claude/skills" "claude" 
 command -v antigravity &>/dev/null && link_to_native "$HOME/.gemini/antigravity/skills" "antigravity" || true
 command -v cursor &>/dev/null && link_to_native "$HOME/.cursor/skills" "cursor" || true
 command -v gh &>/dev/null && [[ -d "$HOME/.github" ]] && link_to_native "$HOME/.github/skills" "copilot" || true
+[[ -d "$HOME/.codeium/windsurf" ]] && link_to_native "$HOME/.codeium/windsurf/skills" "windsurf" || true
+[[ -d "$HOME/.codeium/windsurf-next" ]] && link_to_native "$HOME/.codeium/windsurf-next/skills" "windsurf-next" || true
 
 if [[ -z "$linked_agents" ]]; then
   echo "  – No additional agents detected, skipping"
