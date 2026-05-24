@@ -107,6 +107,27 @@ if command -v codex &>/dev/null || [[ -d "$HOME/.codex" ]]; then
   echo "  ✓ Codex: $CODEX_FILE"
 fi
 
+# ── 3b. Windsurf: concatenate rules into global_rules.md ─────────────────────
+WINDSURF_RULES="$HOME/.codeium/windsurf/memories/global_rules.md"
+if [[ -d "$HOME/.codeium/windsurf" ]]; then
+  echo "→ Setting up Windsurf rules..."
+  mkdir -p "$(dirname "$WINDSURF_RULES")"
+  cat "$RULES_DIR"/router.md "$RULES_DIR"/session-sync.md \
+      "$RULES_DIR"/workflow-tools.md "$RULES_DIR"/stack-and-deployment.md \
+      "$RULES_DIR"/external-tools.md > "$WINDSURF_RULES"
+  echo "  ✓ Windsurf: $WINDSURF_RULES"
+fi
+
+WINDSURF_NEXT_RULES="$HOME/.codeium/windsurf-next/memories/global_rules.md"
+if [[ -d "$HOME/.codeium/windsurf-next" ]]; then
+  echo "→ Setting up Windsurf Next rules..."
+  mkdir -p "$(dirname "$WINDSURF_NEXT_RULES")"
+  cat "$RULES_DIR"/router.md "$RULES_DIR"/session-sync.md \
+      "$RULES_DIR"/workflow-tools.md "$RULES_DIR"/stack-and-deployment.md \
+      "$RULES_DIR"/external-tools.md > "$WINDSURF_NEXT_RULES"
+  echo "  ✓ Windsurf Next: $WINDSURF_NEXT_RULES"
+fi
+
 fi # end !SKILLS_ONLY
 
 # ── 4. Skills: sync from manifest ────────────────────────────────────────────

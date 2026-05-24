@@ -85,8 +85,8 @@ Rules and skills are only installed for agents detected on your machine.
 | Kiro | `kiro` in PATH or `~/.kiro/` exists | `~/.kiro/steering/*.md` | `~/.agents/skills/` |
 | Claude Code | `claude` in PATH or `~/.claude/` exists | `~/.claude/CLAUDE.md` | `~/.claude/skills/` |
 | Codex | `codex` in PATH or `~/.codex/` exists | `~/.codex/AGENTS.md` | `~/.codex/skills/` |
-| Windsurf | `~/.codeium/windsurf/` exists | — | `~/.codeium/windsurf/skills/` |
-| Windsurf Next | `~/.codeium/windsurf-next/` exists | — | `~/.codeium/windsurf-next/skills/` |
+| Windsurf | `~/.codeium/windsurf/` exists | `~/.codeium/windsurf/memories/global_rules.md` | `~/.codeium/windsurf/skills/` |
+| Windsurf Next | `~/.codeium/windsurf-next/` exists | `~/.codeium/windsurf-next/memories/global_rules.md` | `~/.codeium/windsurf-next/skills/` |
 | Gemini Antigravity | `antigravity` in PATH | — | `~/.gemini/antigravity/skills/` |
 | Cursor | `cursor` in PATH | — | `~/.cursor/skills/` |
 | GitHub Copilot | `gh` in PATH + `~/.github/` exists | — | `~/.github/skills/` |
