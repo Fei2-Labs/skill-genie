@@ -89,6 +89,14 @@ done
 if command -v kiro &>/dev/null || [[ -d "$KIRO_DIR" ]]; then
   echo "→ Setting up Kiro rules..."
   mkdir -p "$KIRO_DIR"
+  # Backup and remove non-symlink files (user's old manual configs)
+  for f in "$KIRO_DIR"/*.md; do
+    [[ -e "$f" ]] || continue
+    [[ -L "$f" ]] && continue
+    echo "  ⚠ Found existing file: $(basename "$f") — backing up to $BACKUP_DIR/"
+    mkdir -p "$BACKUP_DIR"
+    mv "$f" "$BACKUP_DIR/"
+  done
   for f in "$RULES_DIR"/*.md; do
     ln -sf "$f" "$KIRO_DIR/$(basename "$f")"
   done
