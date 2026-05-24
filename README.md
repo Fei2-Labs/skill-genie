@@ -11,7 +11,7 @@ Every AI coding agent (Claude Code, Codex, Kiro, Cursor, Gemini) has its own con
 Skill Genie fixes this:
 - **One repo** — all your skills and rules version-controlled together
 - **One command** — `./setup.sh` distributes everything to the right places
-- **Every agent** — native path support for Codex, Claude Code, Gemini Antigravity, Cursor, and GitHub Copilot
+- **Every agent** — native path support for Codex, Claude Code, Gemini Antigravity, Cursor, Windsurf, and GitHub Copilot
 
 ## Quick Start
 
@@ -75,6 +75,11 @@ remote:
 ```
 
 Your `skills.yaml` is gitignored — it won't be overwritten by updates.
+
+To generate personalized agent rules, tell your agent:
+```
+skillgenie read init-rules
+```
 
 ## Agent Compatibility
 
