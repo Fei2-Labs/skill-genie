@@ -78,6 +78,14 @@ fi
 # ── 1. Kiro: symlink individual rule files ────────────────────────────────────
 if ! $SKILLS_ONLY; then
 
+# Install topic files to fixed location for all agents to read on demand
+RULES_GLOBAL="$HOME/.agents/rules"
+mkdir -p "$RULES_GLOBAL"
+for f in "$RULES_DIR"/*.md; do
+  [[ "$(basename "$f")" == "README.md" ]] && continue
+  ln -sf "$f" "$RULES_GLOBAL/$(basename "$f")"
+done
+
 if command -v kiro &>/dev/null || [[ -d "$KIRO_DIR" ]]; then
   echo "→ Setting up Kiro rules..."
   mkdir -p "$KIRO_DIR"
