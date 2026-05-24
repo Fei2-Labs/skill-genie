@@ -71,7 +71,8 @@ if [[ ! -d "$RULES_DIR" ]] || [[ -z "$(ls "$RULES_DIR"/*.md 2>/dev/null)" ]]; th
   if [[ -d "$DOTFILES_DIR/rules.example" ]]; then
     mkdir -p "$RULES_DIR"
     cp "$DOTFILES_DIR/rules.example"/*.md "$RULES_DIR/"
-    echo "ℹ Created rules/ from examples. Edit them to customize your agent rules."
+    echo "ℹ Created rules/ from examples (placeholder only)."
+    echo "  → To generate personalized rules, tell your agent: skillgenie read init-rules"
   fi
 fi
 
