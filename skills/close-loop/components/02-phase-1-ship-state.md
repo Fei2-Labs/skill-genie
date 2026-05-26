@@ -7,3 +7,4 @@
 5. Move misplaced document files (`.md`, `.docx`, `.pdf`, `.xlsx`, `.pptx`) to the correct docs location when applicable.
 6. Detect deploy scripts/skills and run only if deploy is approved.
 7. Reconcile task tracking: close completed items, flag stale or orphaned items.
+8. If unfinished next steps or blocked items remain, invoke `session-handoff` to write a handoff file. This ensures the next session discovers pending work via `handoff-receiver` without relying on the user to remember.
