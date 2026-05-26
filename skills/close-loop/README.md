@@ -42,7 +42,7 @@ It is designed for low human overhead and supports autonomous mode selection.
 1. Trigger with `wrap up` or equivalent phrase.
 2. Apply action gates and auto-select strategy mode.
 3. Run phases in strict order:
-   - Phase 1: Ship State
+   - Phase 1: Ship State (includes handoff for unfinished items)
    - Phase 2: Consolidate Memory
    - Phase 3: Review and Apply Improvements
    - Phase 4: Publish Queue
@@ -183,7 +183,7 @@ For long or shifting tasks:
 
 `close-loop` 将会话收尾转化为确定性操作流程：
 
-1. 干净地关闭仓库/任务状态
+1. 干净地关闭仓库/任务状态（未完成项自动调用 `session-handoff` 写交接文档）
 2. 生成可靠的记忆更新
 3. 应用低风险自我改进
 4. 排队可发布工件
@@ -241,7 +241,7 @@ For long or shifting tasks:
 
 `close-loop` はセッションのまとめを決定論的オペレーティング手順に変えます：
 
-1. リポ/タスク状態をクリーンにクローズ
+1. リポ/タスク状態をクリーンにクローズ（未完了アイテムがある場合 `session-handoff` を呼び出し）
 2. 信頼性の高いメモリ更新を生成
 3. 低リスクの自己改善を適用
 4. 公開可能なアーティファクトをキュー
