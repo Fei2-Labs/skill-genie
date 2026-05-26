@@ -328,3 +328,9 @@ MIT
 - シークレット/エンドポイントをハードコードしない
 - 一時的なバイパスを最終修正として出荷しない
 - 修正を最小かつアーキテクチャ互換に保つ
+
+---
+
+**Source**: [github.com/Fei2-Labs/skill-genie](https://github.com/Fei2-Labs/skill-genie)
+**Author**: [@clarezoe](https://x.com/clarezoe)
+
