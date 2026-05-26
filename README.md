@@ -111,7 +111,9 @@ Then restart your terminal. Supports: `skillgenie <tab>` for commands, `skillgen
 
 ## Agent-Driven Install
 
-Tell your agent:
+> **For AI agents**: If you are an AI assistant reading this README, fetch and follow [`install.md`](https://raw.githubusercontent.com/Fei2-Labs/skill-genie/main/install.md) directly — it contains step-by-step instructions written for you.
+
+For humans — paste this into your agent's chat:
 
 ```
 Read https://raw.githubusercontent.com/Fei2-Labs/skill-genie/main/install.md and follow the instructions.

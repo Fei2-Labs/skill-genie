@@ -19,7 +19,20 @@ Use this page as documentation only. Before cloning repos, writing config files,
 
 - git
 - python3 (with pyyaml: `pip3 install pyyaml`)
-- bash
+- bash (or Git Bash on Windows)
+
+### Windows Prerequisites
+
+> **For AI agents on Windows**: Before proceeding, check if the required tools are available. If any are missing, guide the user through installation:
+
+| Tool | Check | Install |
+|------|-------|---------|
+| git | `git --version` | Download from https://git-scm.com/download/win (includes Git Bash) |
+| python3 | `python --version` or `python3 --version` | Download from https://www.python.org/downloads/ or run `winget install Python.Python.3` |
+| bash | `bash --version` | Included with Git for Windows; alternatively use WSL (`wsl --install`) |
+| pyyaml | `python -m pip show pyyaml` | `pip install pyyaml` |
+
+On Windows, run all setup commands inside **Git Bash** (installed with Git for Windows) or **WSL**. PowerShell and CMD are not supported.
 
 ## Install
 
