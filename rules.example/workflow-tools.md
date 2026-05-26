@@ -14,6 +14,7 @@ Rules:
 - Bump the version beyond what is currently on ClawdHub (`clawdhub list` to check).
 - Update the `version` field in the skill's SKILL.md frontmatter to match.
 - The `--changelog` must be a concise summary of what changed.
+- Always include `--tags` with comma-separated tags describing the skill's function (e.g. `session-memory,workflow,handoff`). Derive tags from the skill's category and purpose.
 - Do not publish if the skill has uncommitted changes — commit first.
 - If `clawdhub` is not in PATH, skip and inform the user.
 
