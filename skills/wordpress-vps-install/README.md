@@ -19,3 +19,8 @@ Fresh-VPS bootstrap workflow for installing WordPress, wiring the live container
 - checks the WordPress volume and DB wiring
 - runs installation against the live files
 - verifies the public URL after deployment
+---
+
+**Source**: [github.com/Fei2-Labs/skill-genie](https://github.com/Fei2-Labs/skill-genie)
+**Author**: [@clarezoe](https://x.com/clarezoe)
+

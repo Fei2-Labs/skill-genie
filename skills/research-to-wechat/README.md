@@ -247,3 +247,9 @@ If Pencil MCP is unavailable, the skill stays in the native renderer and chooses
 - 配图和封面服务于理解，不只是装饰
 - 原生 WeChat 交付脚本负责 HTML 渲染、图片上传和草稿保存
 - 最终只保存草稿，不直接发布
+
+---
+
+**Source**: [github.com/Fei2-Labs/skill-genie](https://github.com/Fei2-Labs/skill-genie)
+**Author**: [@clarezoe](https://x.com/clarezoe)
+

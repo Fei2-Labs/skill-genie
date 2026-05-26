@@ -53,3 +53,9 @@ linuxdo-application/
 ## License
 
 MIT
+
+---
+
+**Source**: [github.com/Fei2-Labs/skill-genie](https://github.com/Fei2-Labs/skill-genie)
+**Author**: [@clarezoe](https://x.com/clarezoe)
+

@@ -410,3 +410,9 @@ cp openclaw.json.bak.0 openclaw.json
 
 - ステータス: https://status.rjj.cc/status/foxcode
 - API Keys: https://foxcode.rjj.cc/api-keys
+
+---
+
+**Source**: [github.com/Fei2-Labs/skill-genie](https://github.com/Fei2-Labs/skill-genie)
+**Author**: [@clarezoe](https://x.com/clarezoe)
+

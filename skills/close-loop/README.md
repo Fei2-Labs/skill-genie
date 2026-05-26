@@ -286,3 +286,9 @@ For long or shifting tasks:
 - モードが保守的すぎる：`modeSelection` ペナルティと `decisionConfidence` を検査
 - メモリコストが高すぎる：`retrievedTokenSize`、`endToEndMemoryCost`、`costPerUsefulWrite` を検査
 - 競合メモリが持続：`needs-review` レコードと証拠リンクを昇格前にレビュー
+
+---
+
+**Source**: [github.com/Fei2-Labs/skill-genie](https://github.com/Fei2-Labs/skill-genie)
+**Author**: [@clarezoe](https://x.com/clarezoe)
+

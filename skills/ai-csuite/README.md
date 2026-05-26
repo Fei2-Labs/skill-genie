@@ -347,3 +347,9 @@ python3 scripts/validate_output.py --file logs/latest-decision.md
 - `CEO DECISION`
 - 決定メタデータ（`CONFIDENCE`、`REVERSIBILITY`、次のステップ）
 
+
+---
+
+**Source**: [github.com/Fei2-Labs/skill-genie](https://github.com/Fei2-Labs/skill-genie)
+**Author**: [@clarezoe](https://x.com/clarezoe)
+
