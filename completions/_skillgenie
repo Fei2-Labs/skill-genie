@@ -36,7 +36,10 @@ _skillgenie() {
           '--claude[Claude Code only]' \
           '--openclaw[OpenClaw only]' \
           '--hermes[Hermes only]' \
+          '--kiro[Kiro only]' \
           '--codex[Codex only]' \
+          '--opencode[OpenCode only]' \
+          '--devin[Devin CLI only]' \
           '--antigravity[Gemini Antigravity only]' \
           '--cursor[Cursor only]' \
           '--copilot[GitHub Copilot only]' \
