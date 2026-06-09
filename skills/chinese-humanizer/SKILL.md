@@ -2,7 +2,7 @@
 name: "chinese-humanizer"
 description: "Rewrite Chinese AI-generated or AI-polished drafts into natural, credible, genre-appropriate text. Use when the user asks to 去 AI 味, 去机器味, humanize Chinese writing, remove 公文腔/营销腔/翻译腔/套话, make a draft 像真人写, 保留意思但别那么模板, polish an AI 草稿, or adapt Chinese text to a genre such as 官网文案, 产品介绍, 投融资材料, 商务邮件, 公众号, 知乎, 小红书, 口播稿, 新闻评论, 技术博客, 产品文档, 咨询报告, 行业分析, 学术摘要, 申请文书, 个人陈述, 求职信, 反思总结. Improves editorial quality and authenticity. Do NOT use for pure translation, pure summarization, or factual research alone. This skill must never promise to bypass AI detectors, fabricate facts/sources/experiences, or optimize for detector scores."
 license: "MIT"
-metadata: {"version":"1.0.0","category":"writing-tools","tags":["chinese","humanizer","ai-detection","editing","rewriting","writing"],"license":"MIT","hermes":{"tags":["chinese","humanizer","ai-detection","editing","rewriting","writing"]}}
+metadata: {"version":"1.0.1","category":"writing-tools","tags":["chinese","humanizer","ai-detection","editing","rewriting","writing"],"license":"MIT","hermes":{"tags":["chinese","humanizer","ai-detection","editing","rewriting","writing"]}}
 allowed-tools: Read, Write, Edit, AskUserQuestion
 ---
 
@@ -30,7 +30,7 @@ Do **not** use for pure translation, pure summarization, or factual research unl
 1. **Identify the task** — extract: text to rewrite, target genre, audience, tone, length limit, whether new facts are allowed, any author writing sample, and edit depth (轻改 / 标准改 / 重构改). If text + genre are clear, do not ask — proceed. Ask at most **one** clarifying question, and only when continuing would likely produce the wrong genre, wrong voice, or fabricated content.
 2. **Determine genre** — classify as 商业 / 内容 / 专业 / 个人 / 其他. Genre controls the rewrite. Never add casual voice to technical, legal, academic, or documentation text. See `references/genre-playbook.md`.
 3. **Calibrate author voice** — if the user gives a sample, extract sentence length, word level, punctuation, transition habits, first-person use, opinion directness, tolerance for edge; match it. No sample → restrained, natural, genre-fit Chinese; do not invent a persona. See `references/voice-calibration.md`. Use a sample only for the current task; do not persist it as a reusable profile.
-4. **Diagnose AI tells** — mark the **3–5 most damaging** issues only, not every flaw. Full taxonomy in `references/chinese-ai-tells.md`. The core set: 空泛升维 · 宏大无证据判断 · 机械三段式 · 公文腔 · 营销腔 · 翻译腔 · 连接词堆叠 · 安全中立腔 · 假平衡 · 强行递进（不仅…更…）· 抽象商业词（赋能/打造/助力/闭环/生态/场景化/深度融合）· 套话评价 · 伪权威归因 · 没有作者视角 · 没有具体场景 · 句长过于均匀 · 段落结构过于完整 · 结尾上价值 · 同义词轮换 · 过度限定.
+4. **Diagnose AI tells** — mark the **3–5 most damaging** issues only, not every flaw. Full taxonomy in `references/chinese-ai-tells.md`. The core set: 空泛升维 · 宏大无证据判断 · 机械三段式 · 公文腔 · 营销腔 · 翻译腔 · 连接词堆叠 · 安全中立腔 · 假平衡 · 强行递进（不仅…更…）· 否定式对照（不是…而是…，高风险非禁用，分纠偏/升维/假靶子/连用四种处置）· 抽象商业词（赋能/打造/助力/闭环/生态/场景化/深度融合）· 套话评价 · 伪权威归因 · 没有作者视角 · 没有具体场景 · 句长过于均匀 · 段落结构过于完整 · 结尾上价值 · 同义词轮换 · 过度限定.
 5. **Flag risk** — what must not move: terms, citations, numbers, dates, commitments, names. Mark unsupported claims.
 6. **Choose strategy** — operations in `references/rewrite-strategies.md`. 商业→抽象转场景；专业→去模板保术语；内容→判断有对象有边界；个人→场景化+作者位置（禁止虚构经历）.
 7. **Rewrite** — produce one complete publishable version, not a patch list. Preserve meaning and coverage. For human-AI mixed text, edit locally; do not wash the whole piece and erase the most human parts. Do not force 第一人称 or fake 口语 markers (说实话/老实讲/真的/挺/蛮) unless the sample and genre call for it.
