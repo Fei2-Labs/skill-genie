@@ -218,7 +218,15 @@ echo "→ Checking optional tool skills..."
 
 # Trellis
 if command -v trellis &>/dev/null; then
-  TRELLIS_SKILLS="$(npm root -g)/@mindfoldhq/trellis/dist/templates/codex/skills"
+  # Derive the package root from the trellis binary so this works regardless of
+  # install method (nvm, Homebrew, pnpm). Fall back to the npm global root.
+  TRELLIS_SKILLS=""
+  TRELLIS_BIN="$(readlink -f "$(command -v trellis)" 2>/dev/null || true)"
+  if [[ -n "$TRELLIS_BIN" ]]; then
+    TRELLIS_CANDIDATE="$(dirname "$TRELLIS_BIN")/../dist/templates/codex/skills"
+    [[ -d "$TRELLIS_CANDIDATE" ]] && TRELLIS_SKILLS="$TRELLIS_CANDIDATE"
+  fi
+  [[ -z "$TRELLIS_SKILLS" ]] && TRELLIS_SKILLS="$(npm root -g)/@mindfoldhq/trellis/dist/templates/codex/skills"
   if [[ -d "$TRELLIS_SKILLS" ]]; then
     for skill in start brainstorm check check-cross-layer update-spec before-dev break-loop finish-work; do
       [[ -d "$TRELLIS_SKILLS/$skill" ]] && install_skill "$TRELLIS_SKILLS/$skill" "$SKILLS_DEST/$skill"
