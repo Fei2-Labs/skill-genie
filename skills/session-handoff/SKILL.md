@@ -1,25 +1,10 @@
 ---
-name: session-handoff
-description: Summarize the current session into a precise, file-saved handoff document covering goals, files changed, commands run, errors, decisions, and next steps. Use mid-session or at end of session when handing off to another person or AI instance.
+name: "session-handoff"
+description: "Summarize the current session into a precise, file-saved handoff document covering goals, files changed, commands run, errors, decisions, and next steps. Use mid-session or at end of session when handing off to another person or AI instance."
+license: "MIT"
 argument-hint: "What will the next session focus on?"
-license: MIT
-allowed-tools:
-  - Bash
-  - Read
-  - Write
-  - Glob
-  - Grep
-metadata:
-  version: 1.5.0
-  category: session-memory
-  triggers:
-    - "handoff"
-    - "session summary"
-    - "summarize session"
-    - "hand this off"
-    - "create handoff"
-    - "write handoff"
-    - "/handoff"
+allowed-tools: "Bash, Read, Write, Glob, Grep"
+metadata: {"version":"1.5.1","category":"session-memory","triggers":["handoff","session summary","summarize session","hand this off","create handoff","write handoff","/handoff"],"license":"MIT","tags":["session-memory","handoff","workflow","continuation"],"hermes":{"tags":["session-memory","handoff","workflow","continuation"]}}
 ---
 
 # Session Handoff

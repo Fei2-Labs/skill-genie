@@ -257,6 +257,12 @@ link_to_native() {
 
 command -v codex &>/dev/null && link_to_native "$HOME/.codex/skills" "codex" || true
 command -v claude &>/dev/null && link_to_native "$HOME/.claude/skills" "claude" || true
+if command -v openclaw &>/dev/null || [[ -d "$HOME/.openclaw" ]]; then
+  link_to_native "$HOME/.openclaw/skills" "openclaw"
+fi
+if command -v hermes &>/dev/null || [[ -d "$HOME/.hermes" ]]; then
+  link_to_native "$HOME/.hermes/skills" "hermes"
+fi
 command -v antigravity &>/dev/null && link_to_native "$HOME/.gemini/antigravity/skills" "antigravity" || true
 command -v cursor &>/dev/null && link_to_native "$HOME/.cursor/skills" "cursor" || true
 command -v gh &>/dev/null && [[ -d "$HOME/.github" ]] && link_to_native "$HOME/.github/skills" "copilot" || true

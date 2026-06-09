@@ -1,28 +1,10 @@
 ---
-name: dev-inbox
-description: Triage and route anything that comes up during a session — bugs, ideas, improvements, small fixes — to the right place. Use when the user or you notice something that may not belong to the current task.
+name: "dev-inbox"
+description: "Triage and route anything that comes up during a session — bugs, ideas, improvements, small fixes — to the right place. Use when the user or you notice something that may not belong to the current task."
+license: "MIT"
 argument-hint: "Describe the problem, idea, or improvement"
-license: MIT
-allowed-tools:
-  - Bash
-  - Read
-  - Write
-  - Grep
-  - Glob
-metadata:
-  version: 1.0.0
-  category: workflow
-  triggers:
-    - "记一下"
-    - "记下来"
-    - "以后再说"
-    - "这个先不管"
-    - "open an issue"
-    - "log this"
-    - "track this"
-    - "dev inbox"
-    - "inbox"
-    - "/dev-inbox"
+allowed-tools: "Bash, Read, Write, Grep, Glob"
+metadata: {"version":"1.0.1","category":"workflow","triggers":["记一下","记下来","以后再说","这个先不管","open an issue","log this","track this","dev inbox","inbox","/dev-inbox"],"license":"MIT","tags":["workflow","task-triage","issue-tracking","session-management"],"hermes":{"tags":["workflow","task-triage","issue-tracking","session-management"]}}
 ---
 
 # Dev Inbox

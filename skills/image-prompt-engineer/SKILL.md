@@ -1,15 +1,8 @@
 ---
-name: image-prompt-engineer
-description: Generate production-ready image prompts for Midjourney and other image models. Use when the user asks to create, refine, translate, critique, or produce variants of image-generation prompts, AI art prompts, Midjourney /imagine prompts, product shots, logos, interiors, editorial images, style prompts, negative prompts, or prompt packs. Default to Midjourney when the user does not specify an image model, and remind the user once.
-license: MIT
-metadata:
-  version: 1.0.0
-  category: creative-tools
-  tags:
-    - image-prompts
-    - midjourney
-    - prompt-engineering
-    - generative-ai
+name: "image-prompt-engineer"
+description: "Generate production-ready image prompts for Midjourney and other image models. Use when the user asks to create, refine, translate, critique, or produce variants of image-generation prompts, AI art prompts, Midjourney /imagine prompts, product shots, logos, interiors, editorial images, style prompts, negative prompts, or prompt packs. Default to Midjourney when the user does not specify an image model, and remind the user once."
+license: "MIT"
+metadata: {"version":"1.0.1","category":"creative-tools","tags":["image-prompts","midjourney","prompt-engineering","generative-ai"],"license":"MIT","hermes":{"tags":["image-prompts","midjourney","prompt-engineering","generative-ai"]}}
 ---
 
 # Image Prompt Engineer

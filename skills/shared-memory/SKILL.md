@@ -1,26 +1,9 @@
 ---
-name: shared-memory
-description: Read and write project memory that ANY AI agent can find (Claude Code, Cursor, Codex, OpenClaw, Aider, ...). Defines a portable on-disk convention in the project repo plus a private layer for personal notes. Use when saving project knowledge that should survive across tools, or when you suspect another agent's memory might be relevant.
-license: MIT
-allowed-tools:
-  - Bash
-  - Read
-  - Write
-  - Edit
-  - Glob
-  - Grep
-metadata:
-  version: 1.0.0
-  category: cross-agent-coordination
-  triggers:
-    - "save to shared memory"
-    - "remember this for all agents"
-    - "what do agents know about this project"
-    - "load project memory"
-    - "shared memory"
-    - "cross-agent memory"
-    - "where is the project memory"
-    - "find memory from other agents"
+name: "shared-memory"
+description: "Read and write project memory that ANY AI agent can find (Claude Code, Cursor, Codex, OpenClaw, Aider, ...). Defines a portable on-disk convention in the project repo plus a private layer for personal notes. Use when saving project knowledge that should survive across tools, or when you suspect another agent's memory might be relevant."
+license: "MIT"
+allowed-tools: "Bash, Read, Write, Edit, Glob, Grep"
+metadata: {"version":"1.0.1","category":"cross-agent-coordination","triggers":["save to shared memory","remember this for all agents","what do agents know about this project","load project memory","shared memory","cross-agent memory","where is the project memory","find memory from other agents"],"license":"MIT","tags":["shared-memory","cross-agent-coordination","project-memory","workflow"],"hermes":{"tags":["shared-memory","cross-agent-coordination","project-memory","workflow"]}}
 ---
 
 # Shared Memory — cross-agent project knowledge

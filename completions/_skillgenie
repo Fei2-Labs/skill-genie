@@ -5,6 +5,7 @@ _skillgenie() {
   commands=(
     'list:List available skills'
     'read:Read a skill SKILL.md'
+    'validate:Validate cross-agent skill compatibility'
     'status:Show install status per runtime'
     'install:Install skill(s)'
     'update:Update (re-install) skill(s)'
@@ -18,6 +19,33 @@ _skillgenie() {
         local -a skills
         skills=($(skillgenie list 2>/dev/null | grep -oP '^\s+\S+' | tr -d ' '))
         _describe 'skill' skills
+        ;;
+      validate)
+        local -a skills
+        skills=($(skillgenie list 2>/dev/null | grep -oP '^\s+\S+' | tr -d ' '))
+        _describe 'skill' skills
+        ;;
+    esac
+  elif (( CURRENT >= 3 )); then
+    case "${words[2]}" in
+      install|update)
+        _arguments \
+          '--all[All skills]' \
+          '--global[All supported runtimes]' \
+          '--agents[AgentSkills root]' \
+          '--claude[Claude Code only]' \
+          '--openclaw[OpenClaw only]' \
+          '--hermes[Hermes only]' \
+          '--codex[Codex only]' \
+          '--antigravity[Gemini Antigravity only]' \
+          '--cursor[Cursor only]' \
+          '--copilot[GitHub Copilot only]' \
+          '--windsurf[Windsurf only]' \
+          '--windsurf-next[Windsurf Next only]' \
+          '--dry-run[Show actions without executing]'
+        ;;
+      validate)
+        _arguments '--all[All skills]'
         ;;
     esac
   fi
