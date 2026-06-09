@@ -1,22 +1,9 @@
 ---
-name: handoff-receiver
-description: Receive a prior session handoff and continue execution safely by validating repo state, resuming from next steps, and refreshing the handoff artifact.
-license: MIT
-allowed-tools:
-  - Bash
-  - Read
-  - Write
-  - Glob
-  - Grep
-metadata:
-  version: 1.3.0
-  category: session-memory
-  triggers:
-    - "take over this handoff"
-    - "continue from handoff"
-    - "resume from handoff"
-    - "pick this up from previous session"
-    - "handoff receiver"
+name: "handoff-receiver"
+description: "Receive a prior session handoff and continue execution safely by validating repo state, resuming from next steps, and refreshing the handoff artifact."
+license: "MIT"
+allowed-tools: "Bash, Read, Write, Glob, Grep"
+metadata: {"version":"1.3.1","category":"session-memory","triggers":["take over this handoff","continue from handoff","resume from handoff","pick this up from previous session","handoff receiver"],"license":"MIT","tags":["session-memory","handoff","continuation","workflow"],"hermes":{"tags":["session-memory","handoff","continuation","workflow"]}}
 ---
 
 # Handoff Receiver
