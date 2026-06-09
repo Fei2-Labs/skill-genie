@@ -203,6 +203,79 @@ def gating_rows(intake):
     return rows
 
 
+# Aliases so existing_pages strings can be matched to required-page names.
+PAGE_ALIASES = {
+    "Privacy Policy": ["privacy"],
+    "Cookie Policy + banner + consent settings": ["cookie", "consent", "banner"],
+    "Terms of Service": ["terms", "tos", "t&c", "conditions"],
+    "Refund & Return Policy": ["refund", "return"],
+    "Shipping Policy": ["shipping", "delivery"],
+    "Digital product terms / licence": ["licence", "license", "eula", "digital terms"],
+    "Subscription Terms": ["subscription", "billing", "auto-renew", "renewal"],
+    "Account deletion / data-rights section": ["deletion", "delete account", "data rights"],
+    "DPA outline": ["dpa", "data processing"],
+    "Seller terms + moderation + complaint workflow": ["seller", "moderation", "complaint"],
+    "Children's notice / age gate / parental consent": ["children", "kids", "age", "parental"],
+    "AI disclosure notice": ["ai disclosure", "ai notice", "ai transparency"],
+    "Accessibility Statement + WCAG remediation checklist": ["accessibility", "wcag"],
+    "Marketing consent language": ["marketing", "unsubscribe", "opt-in", "newsletter"],
+    "App Store / Google Play compliance notes": ["app store", "google play", "app privacy", "data safety"],
+    "Red-flag report + legal-review notice": ["red flag", "risk"],
+}
+
+
+def audit_gap(intake, pages):
+    """Match required pages against intake['existing_pages']; mark Present vs Missing.
+
+    Adequacy/Mismatch grading is left to the agent (interpretation), so Present
+    rows are flagged for review rather than passed.
+    """
+    existing = " ".join(str(e).lower() for e in intake.get("existing_pages", []))
+    gap = []
+    for page, cls, reason in pages:
+        aliases = PAGE_ALIASES.get(page, [page.split()[0].lower()])
+        present = any(a in existing for a in aliases)
+        if present:
+            status = "Present — review for adequacy/mismatch"
+            action = "Check mandatory sections + region/platform modules; verify it matches actual practice"
+        else:
+            status = "Missing"
+            action = "Create this page (%s)" % reason
+        gap.append({"required": page, "class": cls, "status": status,
+                    "finding": reason, "action": action})
+    return gap
+
+
+def render_audit_md(intake, gap, rows):
+    out = []
+    out.append("# Web Compliance — AUDIT gap report\n")
+    out.append("Existing pages provided: %s\n" % (
+        ", ".join(intake.get("existing_pages", [])) or "(none)"))
+    out.append("## Gap report\n")
+    out.append("| Required item | Class | Status | Finding | Action |")
+    out.append("|---|---|---|---|---|")
+    for g in gap:
+        out.append("| %s | %s | %s | %s | %s |" % (
+            g["required"], g["class"], g["status"], g["finding"], g["action"]))
+    missing = [g for g in gap if g["status"] == "Missing"]
+    out.append("\n## Remediation gate (Missing legal/platform items + Blocking findings)\n")
+    blocking = [r for r in rows if r["severity"] == "Blocking"]
+    if missing or blocking:
+        for g in missing:
+            if g["class"] in (LEGAL, PLATFORM):
+                out.append("- [ ] MISSING: %s" % g["required"])
+        for r in blocking:
+            out.append("- [ ] %s" % r["requirement"])
+    else:
+        out.append("- (none from deterministic checks — still grade Present pages for Inadequate/Mismatch)")
+    out.append("\n> NOTE: This script only decides Present vs Missing. Grade each "
+               "Present page for **Present-Inadequate** or **Mismatch** (page contradicts "
+               "actual practice = Blocking) per references/audit-workflow.md.")
+    out.append("\n---\n")
+    out.append("> " + DISCLAIMER)
+    return "\n".join(out)
+
+
 def render_md(intake, pages, rows):
     out = []
     out.append("# Web Compliance — generated requirements\n")
@@ -238,6 +311,8 @@ def main(argv=None):
     p = argparse.ArgumentParser(description="web-compliance-builder checklist generator")
     p.add_argument("intake", help="path to filled intake JSON, or '-' for stdin")
     p.add_argument("--format", choices=["md", "json"], default="md")
+    p.add_argument("--audit", action="store_true",
+                   help="audit mode: compare required pages against intake['existing_pages'] and emit a gap report")
     args = p.parse_args(argv)
 
     raw = sys.stdin.read() if args.intake == "-" else open(args.intake, encoding="utf-8").read()
@@ -247,8 +322,23 @@ def main(argv=None):
         print("Invalid intake JSON: %s" % e, file=sys.stderr)
         return 2
 
+    audit = args.audit or intake.get("mode") == "audit"
     pages = required_pages(intake)
     rows = gating_rows(intake)
+
+    if audit:
+        gap = audit_gap(intake, pages)
+        if args.format == "json":
+            print(json.dumps({
+                "mode": "audit",
+                "existing_pages": intake.get("existing_pages", []),
+                "gap_report": gap,
+                "gating_checklist": rows,
+                "disclaimer": DISCLAIMER,
+            }, indent=2, ensure_ascii=False))
+        else:
+            print(render_audit_md(intake, gap, rows))
+        return 0
 
     if args.format == "json":
         print(json.dumps({
