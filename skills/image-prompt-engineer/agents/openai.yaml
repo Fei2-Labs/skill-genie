@@ -1,0 +1,4 @@
+interface:
+  display_name: "Image Prompt Engineer"
+  short_description: "Generate production-ready image prompts"
+  default_prompt: "Use $image-prompt-engineer to turn this concept into a Midjourney image prompt."
