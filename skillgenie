@@ -63,7 +63,7 @@ TARGETS = {
     "kiro": ("Kiro", KIRO_SKILLS_DIR, "symlink"),
     "codex": ("Codex", CODEX_DIR, "symlink"),
     "opencode": ("OpenCode", OPENCODE_DIR, "symlink"),
-    "devin": ("Devin CLI", DEVIN_DIR, "copy"),
+    "devin": ("Devin (CLI + Desktop)", DEVIN_DIR, "copy"),
     "antigravity": ("Gemini Antigravity", ANTIGRAVITY_DIR, "symlink"),
     "cursor": ("Cursor", CURSOR_DIR, "symlink"),
     "copilot": ("GitHub Copilot", COPILOT_DIR, "symlink"),
@@ -140,7 +140,7 @@ def detect_targets() -> list[str]:
         "kiro": lambda: shutil.which("kiro") or KIRO_SKILLS_DIR.parent.exists(),
         "codex": lambda: shutil.which("codex") or CODEX_DIR.parent.exists(),
         "opencode": lambda: shutil.which("opencode") or OPENCODE_DIR.parent.exists(),
-        "devin": lambda: shutil.which("devin") or DEVIN_DIR.parent.exists(),
+        "devin": lambda: shutil.which("devin") or DEVIN_DIR.parent.exists() or (Path.home() / ".devin").exists() or (Path.home() / ".devin-next").exists(),
         "antigravity": lambda: shutil.which("antigravity") or ANTIGRAVITY_DIR.parent.exists(),
         "cursor": lambda: shutil.which("cursor") or CURSOR_DIR.parent.exists(),
         "copilot": lambda: shutil.which("gh") and COPILOT_DIR.parent.exists(),
@@ -413,7 +413,7 @@ examples:
         g.add_argument("--kiro",            action="store_true", dest="kiro",     help="Kiro only (~/.kiro/skills/)")
         g.add_argument("--codex",           action="store_true", dest="codex",    help="Codex only (~/.codex/skills/)")
         g.add_argument("--opencode",        action="store_true", dest="opencode", help="OpenCode only (~/.config/opencode/skills/)")
-        g.add_argument("--devin",           action="store_true", dest="devin",    help="Devin CLI only (~/.config/devin/skills/)")
+        g.add_argument("--devin",           action="store_true", dest="devin",    help="Devin CLI + Desktop, formerly Windsurf (~/.config/devin/skills/)")
         g.add_argument("--antigravity",     action="store_true", dest="antigravity", help="Gemini Antigravity only (~/.gemini/antigravity/skills/)")
         g.add_argument("--cursor",          action="store_true", dest="cursor",   help="Cursor only (~/.cursor/skills/)")
         g.add_argument("--copilot",         action="store_true", dest="copilot",  help="GitHub Copilot only (~/.github/skills/)")
