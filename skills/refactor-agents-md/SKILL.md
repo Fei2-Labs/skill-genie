@@ -2,7 +2,7 @@
 name: "refactor-agents-md"
 description: "Refactors AGENTS.md files into a minimal root file plus topic-specific follow-up docs using progressive disclosure. Use when cleaning up, splitting, or reviewing AGENTS.md / CLAUDE.md guidance — or when the file has grown into a \"ball of mud\" with contradictions, bloat, and stale instructions."
 license: "MIT-0"
-metadata: {"openclaw":{"emoji":"🧹","homepage":"https://github.com/Fei2-Labs/skill-genie"},"category":"developer-tools","author":"Skill Genie","tags":["agents-md","claude-md","refactoring","progressive-disclosure","ai-config"],"version":"1.0.1","license":"MIT-0","hermes":{"tags":["agents-md","claude-md","refactoring","progressive-disclosure","ai-config"]}}
+metadata: {"openclaw":{"emoji":"🧹","homepage":"https://github.com/Fei2-Labs/skill-genie"},"category":"developer-tools","author":"Skill Genie","tags":["agents-md","claude-md","refactoring","progressive-disclosure","ai-config"],"version":"1.0.2","license":"MIT-0","hermes":{"tags":["agents-md","claude-md","refactoring","progressive-disclosure","ai-config"]}}
 ---
 
 <objective>

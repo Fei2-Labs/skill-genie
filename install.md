@@ -78,11 +78,19 @@ Detected if `hermes` is in PATH or `~/.hermes/` exists. Skills to `~/.hermes/ski
 
 ### Kiro
 
-Detected if `kiro` is in PATH or `~/.kiro/` exists. Rules symlinked to `~/.kiro/steering/`, skills to `~/.agents/skills/`.
+Detected if `kiro` is in PATH or `~/.kiro/` exists. Rules symlinked to `~/.kiro/steering/`, skills to `~/.kiro/skills/` and `~/.agents/skills/`.
 
 ### Codex
 
 Detected if `codex` is in PATH or `~/.codex/` exists. Rules written to `~/.codex/AGENTS.md`, skills to `~/.codex/skills/`.
+
+### OpenCode
+
+Detected if `opencode` is in PATH or `~/.config/opencode/` exists. Skills to `~/.config/opencode/skills/` and the shared `~/.agents/skills/` root.
+
+### Devin CLI
+
+Detected if `devin` is in PATH or `~/.config/devin/` exists. Skills to `~/.config/devin/skills/`; Devin also detects repo-local `.agents/skills/` files.
 
 ### Gemini Antigravity
 

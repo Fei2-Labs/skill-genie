@@ -2,7 +2,7 @@
 name: "psychology-master"
 description: "World-class psychology expertise for human mind optimization. Masters learning science (age-appropriate skill acquisition for languages, coding, etc.), cognitive psychology, behavioral economics, and ethical marketing/conversion psychology. Use when designing learning programs, understanding human motivation, optimizing user experiences, creating persuasive messaging, improving conversion rates, or analyzing human behavior patterns. Covers developmental psychology, memory systems, habit formation, decision-making biases, and customer psychology."
 license: "MIT"
-metadata: {"version":"1.0.3","tags":["psychology","learning-science","behavior-design","conversion"],"hermes":{"tags":["psychology","learning-science","behavior-design","conversion"]}}
+metadata: {"version":"1.0.4","tags":["psychology","learning-science","behavior-design","conversion"],"hermes":{"tags":["psychology","learning-science","behavior-design","conversion"]}}
 ---
 
 # Psychology Master

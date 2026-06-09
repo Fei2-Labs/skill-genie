@@ -4,7 +4,7 @@ description: "Summarize the current session into a precise, file-saved handoff d
 license: "MIT"
 argument-hint: "What will the next session focus on?"
 allowed-tools: "Bash, Read, Write, Glob, Grep"
-metadata: {"version":"1.5.1","category":"session-memory","triggers":["handoff","session summary","summarize session","hand this off","create handoff","write handoff","/handoff"],"license":"MIT","tags":["session-memory","handoff","workflow","continuation"],"hermes":{"tags":["session-memory","handoff","workflow","continuation"]}}
+metadata: {"version":"1.5.2","category":"session-memory","triggers":["handoff","session summary","summarize session","hand this off","create handoff","write handoff","/handoff"],"license":"MIT","tags":["session-memory","handoff","workflow","continuation"],"hermes":{"tags":["session-memory","handoff","workflow","continuation"]}}
 ---
 
 # Session Handoff

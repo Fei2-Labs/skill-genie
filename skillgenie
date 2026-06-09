@@ -6,20 +6,24 @@ Usage:
   skillgenie list
   skillgenie read <skill>
   skillgenie status
-  skillgenie install <skill>|--all [--claude|-cc] [--openclaw|-oc] [--hermes] [--global|-g] [--dry-run]
-  skillgenie update  <skill>|--all [--claude|-cc] [--openclaw|-oc] [--hermes] [--global|-g] [--dry-run]
+  skillgenie install <skill>|--all [--claude|-cc] [--openclaw|-oc] [--hermes] [--opencode] [--global|-g] [--dry-run]
+  skillgenie update  <skill>|--all [--claude|-cc] [--openclaw|-oc] [--hermes] [--opencode] [--global|-g] [--dry-run]
 
 Targets:
   --claude / -cc     Install into Claude Code  (~/.claude/skills/)
   --openclaw / -oc   Install into OpenClaw     (~/.openclaw/skills/) via file copy
   --hermes           Install into Hermes       (~/.hermes/skills/) via file copy
+  --opencode         Install into OpenCode     (~/.config/opencode/skills/)
+  --kiro             Install into Kiro         (~/.kiro/skills/)
+  --devin            Install into Devin CLI    (~/.config/devin/skills/)
   --global / -g      All supported targets
   (no flag)          Auto-detect: all runtimes found on this machine
 
 Install backends:
-  Claude Code, Codex, Cursor, Antigravity, Copilot, Windsurf → symlink
+  Claude Code, Codex, Cursor, Antigravity, Copilot, Windsurf, Kiro, OpenCode → symlink
   OpenClaw     →  shutil.copytree  →  ~/.openclaw/skills/<skill>/
   Hermes       →  shutil.copytree  →  ~/.hermes/skills/<skill>/
+  Devin CLI    →  shutil.copytree  →  ~/.config/devin/skills/<skill>/
 """
 
 import argparse
@@ -38,7 +42,10 @@ AGENTS_DIR    = Path.home() / ".agents" / "skills"
 CLAUDE_DIR    = Path.home() / ".claude" / "skills"
 OPENCLAW_DIR  = Path.home() / ".openclaw" / "skills"
 HERMES_DIR    = Path.home() / ".hermes" / "skills"
+KIRO_SKILLS_DIR = Path.home() / ".kiro" / "skills"
 CODEX_DIR     = Path.home() / ".codex" / "skills"
+OPENCODE_DIR  = Path.home() / ".config" / "opencode" / "skills"
+DEVIN_DIR     = Path.home() / ".config" / "devin" / "skills"
 ANTIGRAVITY_DIR = Path.home() / ".gemini" / "antigravity" / "skills"
 CURSOR_DIR    = Path.home() / ".cursor" / "skills"
 COPILOT_DIR   = Path.home() / ".github" / "skills"
@@ -52,7 +59,10 @@ TARGETS = {
     "claude": ("Claude Code", CLAUDE_DIR, "symlink"),
     "openclaw": ("OpenClaw", OPENCLAW_DIR, "copy"),
     "hermes": ("Hermes", HERMES_DIR, "copy"),
+    "kiro": ("Kiro", KIRO_SKILLS_DIR, "symlink"),
     "codex": ("Codex", CODEX_DIR, "symlink"),
+    "opencode": ("OpenCode", OPENCODE_DIR, "symlink"),
+    "devin": ("Devin CLI", DEVIN_DIR, "copy"),
     "antigravity": ("Gemini Antigravity", ANTIGRAVITY_DIR, "symlink"),
     "cursor": ("Cursor", CURSOR_DIR, "symlink"),
     "copilot": ("GitHub Copilot", COPILOT_DIR, "symlink"),
@@ -125,7 +135,10 @@ def detect_targets() -> list[str]:
         "claude": lambda: shutil.which("claude") or CLAUDE_DIR.parent.exists(),
         "openclaw": lambda: shutil.which("openclaw") or OPENCLAW_DIR.parent.exists(),
         "hermes": lambda: shutil.which("hermes") or HERMES_DIR.parent.exists(),
+        "kiro": lambda: shutil.which("kiro") or KIRO_SKILLS_DIR.parent.exists(),
         "codex": lambda: shutil.which("codex") or CODEX_DIR.parent.exists(),
+        "opencode": lambda: shutil.which("opencode") or OPENCODE_DIR.parent.exists(),
+        "devin": lambda: shutil.which("devin") or DEVIN_DIR.parent.exists(),
         "antigravity": lambda: shutil.which("antigravity") or ANTIGRAVITY_DIR.parent.exists(),
         "cursor": lambda: shutil.which("cursor") or CURSOR_DIR.parent.exists(),
         "copilot": lambda: shutil.which("gh") and COPILOT_DIR.parent.exists(),
@@ -167,7 +180,7 @@ def cmd_read(args):
     skill = args.skill
     skill_md = REPO_ROOT / skill / "SKILL.md"
     if not skill_md.exists():
-        global_path = Path.home() / ".agent" / "skills" / skill / "SKILL.md"
+        global_path = AGENTS_DIR / skill / "SKILL.md"
         if global_path.exists():
             skill_md = global_path
         else:
@@ -210,8 +223,15 @@ def validate_frontmatter(skill_md: Path) -> list[str]:
         errors.append("missing frontmatter name")
     if not data.get("description"):
         errors.append("missing frontmatter description")
-    if len(data.get("description", "")) > 1536:
-        errors.append("description exceeds Claude Code 1536 character listing budget")
+    name = data.get("name", "")
+    if not re.match(r"^[a-z0-9]+(-[a-z0-9]+)*$", name):
+        errors.append("name must be lowercase alphanumeric with single hyphen separators")
+    if name and name != skill_md.parent.name:
+        errors.append("name must match the skill directory name")
+    if len(name) > 64:
+        errors.append("name exceeds 64 characters")
+    if len(data.get("description", "")) > 1024:
+        errors.append("description exceeds OpenCode/Kiro 1024 character limit")
     for lineno, line in enumerate(front.splitlines(), 1):
         if line.startswith(" ") or line.startswith("-"):
             errors.append(f"frontmatter line {lineno} is not single-line key syntax")
@@ -253,7 +273,7 @@ def cmd_validate(args):
                 print(f"    - {error}")
         print()
         sys.exit(1)
-    ok(f"All checked skills are AgentSkills/OpenClaw/Hermes compatible ({len(skills)})")
+    ok(f"All checked skills are AgentSkills/OpenClaw/Hermes/OpenCode/Kiro/Devin compatible ({len(skills)})")
 
 
 def remove_existing(path: Path):
@@ -352,6 +372,8 @@ examples:
   skillgenie install research-to-wechat
   skillgenie install research-to-wechat --openclaw
   skillgenie install research-to-wechat --hermes
+  skillgenie install research-to-wechat --opencode
+  skillgenie install research-to-wechat --kiro
   skillgenie install --all --global
   skillgenie install --all --dry-run
   skillgenie update close-loop --claude
@@ -385,7 +407,10 @@ examples:
         g.add_argument("--claude", "-cc",  action="store_true", dest="claude",   help="Claude Code only (~/.claude/skills/)")
         g.add_argument("--openclaw", "-oc",action="store_true", dest="openclaw", help="OpenClaw only (~/.openclaw/skills/)")
         g.add_argument("--hermes",          action="store_true", dest="hermes",   help="Hermes only (~/.hermes/skills/)")
+        g.add_argument("--kiro",            action="store_true", dest="kiro",     help="Kiro only (~/.kiro/skills/)")
         g.add_argument("--codex",           action="store_true", dest="codex",    help="Codex only (~/.codex/skills/)")
+        g.add_argument("--opencode",        action="store_true", dest="opencode", help="OpenCode only (~/.config/opencode/skills/)")
+        g.add_argument("--devin",           action="store_true", dest="devin",    help="Devin CLI only (~/.config/devin/skills/)")
         g.add_argument("--antigravity",     action="store_true", dest="antigravity", help="Gemini Antigravity only (~/.gemini/antigravity/skills/)")
         g.add_argument("--cursor",          action="store_true", dest="cursor",   help="Cursor only (~/.cursor/skills/)")
         g.add_argument("--copilot",         action="store_true", dest="copilot",  help="GitHub Copilot only (~/.github/skills/)")
