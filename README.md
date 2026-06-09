@@ -92,15 +92,17 @@ Rules and skills are only installed for agents detected on your machine. Rules a
 | OpenClaw | `openclaw` in PATH or `~/.openclaw/` exists | Reads linked/global rules on demand | `~/.openclaw/skills/` + `~/.agents/skills/` |
 | Hermes | `hermes` in PATH or `~/.hermes/` exists | Reads linked/global rules on demand | `~/.hermes/skills/` + `~/.agents/skills/` |
 | OpenCode | `opencode` in PATH or `~/.config/opencode/` exists | Reads project/global rules on demand | `~/.config/opencode/skills/` + `~/.agents/skills/` |
-| Devin CLI | `devin` in PATH or `~/.config/devin/` exists | Reads project/global rules on demand | `~/.config/devin/skills/` + `.agents/skills/` |
+| Devin (CLI + Desktop) | `devin` in PATH, or `~/.config/devin/`, `~/.devin/`, `~/.devin-next/` exists | Reads project/global rules on demand | `~/.config/devin/skills/` + `~/.agents/skills/` |
 | Claude Code | `claude` in PATH or `~/.claude/` exists | `~/.claude/CLAUDE.md` → `router.md` | `~/.claude/skills/` |
 | Codex | `codex` in PATH or `~/.codex/` exists | `~/.codex/AGENTS.md` → `router.md` | `~/.codex/skills/` |
-| Windsurf | `~/.codeium/windsurf/` exists | `~/.codeium/windsurf/memories/global_rules.md` → `router.md` | `~/.codeium/windsurf/skills/` |
-| Windsurf Next | `~/.codeium/windsurf-next/` exists | `~/.codeium/windsurf-next/memories/global_rules.md` → `router.md` | `~/.codeium/windsurf-next/skills/` |
+| Windsurf _(legacy)_ | `~/.codeium/windsurf/` exists | `~/.codeium/windsurf/memories/global_rules.md` → `router.md` | `~/.codeium/windsurf/skills/` |
+| Windsurf Next _(legacy)_ | `~/.codeium/windsurf-next/` exists | `~/.codeium/windsurf-next/memories/global_rules.md` → `router.md` | `~/.codeium/windsurf-next/skills/` |
 | Gemini Antigravity | `antigravity` in PATH | — | `~/.gemini/antigravity/skills/` |
 | Cursor | `cursor` in PATH | — | `~/.cursor/skills/` |
 | GitHub Copilot | `gh` in PATH + `~/.github/` exists | — | `~/.github/skills/` |
 | GitHub Copilot CLI/app | `copilot` in PATH or `~/.copilot/` exists | `~/.copilot/copilot-instructions.md` / `AGENTS.md` | `~/.copilot/skills/` + `~/.agents/skills/` |
+
+> **Windsurf → Devin Desktop:** the Windsurf editor was rebranded to Devin Desktop (Cognition, June 2026). Devin Desktop and the Devin CLI both load global skills from `~/.config/devin/skills/` — covered by the **Devin** target. The legacy `~/.codeium/windsurf*` paths are kept for installs still on the old brand during the transition.
 
 ## Skill Compatibility
 

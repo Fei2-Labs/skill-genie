@@ -277,7 +277,8 @@ fi
 if command -v opencode &>/dev/null || [[ -d "$HOME/.config/opencode" ]]; then
   link_to_native "$HOME/.config/opencode/skills" "opencode"
 fi
-if command -v devin &>/dev/null || [[ -d "$HOME/.config/devin" ]]; then
+# Devin CLI + Devin Desktop (formerly Windsurf); both read ~/.config/devin/skills
+if command -v devin &>/dev/null || [[ -d "$HOME/.config/devin" ]] || [[ -d "$HOME/.devin" ]] || [[ -d "$HOME/.devin-next" ]]; then
   link_to_native "$HOME/.config/devin/skills" "devin"
 fi
 command -v antigravity &>/dev/null && link_to_native "$HOME/.gemini/antigravity/skills" "antigravity" || true
