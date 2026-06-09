@@ -2,7 +2,7 @@
 name: "wordpress-vps-install"
 description: "Bootstrap a fresh VPS with WordPress installed and verified end-to-end; use when you need to provision the stack, align volumes and environment variables, run WP-CLI installation, and confirm the public site is live."
 license: "MIT"
-metadata: {"version":"1.3.1","category":"wordpress-install","license":"MIT","tags":["wordpress","vps","deployment","dokploy"],"hermes":{"tags":["wordpress","vps","deployment","dokploy"]}}
+metadata: {"version":"1.3.2","category":"wordpress-install","license":"MIT","tags":["wordpress","vps","deployment","dokploy"],"hermes":{"tags":["wordpress","vps","deployment","dokploy"]}}
 ---
 
 # WordPress VPS Install

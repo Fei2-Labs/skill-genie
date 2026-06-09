@@ -3,7 +3,7 @@ name: "init-rules"
 description: "Interactively generate personalized agent rules. Asks about tech stack, work style, and preferences, then writes customized rule files. Use when user says \"init rules\", \"set up my rules\", or \"configure agent rules\"."
 license: "MIT"
 requires: "Fei2-Labs/skill-genie"
-metadata: {"version":"1.0.1","tags":["agent-rules","configuration","onboarding","workflow"],"hermes":{"tags":["agent-rules","configuration","onboarding","workflow"]}}
+metadata: {"version":"1.0.2","tags":["agent-rules","configuration","onboarding","workflow"],"hermes":{"tags":["agent-rules","configuration","onboarding","workflow"]}}
 ---
 
 # Init Rules

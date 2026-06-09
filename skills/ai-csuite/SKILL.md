@@ -3,7 +3,7 @@ name: "ai-csuite"
 description: "Runs a script-backed AI C-Suite strategic debate for SaaS teams. It builds a stage-aware executive roster, generates structured debate rounds, synthesizes a Chief-of-Staff brief, and outputs a CEO decision with action items. Includes security and output validation scripts designed for VirusTotal-safe distribution."
 license: "MIT"
 allowed-tools: "Read, Write, Edit, Bash, Glob, Grep, Task"
-metadata: {"version":"2.1.1","mode":"prompt-plus-scripts","runtime":"python3-stdlib","license":"MIT","tags":["strategy","executive-debate","saas","decision-support"],"hermes":{"tags":["strategy","executive-debate","saas","decision-support"]}}
+metadata: {"version":"2.1.2","mode":"prompt-plus-scripts","runtime":"python3-stdlib","license":"MIT","tags":["strategy","executive-debate","saas","decision-support"],"hermes":{"tags":["strategy","executive-debate","saas","decision-support"]}}
 ---
 
 # AI C-Suite Multi-Agent Framework

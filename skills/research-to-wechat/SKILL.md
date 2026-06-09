@@ -2,7 +2,7 @@
 name: "research-to-wechat"
 description: "A native research-first pipeline that turns a topic, notes, article, URL, or transcript into a sourced article with an evidence ledger, polished Markdown, inline visuals, cover image, WeChat-ready HTML, browser/API-ready draft assets, and optional multi-platform distribution. Use when the user wants 深度研究、改写成公众号、写作、排版、配图、HTML 转换、公众号草稿生成、多平台分发."
 license: "MIT"
-metadata: {"openclaw":{"emoji":"🔬","homepage":"https://github.com/Fei2-Labs/skill-genie","requires":{"anyBins":["python3"]},"primaryEnv":"WECHAT_APPID"},"version":"0.5.5","category":"content-generation","author":"Skill Genie","license":"MIT","tags":["wechat","research","content-generation","publishing"],"hermes":{"tags":["wechat","research","content-generation","publishing"]}}
+metadata: {"openclaw":{"emoji":"🔬","homepage":"https://github.com/Fei2-Labs/skill-genie","requires":{"anyBins":["python3"]},"primaryEnv":"WECHAT_APPID"},"version":"0.5.6","category":"content-generation","author":"Skill Genie","license":"MIT","tags":["wechat","research","content-generation","publishing"],"hermes":{"tags":["wechat","research","content-generation","publishing"]}}
 ---
 
 # Research to WeChat

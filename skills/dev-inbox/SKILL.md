@@ -4,7 +4,7 @@ description: "Triage and route anything that comes up during a session — bugs,
 license: "MIT"
 argument-hint: "Describe the problem, idea, or improvement"
 allowed-tools: "Bash, Read, Write, Grep, Glob"
-metadata: {"version":"1.0.1","category":"workflow","triggers":["记一下","记下来","以后再说","这个先不管","open an issue","log this","track this","dev inbox","inbox","/dev-inbox"],"license":"MIT","tags":["workflow","task-triage","issue-tracking","session-management"],"hermes":{"tags":["workflow","task-triage","issue-tracking","session-management"]}}
+metadata: {"version":"1.0.2","category":"workflow","triggers":["记一下","记下来","以后再说","这个先不管","open an issue","log this","track this","dev inbox","inbox","/dev-inbox"],"license":"MIT","tags":["workflow","task-triage","issue-tracking","session-management"],"hermes":{"tags":["workflow","task-triage","issue-tracking","session-management"]}}
 ---
 
 # Dev Inbox

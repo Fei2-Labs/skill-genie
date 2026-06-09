@@ -2,7 +2,7 @@
 name: "rtk-token-saver"
 description: "Use rtk to reduce token usage from common shell, git, search, file-reading, test, build, and lint commands while preserving raw-output fallbacks when exact output is required."
 license: "MIT"
-metadata: {"version":"1.0.1","category":"developer-tools","triggers":["rtk","reduce tokens","large command output","compact shell output","token savings"],"license":"MIT","tags":["developer-tools","token-savings","shell-output","cli"],"hermes":{"tags":["developer-tools","token-savings","shell-output","cli"]}}
+metadata: {"version":"1.0.2","category":"developer-tools","triggers":["rtk","reduce tokens","large command output","compact shell output","token savings"],"license":"MIT","tags":["developer-tools","token-savings","shell-output","cli"],"hermes":{"tags":["developer-tools","token-savings","shell-output","cli"]}}
 ---
 
 # RTK Token Saver

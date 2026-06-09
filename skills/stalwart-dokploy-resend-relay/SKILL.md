@@ -2,7 +2,7 @@
 name: "stalwart-dokploy-resend-relay"
 description: "Set up Stalwart Mail Server on a new VPS via Dokploy, with default outbound delivery through Resend SMTP relay for environments where direct SMTP port 25 egress is blocked."
 license: "MIT"
-metadata: {"version":"1.1.1","category":"email-infrastructure","license":"MIT","tags":["email-infrastructure","stalwart","dokploy","resend"],"hermes":{"tags":["email-infrastructure","stalwart","dokploy","resend"]}}
+metadata: {"version":"1.1.2","category":"email-infrastructure","license":"MIT","tags":["email-infrastructure","stalwart","dokploy","resend"],"hermes":{"tags":["email-infrastructure","stalwart","dokploy","resend"]}}
 ---
 
 # Stalwart on Dokploy (Resend Relay Default)

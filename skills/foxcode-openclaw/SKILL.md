@@ -2,7 +2,7 @@
 name: "foxcode-openclaw"
 description: "Configure and manage Foxcode AI models in OpenClaw. Guides users through API setup, endpoint selection, primary/fallback model configuration, and status monitoring. Optimized for beginners with psychology-backed teaching approach."
 license: "MIT"
-metadata: {"version":"1.2.5","category":"ai-configuration","author":"Skill Genie","license":"MIT","tags":["openclaw","model-config","foxcode","ai-configuration"],"hermes":{"tags":["openclaw","model-config","foxcode","ai-configuration"]}}
+metadata: {"version":"1.2.6","category":"ai-configuration","author":"Skill Genie","license":"MIT","tags":["openclaw","model-config","foxcode","ai-configuration"],"hermes":{"tags":["openclaw","model-config","foxcode","ai-configuration"]}}
 ---
 
 # Foxcode OpenClaw Setup

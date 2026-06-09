@@ -2,7 +2,7 @@
 name: "linuxdo-application"
 description: "Craft high-pass-rate, de-AI'd Chinese applications (小作文) for Linux.do registration. Conducts an adaptive survey to learn the applicant's real background, then generates natural, rule-compliant plain text ready to paste. All user interactions in Chinese."
 license: "MIT"
-metadata: {"openclaw":{"emoji":"📝","homepage":"https://github.com/Fei2-Labs/skill-genie"},"version":"1.0.1","category":"content-generation","author":"Skill Genie","license":"MIT","language":{"backend":"English","user-facing":"Chinese"},"tags":["content-generation","chinese-writing","application-writing","de-ai"],"hermes":{"tags":["content-generation","chinese-writing","application-writing","de-ai"]}}
+metadata: {"openclaw":{"emoji":"📝","homepage":"https://github.com/Fei2-Labs/skill-genie"},"version":"1.0.2","category":"content-generation","author":"Skill Genie","license":"MIT","language":{"backend":"English","user-facing":"Chinese"},"tags":["content-generation","chinese-writing","application-writing","de-ai"],"hermes":{"tags":["content-generation","chinese-writing","application-writing","de-ai"]}}
 ---
 
 # Linux.do Application Writer

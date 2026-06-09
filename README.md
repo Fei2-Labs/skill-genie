@@ -11,7 +11,7 @@ Every AI coding agent (Claude Code, Codex, Kiro, Cursor, Gemini) has its own con
 Skill Genie fixes this:
 - **One repo** — all your skills and rules version-controlled together
 - **One command** — `./setup.sh` distributes everything to the right places
-- **Every agent** — native path support for OpenClaw, Hermes, Codex, Claude Code, Gemini Antigravity, Cursor, Windsurf, and GitHub Copilot
+- **Every agent** — native path support for OpenClaw, Hermes, Devin, OpenCode, Kiro, Codex, Claude Code, Gemini Antigravity, Cursor, Windsurf, and GitHub Copilot
 
 ## Quick Start
 
@@ -88,9 +88,11 @@ Rules and skills are only installed for agents detected on your machine. Rules a
 
 | Agent | Detection | Rules | Skills |
 |-------|-----------|-------|--------|
-| Kiro | `kiro` in PATH or `~/.kiro/` exists | `~/.kiro/steering/*.md` (all topic files) | `~/.agents/skills/` |
+| Kiro | `kiro` in PATH or `~/.kiro/` exists | `~/.kiro/steering/*.md` (all topic files) | `~/.kiro/skills/` + `~/.agents/skills/` |
 | OpenClaw | `openclaw` in PATH or `~/.openclaw/` exists | Reads linked/global rules on demand | `~/.openclaw/skills/` + `~/.agents/skills/` |
 | Hermes | `hermes` in PATH or `~/.hermes/` exists | Reads linked/global rules on demand | `~/.hermes/skills/` + `~/.agents/skills/` |
+| OpenCode | `opencode` in PATH or `~/.config/opencode/` exists | Reads project/global rules on demand | `~/.config/opencode/skills/` + `~/.agents/skills/` |
+| Devin CLI | `devin` in PATH or `~/.config/devin/` exists | Reads project/global rules on demand | `~/.config/devin/skills/` + `.agents/skills/` |
 | Claude Code | `claude` in PATH or `~/.claude/` exists | `~/.claude/CLAUDE.md` → `router.md` | `~/.claude/skills/` |
 | Codex | `codex` in PATH or `~/.codex/` exists | `~/.codex/AGENTS.md` → `router.md` | `~/.codex/skills/` |
 | Windsurf | `~/.codeium/windsurf/` exists | `~/.codeium/windsurf/memories/global_rules.md` → `router.md` | `~/.codeium/windsurf/skills/` |
@@ -101,13 +103,15 @@ Rules and skills are only installed for agents detected on your machine. Rules a
 
 ## Skill Compatibility
 
-Skills in `skills/` follow the AgentSkills `SKILL.md` shape used by Claude Code, OpenClaw, Hermes, and other local skill-aware agents:
+Skills in `skills/` follow the AgentSkills `SKILL.md` shape used by Claude Code, OpenClaw, Hermes, OpenCode, Kiro, Devin, Codex, Cursor, Windsurf, and other local skill-aware agents:
 
 - Every skill directory has a root `SKILL.md`.
 - Frontmatter includes single-line `name`, `description`, and `license` fields.
 - `metadata` is a single-line JSON object so OpenClaw's embedded parser can read it, including `metadata.version`.
 - Tags are stored in `metadata.tags` and mirrored to `metadata.hermes.tags`.
 - `allowed-tools`, when present, is a single-line comma-separated value for Claude Code compatibility.
+- Skill names must match their directory and use lowercase letters, digits, and single hyphens.
+- Descriptions must stay at or below 1024 characters for OpenCode and Kiro compatibility.
 
 Run `skillgenie validate` before committing skill changes.
 

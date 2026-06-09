@@ -2,7 +2,7 @@
 name: "npm-publish"
 description: "Publish an NPM package to the registry, handling authentication via browser-based login with 2FA/security key support."
 license: "MIT"
-metadata: {"version":"1.0.1","triggers":["publish to npm","npm publish","publish package","deploy to npm"],"tags":["npm","package-publishing","release","developer-tools"],"hermes":{"tags":["npm","package-publishing","release","developer-tools"]}}
+metadata: {"version":"1.0.2","triggers":["publish to npm","npm publish","publish package","deploy to npm"],"tags":["npm","package-publishing","release","developer-tools"],"hermes":{"tags":["npm","package-publishing","release","developer-tools"]}}
 ---
 
 # NPM Publish Skill
