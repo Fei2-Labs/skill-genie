@@ -11,7 +11,7 @@ Every AI coding agent (Claude Code, Codex, Kiro, Cursor, Gemini) has its own con
 Skill Genie fixes this:
 - **One repo** — all your skills and rules version-controlled together
 - **One command** — `./setup.sh` distributes everything to the right places
-- **Every agent** — native path support for OpenClaw, Hermes, Devin, OpenCode, Kiro, Codex, Claude Code, Gemini Antigravity, Cursor, Windsurf, and GitHub Copilot
+- **Every agent** — native path support for OpenClaw, Hermes, Devin, OpenCode, Kiro, Codex, Claude Code, Gemini Antigravity, Cursor, Windsurf, GitHub Copilot, and GitHub Copilot CLI/app
 
 ## Quick Start
 
@@ -100,6 +100,7 @@ Rules and skills are only installed for agents detected on your machine. Rules a
 | Gemini Antigravity | `antigravity` in PATH | — | `~/.gemini/antigravity/skills/` |
 | Cursor | `cursor` in PATH | — | `~/.cursor/skills/` |
 | GitHub Copilot | `gh` in PATH + `~/.github/` exists | — | `~/.github/skills/` |
+| GitHub Copilot CLI/app | `copilot` in PATH or `~/.copilot/` exists | `~/.copilot/copilot-instructions.md` / `AGENTS.md` | `~/.copilot/skills/` + `~/.agents/skills/` |
 
 ## Skill Compatibility
 

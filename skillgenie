@@ -49,6 +49,7 @@ DEVIN_DIR     = Path.home() / ".config" / "devin" / "skills"
 ANTIGRAVITY_DIR = Path.home() / ".gemini" / "antigravity" / "skills"
 CURSOR_DIR    = Path.home() / ".cursor" / "skills"
 COPILOT_DIR   = Path.home() / ".github" / "skills"
+COPILOT_CLI_DIR = Path.home() / ".copilot" / "skills"
 WINDSURF_DIR  = Path.home() / ".codeium" / "windsurf" / "skills"
 WINDSURF_NEXT_DIR = Path.home() / ".codeium" / "windsurf-next" / "skills"
 
@@ -66,6 +67,7 @@ TARGETS = {
     "antigravity": ("Gemini Antigravity", ANTIGRAVITY_DIR, "symlink"),
     "cursor": ("Cursor", CURSOR_DIR, "symlink"),
     "copilot": ("GitHub Copilot", COPILOT_DIR, "symlink"),
+    "copilot-cli": ("GitHub Copilot CLI/app", COPILOT_CLI_DIR, "symlink"),
     "windsurf": ("Windsurf", WINDSURF_DIR, "symlink"),
     "windsurf-next": ("Windsurf Next", WINDSURF_NEXT_DIR, "symlink"),
 }
@@ -142,6 +144,7 @@ def detect_targets() -> list[str]:
         "antigravity": lambda: shutil.which("antigravity") or ANTIGRAVITY_DIR.parent.exists(),
         "cursor": lambda: shutil.which("cursor") or CURSOR_DIR.parent.exists(),
         "copilot": lambda: shutil.which("gh") and COPILOT_DIR.parent.exists(),
+        "copilot-cli": lambda: shutil.which("copilot") or COPILOT_CLI_DIR.parent.exists(),
         "windsurf": lambda: WINDSURF_DIR.parent.exists(),
         "windsurf-next": lambda: WINDSURF_NEXT_DIR.parent.exists(),
     }
@@ -414,6 +417,7 @@ examples:
         g.add_argument("--antigravity",     action="store_true", dest="antigravity", help="Gemini Antigravity only (~/.gemini/antigravity/skills/)")
         g.add_argument("--cursor",          action="store_true", dest="cursor",   help="Cursor only (~/.cursor/skills/)")
         g.add_argument("--copilot",         action="store_true", dest="copilot",  help="GitHub Copilot only (~/.github/skills/)")
+        g.add_argument("--copilot-cli",     action="store_true", dest="copilot_cli", help="GitHub Copilot CLI/app only (~/.copilot/skills/)")
         g.add_argument("--windsurf",        action="store_true", dest="windsurf", help="Windsurf only (~/.codeium/windsurf/skills/)")
         g.add_argument("--windsurf-next",   action="store_true", dest="windsurf_next", help="Windsurf Next only (~/.codeium/windsurf-next/skills/)")
         p.add_argument("--dry-run", action="store_true", help="Show actions without executing")
