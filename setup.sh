@@ -283,6 +283,10 @@ fi
 command -v antigravity &>/dev/null && link_to_native "$HOME/.gemini/antigravity/skills" "antigravity" || true
 command -v cursor &>/dev/null && link_to_native "$HOME/.cursor/skills" "cursor" || true
 command -v gh &>/dev/null && [[ -d "$HOME/.github" ]] && link_to_native "$HOME/.github/skills" "copilot" || true
+# GitHub Copilot CLI + Copilot app (both load personal Agent Skills from ~/.copilot/skills)
+if command -v copilot &>/dev/null || [[ -d "$HOME/.copilot" ]]; then
+  link_to_native "$HOME/.copilot/skills" "copilot-cli"
+fi
 [[ -d "$HOME/.codeium/windsurf" ]] && link_to_native "$HOME/.codeium/windsurf/skills" "windsurf" || true
 [[ -d "$HOME/.codeium/windsurf-next" ]] && link_to_native "$HOME/.codeium/windsurf-next/skills" "windsurf-next" || true
 
