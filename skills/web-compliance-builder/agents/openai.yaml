@@ -1,0 +1,4 @@
+interface:
+  display_name: "Web Compliance Builder"
+  short_description: "Classify a web business and build its compliance pages, checklists, and launch gate"
+  default_prompt: "Use $web-compliance-builder to figure out which compliance pages and disclosures my website needs and draft them."
