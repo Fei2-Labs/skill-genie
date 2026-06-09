@@ -2,7 +2,7 @@
 name: "git-crypt"
 description: "Manage git-crypt encrypted repos end-to-end: UNLOCK (auto-fetch GPG key + passphrase from Bitwarden via rbw, non-interactive), LOCK (re-scramble the local working tree before leaving a shared machine), SETUP (encrypt internal docs in a new public repo: init, authorize key, .gitattributes patterns), and STATUS. Use when encrypted GITCRYPT blobs appear after a clone, when leaving a machine, when onboarding a new public repo, or to check what's encrypted."
 license: "MIT"
-metadata: {"version":"1.3.0","triggers":["unlock git-crypt","git-crypt unlock","解锁仓库","解锁加密文档","解密 AGENTS.md","decrypt internal docs","lock repo","锁定仓库","锁上文档","git-crypt lock","encrypt this repo","给仓库加密","上 git-crypt","encrypt internal docs","git-crypt status","加密状态"],"tags":["git-crypt","gpg","bitwarden","rbw","encryption","developer-tools"]}
+metadata: {"version":"1.3.0","triggers":["unlock git-crypt","git-crypt unlock","解锁仓库","解锁加密文档","解密 AGENTS.md","decrypt internal docs","lock repo","锁定仓库","锁上文档","git-crypt lock","encrypt this repo","给仓库加密","上 git-crypt","encrypt internal docs","git-crypt status","加密状态"],"tags":["git-crypt","gpg","bitwarden","rbw","encryption","developer-tools"],"hermes":{"tags":["git-crypt","gpg","bitwarden","rbw","encryption","developer-tools"]}}
 ---
 
 # git-crypt Manager
