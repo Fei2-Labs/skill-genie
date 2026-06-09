@@ -59,6 +59,8 @@ INTAKE_SKELETON = {
     "cross_border_fulfilment_flag": False,
     "app_distribution": [],
     "risk_level": "low",  # low | medium | high | blocking
+    "mode": "build",       # build | audit
+    "existing_pages": [],  # audit mode: page types the site already has, e.g. ["Privacy Policy", "Cookie Policy"]
 }
 
 
