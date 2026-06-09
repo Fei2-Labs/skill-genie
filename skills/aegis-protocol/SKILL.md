@@ -1,21 +1,8 @@
 ---
-name: aegis-protocol
-description: High-confidence code security review workflow for changed code, using modern threat-informed methodologies with strict false-positive filtering and exploit-focused findings.
-license: MIT
-metadata:
-  version: 1.1.0
-  references:
-    - https://github.com/anthropics/claude-code-security-review
-    - https://www.nist.gov/publications/nist-cybersecurity-framework-csf-20
-    - https://csrc.nist.gov/pubs/sp/800/218/final
-    - https://www.cisa.gov/resources-tools/resources/secure-by-design
-    - https://attack.mitre.org/
-    - https://owasp.org/www-project-application-security-verification-standard/
-    - https://owasp.org/Top10/2025/
-    - https://www.cisa.gov/known-exploited-vulnerabilities-catalog
-    - https://www.cisa.gov/stakeholder-specific-vulnerability-categorization-ssvc
-    - https://www.first.org/cvss/v4.0/specification-document
-    - https://slsa.dev/spec/v1.2/
+name: "aegis-protocol"
+description: "High-confidence code security review workflow for changed code, using modern threat-informed methodologies with strict false-positive filtering and exploit-focused findings."
+license: "MIT"
+metadata: {"version":"1.1.1","references":["https://github.com/anthropics/claude-code-security-review","https://www.nist.gov/publications/nist-cybersecurity-framework-csf-20","https://csrc.nist.gov/pubs/sp/800/218/final","https://www.cisa.gov/resources-tools/resources/secure-by-design","https://attack.mitre.org/","https://owasp.org/www-project-application-security-verification-standard/","https://owasp.org/Top10/2025/","https://www.cisa.gov/known-exploited-vulnerabilities-catalog","https://www.cisa.gov/stakeholder-specific-vulnerability-categorization-ssvc","https://www.first.org/cvss/v4.0/specification-document","https://slsa.dev/spec/v1.2/"],"license":"MIT","tags":["security-review","threat-modeling","code-review","secure-development"],"hermes":{"tags":["security-review","threat-modeling","code-review","secure-development"]}}
 ---
 
 # Aegis Protocol

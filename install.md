@@ -59,8 +59,6 @@ This will:
 | `./setup.sh --skills-only` | Only update skills |
 | `./setup.sh --full` | Clean slate + symlink |
 | `./setup.sh --full --copy` | Clean slate + copy |
-| `./setup.sh --full` | Clean slate + symlink |
-| `./setup.sh --full --copy` | Clean slate + copy |
 
 ## Agent-Specific Setup
 
@@ -69,6 +67,14 @@ This will:
 ### Claude Code
 
 Detected if `claude` is in PATH or `~/.claude/` exists. Rules written to `~/.claude/CLAUDE.md`, skills to `~/.claude/skills/`.
+
+### OpenClaw
+
+Detected if `openclaw` is in PATH or `~/.openclaw/` exists. Skills to `~/.openclaw/skills/` and the shared `~/.agents/skills/` root.
+
+### Hermes
+
+Detected if `hermes` is in PATH or `~/.hermes/` exists. Skills to `~/.hermes/skills/` and the shared `~/.agents/skills/` root.
 
 ### Kiro
 
@@ -112,6 +118,7 @@ Then re-run `./setup.sh` to sync.
 ```bash
 skillgenie list              # List all available skills
 skillgenie read <name>       # Print a skill's content
+skillgenie validate          # Check AgentSkills/OpenClaw/Hermes compatibility
 skillgenie status            # Show install status per runtime
 ```
 

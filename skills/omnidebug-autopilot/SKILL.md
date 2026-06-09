@@ -1,10 +1,8 @@
 ---
-name: omnidebug-autopilot
-description: Autonomous end-to-end debugging skill for any codebase, language, and framework. Detects stack, reproduces failures, isolates root cause, applies minimal safe fixes, and verifies with tests/build/lint without user interruption.
-license: MIT
-metadata:
-  version: 1.0.0
-  category: debugging
+name: "omnidebug-autopilot"
+description: "Autonomous end-to-end debugging skill for any codebase, language, and framework. Detects stack, reproduces failures, isolates root cause, applies minimal safe fixes, and verifies with tests/build/lint without user interruption."
+license: "MIT"
+metadata: {"version":"1.0.1","category":"debugging","license":"MIT","tags":["debugging","testing","root-cause-analysis","developer-tools"],"hermes":{"tags":["debugging","testing","root-cause-analysis","developer-tools"]}}
 ---
 
 # OmniDebug Autopilot
