@@ -1,0 +1,4 @@
+interface:
+  display_name: "Chinese Humanizer"
+  short_description: "去中文 AI 味，按体裁与作者声口自然改写"
+  default_prompt: "Use $chinese-humanizer to 去 AI 味 and rewrite this Chinese draft naturally for its genre."
