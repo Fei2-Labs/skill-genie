@@ -2,7 +2,7 @@
 name: "git-crypt"
 description: "Manage git-crypt encrypted repos end-to-end: UNLOCK (auto-fetch GPG key + passphrase from Bitwarden via rbw, non-interactive), LOCK (re-scramble the local working tree before leaving a shared machine), SETUP (encrypt internal docs in a new public repo: init, authorize key, .gitattributes patterns), and STATUS. Use when encrypted GITCRYPT blobs appear after a clone, when leaving a machine, when onboarding a new public repo, or to check what's encrypted."
 license: "MIT"
-metadata: {"version":"1.1.0","triggers":["unlock git-crypt","git-crypt unlock","解锁仓库","解锁加密文档","解密 AGENTS.md","decrypt internal docs","lock repo","锁定仓库","锁上文档","git-crypt lock","encrypt this repo","给仓库加密","上 git-crypt","encrypt internal docs","git-crypt status","加密状态"],"tags":["git-crypt","gpg","bitwarden","rbw","encryption","developer-tools"]}
+metadata: {"version":"1.2.0","triggers":["unlock git-crypt","git-crypt unlock","解锁仓库","解锁加密文档","解密 AGENTS.md","decrypt internal docs","lock repo","锁定仓库","锁上文档","git-crypt lock","encrypt this repo","给仓库加密","上 git-crypt","encrypt internal docs","git-crypt status","加密状态"],"tags":["git-crypt","gpg","bitwarden","rbw","encryption","developer-tools"]}
 ---
 
 # git-crypt Manager
@@ -23,7 +23,7 @@ Mental model (explain to user if confused): day-to-day **encryption is automatic
 | Setting | Value |
 |---|---|
 | GPG key id | `25FFD2B10C7545B6` (uid `clarezoe`, sign ed25519 + encrypt cv25519 subkey) |
-| Bitwarden item (rbw) | `gpg-git-crypt` — armored private key in **notes**, key passphrase in field **`passphrase`** |
+| Bitwarden item (rbw) | `GPG key - git-crypt (clarezoe)` — item **password** = key passphrase; custom field **`key`** = armored private key (stored single-line: Bitwarden web-UI fields strip newlines — MUST reconstruct, see U4); field **`rev`** = revocation cert |
 | gpg-preset-passphrase | `/opt/homebrew/opt/gnupg/libexec/gpg-preset-passphrase` |
 
 Never echo the passphrase or private key into output/logs; pipe directly between commands.
@@ -64,15 +64,25 @@ gpg --list-secret-keys 25FFD2B10C7545B6 >/dev/null 2>&1 || echo "missing → U4"
 `rbw unlock` pops a pinentry for the **Bitwarden master password — the user types it** (the single interactive moment).
 ```bash
 rbw unlock
-rbw get gpg-git-crypt --field notes | gpg --import   # pipe; never write the key to a file
+N="GPG key - git-crypt (clarezoe)"
+# Field 'key' is single-line (web UI strips newlines) — reconstruct armor, pipe to import:
+rbw get "$N" --field key | python3 -c "
+import sys,re
+s=sys.stdin.read().strip()
+m=re.match(r'-----BEGIN PGP PRIVATE KEY BLOCK-----\s*(.*?)\s*-----END PGP PRIVATE KEY BLOCK-----', s, re.S)
+print('-----BEGIN PGP PRIVATE KEY BLOCK-----'); print()
+for t in m.group(1).split(): print(t)
+print('-----END PGP PRIVATE KEY BLOCK-----')
+" | gpg --batch --import
+gpg --list-secret-keys 25FFD2B10C7545B6   # verify imported
 ```
-If the item is missing: `rbw list | grep -i gpg`, tell the user the expected layout (`gpg-git-crypt`, key in notes, passphrase in field `passphrase`); do not guess at other vault items.
+If the item is missing: `rbw list | grep -i gpg`; do not guess at other vault items. If `rbw sync` fails with `missing field access_token` (vaultwarden token incompat): `rbw purge` then `rbw login` (fresh token chain fixes it). rbw pinentry must be GUI: `rbw config set pinentry /opt/homebrew/bin/pinentry-mac`.
 
 ### U5. Preset passphrase into gpg-agent (non-interactive unlock)
 ```bash
 grep -q allow-preset-passphrase ~/.gnupg/gpg-agent.conf 2>/dev/null || { echo allow-preset-passphrase >> ~/.gnupg/gpg-agent.conf; gpgconf --kill gpg-agent; }
 for grip in $(gpg --list-secret-keys --with-keygrip 25FFD2B10C7545B6 | awk '/Keygrip/{print $3}'); do
-  rbw get gpg-git-crypt --field passphrase | /opt/homebrew/opt/gnupg/libexec/gpg-preset-passphrase --preset "$grip"
+  rbw get "GPG key - git-crypt (clarezoe)" | /opt/homebrew/opt/gnupg/libexec/gpg-preset-passphrase --preset "$grip"   # item password = passphrase
 done
 ```
 
