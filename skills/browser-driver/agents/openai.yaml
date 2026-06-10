@@ -1,0 +1,4 @@
+interface:
+  display_name: "Browser Driver"
+  short_description: "Drive the user's own logged-in browser via CDP + Playwright"
+  default_prompt: "Use $browser-driver to automate this dashboard in my own logged-in browser over CDP."
