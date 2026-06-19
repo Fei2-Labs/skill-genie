@@ -14,9 +14,8 @@ remote:
       - misc/migrate-to-shoehorn
       - misc/scaffold-exercises
       - misc/setup-pre-commit
-      - engineering/diagnose
+      - engineering/diagnosing-bugs
       - engineering/tdd
-      - engineering/zoom-out
       - productivity/grill-me
 
   - repo: warpdotdev/oz-skills
