@@ -45,9 +45,10 @@ cd ~/skill-genie
 This will:
 1. Detect which agents are installed on your machine
 2. Install global rules only for detected agents
-3. Sync skills from `skills.yaml` into detected agent paths
-4. Detect optional tools (e.g. trellis) and link their skills
-5. Link the `skillgenie` CLI to your PATH
+3. Sync agents from `agents/` into the shared registry and detected agent paths
+4. Sync skills from `skills.yaml` into detected agent paths
+5. Detect optional tools (e.g. trellis) and link their skills
+6. Link the `skillgenie` CLI to your PATH
 
 ## Modes
 
@@ -57,6 +58,9 @@ This will:
 | `./setup.sh --copy` | Full setup: rules + skills (copy files) |
 | `./setup.sh --rules-only` | Only update rules |
 | `./setup.sh --skills-only` | Only update skills |
+| `./setup.sh --agents` | Interactive agent picker |
+| `./setup.sh --agents all` | Install all agents |
+| `./setup.sh --agents-only` | Only update agents |
 | `./setup.sh --full` | Clean slate + symlink |
 | `./setup.sh --full --copy` | Clean slate + copy |
 
@@ -67,6 +71,8 @@ This will:
 ### Claude Code
 
 Detected if `claude` is in PATH or `~/.claude/` exists. Rules written to `~/.claude/CLAUDE.md`, skills to `~/.claude/skills/`.
+
+Custom agents from `agents/` are linked to `~/.claude/agents/` when present.
 
 ### OpenClaw
 
@@ -80,9 +86,13 @@ Detected if `hermes` is in PATH or `~/.hermes/` exists. Skills to `~/.hermes/ski
 
 Detected if `kiro` is in PATH or `~/.kiro/` exists. Rules symlinked to `~/.kiro/steering/`, skills to `~/.kiro/skills/` and `~/.agents/skills/`.
 
+Custom agents from `agents/` are linked to `~/.kiro/agents/` when present.
+
 ### Codex
 
 Detected if `codex` is in PATH or `~/.codex/` exists. Rules written to `~/.codex/AGENTS.md`, skills to `~/.codex/skills/`.
+
+Custom agents from `agents/` are linked to `~/.codex/agents/` when present.
 
 ### OpenCode
 
@@ -100,11 +110,18 @@ Detected if `antigravity` is in PATH. Skills to `~/.gemini/antigravity/skills/`.
 
 Detected if `cursor` is in PATH. Skills to `~/.cursor/skills/`.
 
+Custom agents from `agents/` are linked to `~/.cursor/agents/` when present.
+
 ### Other Agents
 
 Skills are also available at `~/.agents/skills/<name>/SKILL.md`. Any agent that can read files can use them directly:
 ```bash
 cat ~/.agents/skills/<name>/SKILL.md
+```
+
+Agents are also available at `~/.agents/agents/<name>.md`. Any agent that can read files can use them directly:
+```bash
+cat ~/.agents/agents/<name>.md
 ```
 
 ## Customization
@@ -121,6 +138,8 @@ remote:
 
 Then re-run `./setup.sh` to sync.
 
+Edit files under `agents/` to add or remove custom agent definitions. Then re-run `./setup.sh --agents` or `./setup.sh --agents-only` to sync them.
+
 ## Verify
 
 ```bash
@@ -133,11 +152,12 @@ skillgenie status            # Show install status per runtime
 ## Uninstall
 
 ```bash
-rm -rf ~/skill-genie ~/.agents/skills ~/.cache/skill-genie-remotes
+rm -rf ~/skill-genie ~/.agents/skills ~/.agents/agents ~/.cache/skill-genie-remotes
 # Remove symlinks:
 rm -f ~/.kiro/steering/router.md ~/.kiro/steering/session-sync.md \
       ~/.kiro/steering/workflow-tools.md ~/.kiro/steering/stack-and-deployment.md \
       ~/.kiro/steering/external-tools.md
 rm -f ~/.claude/CLAUDE.md
+rm -rf ~/.claude/agents ~/.codex/agents ~/.kiro/agents ~/.copilot/agents
 rm -f ~/.config/codex/instructions.md
 ```

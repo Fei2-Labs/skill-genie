@@ -4,6 +4,8 @@ set -euo pipefail
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 RULES_DIR="$DOTFILES_DIR/rules"
 SKILLS_DEST="$HOME/.agents/skills"
+AGENTS_SRC="$DOTFILES_DIR/agents"
+AGENTS_DEST="$HOME/.agents/agents"
 KIRO_DIR="$HOME/.kiro/steering"
 CLAUDE_FILE="$HOME/.claude/CLAUDE.md"
 CODEX_FILE="$HOME/.codex/AGENTS.md"
@@ -13,14 +15,27 @@ FULL=false
 COPY_MODE=false
 RULES_ONLY=false
 SKILLS_ONLY=false
+AGENTS_ONLY=false
+AGENTS_REQUESTED=""
 
-for arg in "$@"; do
-  case "$arg" in
+while [[ $# -gt 0 ]]; do
+  case "$1" in
     --full) FULL=true ;;
     --copy) COPY_MODE=true ;;
     --rules-only) RULES_ONLY=true ;;
     --skills-only) SKILLS_ONLY=true ;;
+    --agents-only) AGENTS_ONLY=true ;;
+    --agents)
+      shift
+      if [[ $# -gt 0 && "$1" != --* ]]; then
+        AGENTS_REQUESTED="$1"
+      else
+        AGENTS_REQUESTED="__PROMPT__"
+        continue
+      fi
+      ;;
   esac
+  shift
 done
 
 if $FULL; then
@@ -31,6 +46,10 @@ fi
 
 if $COPY_MODE; then
   echo "ℹ Copy mode: skills will be copied (not symlinked)"
+fi
+
+if $AGENTS_ONLY && [[ -z "$AGENTS_REQUESTED" ]]; then
+  AGENTS_REQUESTED="all"
 fi
 
 # ── 0. Backup existing configs (first run only) ──────────────────────────────
@@ -58,6 +77,66 @@ install_skill() {
   fi
 }
 
+install_file() {
+  local src="$1" dest="$2"
+  rm -f "$dest"
+  ln -sfn "$src" "$dest"
+}
+
+list_available_agents() {
+  local agent_file agent_name
+  for agent_file in "$AGENTS_SRC"/*.md; do
+    [[ -f "$agent_file" ]] || continue
+    agent_name="$(basename "$agent_file" .md)"
+    printf '%s\n' "$agent_name"
+  done
+}
+
+resolve_agents_selection() {
+  local selection="$1"
+  local available=()
+  local chosen=()
+  local part idx agent_file agent_name
+
+  while IFS= read -r agent_name; do
+    [[ -n "$agent_name" ]] && available+=("$agent_name")
+  done < <(list_available_agents)
+
+  if [[ ${#available[@]} -eq 0 ]]; then
+    return 0
+  fi
+
+  if [[ "$selection" == "__PROMPT__" || -z "$selection" ]]; then
+    echo "Available agents:"
+    for idx in "${!available[@]}"; do
+      printf '  %d) %s\n' "$((idx + 1))" "${available[$idx]}"
+    done
+    echo "  a) all"
+    read -p "Select agents to install [numbers/comma-separated/a]: " selection
+  fi
+
+  if [[ "$selection" == "all" || "$selection" == "a" ]]; then
+    printf '%s\n' "${available[@]}"
+    return 0
+  fi
+
+  IFS=',' read -r -a parts <<< "$selection"
+  for part in "${parts[@]}"; do
+    part="${part// /}"
+    [[ -z "$part" ]] && continue
+    if [[ "$part" =~ ^[0-9]+$ ]]; then
+      idx=$((part - 1))
+      if [[ $idx -ge 0 && $idx -lt ${#available[@]} ]]; then
+        chosen+=("${available[$idx]}")
+      fi
+    else
+      chosen+=("$part")
+    fi
+  done
+
+  printf '%s\n' "${chosen[@]}"
+}
+
 # Ensure skills.yaml exists
 if [[ ! -f "$DOTFILES_DIR/skills.yaml" ]]; then
   if [[ -f "$DOTFILES_DIR/skills.yaml.example" ]]; then
@@ -76,8 +155,12 @@ if [[ ! -d "$RULES_DIR" ]] || [[ -z "$(ls "$RULES_DIR"/*.md 2>/dev/null)" ]]; th
   fi
 fi
 
+if [[ ! -d "$AGENTS_SRC" ]] || [[ -z "$(ls "$AGENTS_SRC"/*.md 2>/dev/null)" ]]; then
+  echo "⚠ No agents found in $AGENTS_SRC"
+fi
+
 # ── 1. Kiro: symlink individual rule files ────────────────────────────────────
-if ! $SKILLS_ONLY; then
+if ! $SKILLS_ONLY && ! $AGENTS_ONLY; then
 
 # Install topic files to fixed location for all agents to read on demand
 RULES_GLOBAL="$HOME/.agents/rules"
@@ -139,8 +222,29 @@ fi
 
 fi # end !SKILLS_ONLY
 
+# ── 3. Agents: sync custom agent definitions ─────────────────────────────────
+if [[ -n "$AGENTS_REQUESTED" ]] || $AGENTS_ONLY; then
+  if [[ -d "$AGENTS_SRC" ]]; then
+    echo "→ Syncing agents..."
+    mkdir -p "$AGENTS_DEST"
+
+    AGENT_SELECTION="$(resolve_agents_selection "${AGENTS_REQUESTED:-}")"
+    if [[ -z "$AGENT_SELECTION" ]]; then
+      echo "  – No agents selected, skipping"
+    else
+      while IFS= read -r agent_name; do
+        [[ -z "$agent_name" ]] && continue
+        agent_src="$AGENTS_SRC/$agent_name.md"
+        [[ -f "$agent_src" ]] || continue
+        install_file "$agent_src" "$AGENTS_DEST/$agent_name.md"
+      done <<< "$AGENT_SELECTION"
+      echo "  ✓ Agents linked to shared registry"
+    fi
+  fi
+fi
+
 # ── 4. Skills: sync from manifest ────────────────────────────────────────────
-if ! $RULES_ONLY; then
+if ! $RULES_ONLY && ! $AGENTS_ONLY; then
 
 echo "→ Syncing skills..."
 mkdir -p "$SKILLS_DEST"
@@ -298,6 +402,35 @@ else
 fi
 
 fi # end !RULES_ONLY
+
+# ── 5b. Native agent paths ───────────────────────────────────────────────────
+if ! $RULES_ONLY; then
+echo "→ Linking agents to detected agent paths..."
+
+linked_agent_targets=""
+
+link_agent_to_native() {
+  local native_dir="$1" agent_name="$2"
+  mkdir -p "$native_dir"
+  install_file "$AGENTS_DEST/$agent_name.md" "$native_dir/$agent_name.md"
+  linked_agent_targets="$linked_agent_targets $agent_name"
+}
+
+for agent_file in "$AGENTS_DEST"/*.md; do
+  [[ -f "$agent_file" ]] || continue
+  agent_name="$(basename "$agent_file" .md)"
+  command -v claude &>/dev/null || [[ -d "$HOME/.claude" ]] && [[ "$agent_name" == "dev-inbox-planner" ]] && link_agent_to_native "$HOME/.claude/agents" "$agent_name"
+  command -v codex &>/dev/null || [[ -d "$HOME/.codex" ]] && [[ "$agent_name" == "dev-inbox-planner" ]] && link_agent_to_native "$HOME/.codex/agents" "$agent_name"
+  command -v kiro &>/dev/null || [[ -d "$HOME/.kiro" ]] && [[ "$agent_name" == "dev-inbox-planner" ]] && link_agent_to_native "$HOME/.kiro/agents" "$agent_name"
+  command -v copilot &>/dev/null || [[ -d "$HOME/.copilot" ]] && [[ "$agent_name" == "dev-inbox-planner" ]] && link_agent_to_native "$HOME/.copilot/agents" "$agent_name"
+done
+
+if [[ -z "$linked_agent_targets" ]]; then
+  echo "  – No additional agent targets detected, skipping"
+else
+  echo "  ✓ Agents linked to:$linked_agent_targets"
+fi
+fi
 
 # ── 6. skillgenie CLI ─────────────────────────────────────────────────────────
 echo "→ Linking skillgenie to PATH..."
