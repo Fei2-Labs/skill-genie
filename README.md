@@ -2,14 +2,14 @@
 
 > ⚠️ **WARNING**: This setup modifies agent configuration files on your system (`~/.claude/`, `~/.codex/`, `~/.kiro/`, `~/.agents/`, etc.). **Back up your existing configs before running `setup.sh`.** This is a personal configuration repo — provided as-is with no warranty. The author is not responsible for any data loss, broken configs, or unintended side effects. Use at your own risk.
 
-Your AI agent environment, in one repo. Skills, rules, and a single command to set it all up.
+Your AI agent environment, in one repo. Skills, rules, agents, and a single command to set it all up.
 
 ## Why
 
 Every AI coding agent (Claude Code, Codex, Kiro, Cursor, Gemini) has its own config location, its own skills format, its own way of loading rules. You end up with scattered configs across machines that drift apart.
 
 Skill Genie fixes this:
-- **One repo** — all your skills and rules version-controlled together
+- **One repo** — all your skills, rules, and agents version-controlled together
 - **One command** — `./setup.sh` distributes everything to the right places
 - **Every agent** — native path support for OpenClaw, Hermes, Devin, OpenCode, Kiro, Codex, Claude Code, Gemini Antigravity, Cursor, Windsurf, GitHub Copilot, and GitHub Copilot CLI/app
 
@@ -28,6 +28,7 @@ That's it. Your agent environment is ready.
 | What | Where | Condition |
 |------|-------|-----------|
 | Agent rules | Agent-specific config dirs | Only for detected agents |
+| Custom agents | `~/.agents/agents/` + native agent paths | Only for selected agents |
 | Skills | `~/.agents/skills/` + native agent paths | Only for detected agents |
 | CLI tool | `skillgenie` in PATH | Always |
 
@@ -38,6 +39,9 @@ That's it. Your agent environment is ready.
 ./setup.sh --copy         # Full setup: rules + skills (copy files)
 ./setup.sh --rules-only   # Only update rules
 ./setup.sh --skills-only  # Only update skills
+./setup.sh --agents       # Pick agents to install
+./setup.sh --agents all   # Install all agents
+./setup.sh --agents-only  # Only update agents
 ./setup.sh --full         # Clean slate + symlink
 ./setup.sh --full --copy  # Clean slate + copy
 ```
@@ -47,6 +51,7 @@ That's it. Your agent environment is ready.
 ```
 skills/             Reusable AI agent skills (each with SKILL.md)
 rules.example/      Example agent rules (copy to rules/ and customize)
+agents/             Agent definitions (copy to ~/.agents/agents/ and native paths)
 skills.yaml.example Third-party skill sources (copy to skills.yaml to customize)
 skillgenie          CLI tool for listing and reading skills
 setup.sh            One-command environment setup
@@ -76,6 +81,8 @@ remote:
 ```
 
 Your `skills.yaml` is gitignored — it won't be overwritten by updates.
+
+Custom agents live in `agents/`. Run `./setup.sh --agents` to pick which ones to install, `./setup.sh --agents all` to install all of them, or `./setup.sh --agents-only` to refresh just agents.
 
 To generate personalized agent rules, tell your agent:
 ```
