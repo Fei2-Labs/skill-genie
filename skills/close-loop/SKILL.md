@@ -7,7 +7,7 @@ metadata: {"version":"2.3.5","category":"session-memory","license":"MIT","tags":
 
 # Close Loop
 
-Use this skill when the user says "wrap up", "close session", "end session", "close out this task", or invokes `/wrap-up`.
+Use this skill when the user says "close loop", "close-loop", "wrap up the session", "close session", "end session", "end of day", or invokes `/close-loop`. This is the full end-of-session controller (ship + memory + self-improve + publish); for archiving a single Trellis task use `finish-work` instead.
 
 Run four phases in order and return one consolidated inline report.
 
