@@ -38,6 +38,8 @@ from pathlib import Path
 # ── Config ────────────────────────────────────────────────────────────────────
 
 REPO_ROOT     = Path(os.path.realpath(__file__)).parent / "skills"
+MANIFEST_PATH = Path(os.path.realpath(__file__)).parent / "skills.yaml"
+REMOTE_CACHE  = Path.home() / ".cache" / "skill-genie-remotes"
 AGENTS_DIR    = Path.home() / ".agents" / "skills"
 CLAUDE_DIR    = Path.home() / ".claude" / "skills"
 OPENCLAW_DIR  = Path.home() / ".openclaw" / "skills"
@@ -360,18 +362,190 @@ def cmd_update(args):
     args._update = True
     cmd_install(args)
 
+
+# ── sync (remote repos from skills.yaml) ──────────────────────────────────────
+
+def load_manifest():
+    """Parse skills.yaml; return list of remote entries. Requires pyyaml."""
+    if not MANIFEST_PATH.exists():
+        err(f"Manifest not found: {MANIFEST_PATH}")
+        sys.exit(1)
+    try:
+        import yaml
+    except ImportError:
+        err("pyyaml not installed — run: pip3 install pyyaml")
+        sys.exit(1)
+    data = yaml.safe_load(MANIFEST_PATH.read_text()) or {}
+    return data.get("remote", []) or []
+
+
+def sync_repo(entry, is_dry, do_clean, copy_mode):
+    """Clone or pull one remote repo; return list of (skill_name, src_path)."""
+    repo = entry["repo"]
+    base_path = entry.get("path", "")
+    picks = entry.get("pick", []) or []
+    repo_dir = REMOTE_CACHE / repo.replace("/", "_")
+
+    if do_clean and repo_dir.exists():
+        info(f"Cleaning cache for {repo}")
+        if not is_dry:
+            shutil.rmtree(repo_dir, ignore_errors=True)
+
+    if not repo_dir.exists():
+        info(f"Cloning {repo}...")
+        if not is_dry:
+            result = subprocess.run(
+                ["git", "clone", "--depth", "1", f"https://github.com/{repo}.git", str(repo_dir)],
+                capture_output=True, text=True,
+            )
+            if result.returncode != 0:
+                err(f"clone failed for {repo}: {result.stderr.strip()}")
+                return []
+    else:
+        info(f"Pulling {repo}...")
+        if not is_dry:
+            subprocess.run(["git", "-C", str(repo_dir), "pull", "--quiet"], capture_output=True)
+
+    found = []
+    for skill in picks:
+        skill_name = os.path.basename(skill)
+        skill_path = (repo_dir / base_path / skill) if base_path else (repo_dir / skill)
+        if skill_path.is_dir():
+            found.append((skill_name, skill_path))
+        else:
+            warn(f"Not found: {repo}/{skill}")
+    return found
+
+
+def install_remote_skill(skill_name, src_path, targets, is_dry, copy_mode):
+    """Install one remote skill into the shared root + optional native targets."""
+    print(f"\n{BOLD}{skill_name}{RESET}")
+    success = True
+    for target in targets:
+        label, base, mode = TARGETS[target]
+        dest = base / skill_name
+        # For remote skills, honor explicit --copy; otherwise use the target's native mode.
+        use_copy = copy_mode or mode == "copy"
+        arrow = "copy" if use_copy else "symlink"
+        info(f"{target:<13} <- {arrow} {src_path}")
+        if is_dry:
+            ok(target)
+            continue
+        try:
+            remove_existing(dest)
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            if use_copy:
+                shutil.copytree(src_path, dest, symlinks=True)
+            else:
+                dest.symlink_to(src_path)
+            ok(target)
+        except Exception as e:
+            err(f"{label}: {e}")
+            success = False
+    return success
+
+
+def cmd_sync(args):
+    if not MANIFEST_PATH.exists():
+        err(f"Manifest not found: {MANIFEST_PATH}")
+        err("Create one from skills.yaml.example: cp skills.yaml.example skills.yaml")
+        sys.exit(1)
+
+    remotes = load_manifest()
+    if not remotes:
+        warn("No 'remote:' entries in skills.yaml — nothing to sync.")
+        return
+
+    is_dry = args.dry_run
+    do_clean = args.clean
+    copy_mode = args.copy
+
+    # Default target is the shared AgentSkills root; --global expands to all.
+    if getattr(args, "global", False):
+        targets = list(TARGETS)
+    else:
+        targets = ["agents"]
+
+    label = f"{DIM}[dry-run]{RESET} " if is_dry else ""
+    print(f"\n{label}{BOLD}Sync{RESET} {len(remotes)} remote repo(s) -> {', '.join(targets)}")
+
+    if not is_dry:
+        REMOTE_CACHE.mkdir(parents=True, exist_ok=True)
+        AGENTS_DIR.mkdir(parents=True, exist_ok=True)
+
+    failed = []
+    total_skills = 0
+    for entry in remotes:
+        found = sync_repo(entry, is_dry, do_clean, copy_mode)
+        for skill_name, src_path in found:
+            total_skills += 1
+            if not install_remote_skill(skill_name, src_path, targets, is_dry, copy_mode):
+                failed.append(skill_name)
+
+    print()
+    if failed:
+        err(f"Failed: {', '.join(failed)}")
+        sys.exit(1)
+    ok(f"Done — synced {total_skills} skill{'s' if total_skills != 1 else ''} from {len(remotes)} repo(s)")
+
+
 # ── CLI wiring ────────────────────────────────────────────────────────────────
 
 def main():
     parser = argparse.ArgumentParser(
         prog="skillgenie",
-        description="Skill manager for the skill-genie repo.",
+        description=(
+            "Skill manager for the skill-genie repo.\n\n"
+            "List, read, validate, install, and update the AI agent skills that\n"
+            "live in ./skills/. Skills are distributed to per-runtime directories\n"
+            "(~/.claude/skills/, ~/.config/devin/skills/, ~/.agents/skills/, ...)\n"
+            "so every supported agent (Claude Code, Devin, Codex, Kiro, OpenClaw,\n"
+            "Hermes, OpenCode, Cursor, Copilot, Windsurf, Antigravity) picks them up.\n\n"
+            "Run 'skillgenie <command> -h' for per-command details."
+        ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
+commands:
+  list        List every skill folder in ./skills/ with its description.
+  read        Print a skill's full SKILL.md (from repo or ~/.agents/skills/).
+  status      Show an install matrix: which runtime has which skill installed.
+  validate    Check SKILL.md frontmatter for cross-agent compatibility.
+              Run this before committing skill changes.
+  install     Copy/symlink a skill into one or more runtime skill directories.
+              With no target flag, auto-detects runtimes present on this machine.
+  update      Re-install a skill (same as install, but signals a refresh of an
+              already-installed skill). Use after editing ./skills/<name>/ or
+              pulling upstream changes.
+  sync        Clone/pull every remote repo in skills.yaml and install the
+              picked skills into ~/.agents/skills/ (and, with --global, into
+              every detected native runtime dir). Use after editing skills.yaml
+              or to refresh third-party skills.
+
+target flags (install / update / sync):
+  --global / -g      All supported runtimes (overrides auto-detect).
+  (no flag)          Auto-detect: every runtime found on this machine.
+  --agents           AgentSkills root        (~/.agents/skills/)
+  --claude / -cc     Claude Code             (~/.claude/skills/)
+  --openclaw / -oc   OpenClaw                (~/.openclaw/skills/)   [copy]
+  --hermes           Hermes                  (~/.hermes/skills/)     [copy]
+  --kiro             Kiro                    (~/.kiro/skills/)
+  --codex            Codex                   (~/.codex/skills/)
+  --opencode         OpenCode                (~/.config/opencode/skills/)
+  --devin            Devin CLI + Desktop     (~/.config/devin/skills/) [copy]
+  --antigravity      Gemini Antigravity      (~/.gemini/antigravity/skills/)
+  --cursor           Cursor                  (~/.cursor/skills/)
+  --copilot          GitHub Copilot          (~/.github/skills/)
+  --copilot-cli      GitHub Copilot CLI/app  (~/.copilot/skills/)
+  --windsurf         Windsurf (legacy)       (~/.codeium/windsurf/skills/)
+  --windsurf-next    Windsurf Next (legacy)  (~/.codeium/windsurf-next/skills/)
+  --dry-run          Show what would happen without writing anything.
+
 examples:
   skillgenie list
-  skillgenie validate
+  skillgenie read research-to-wechat
   skillgenie status
+  skillgenie validate
+  skillgenie validate close-loop
   skillgenie install research-to-wechat
   skillgenie install research-to-wechat --openclaw
   skillgenie install research-to-wechat --hermes
@@ -380,53 +554,121 @@ examples:
   skillgenie install --all --global
   skillgenie install --all --dry-run
   skillgenie update close-loop --claude
+  skillgenie update --all --global
+  skillgenie sync                   # pull all remote repos -> ~/.agents/skills/
+  skillgenie sync --global          # also link into every native runtime dir
+  skillgenie sync --clean           # wipe cache and re-clone every repo
+  skillgenie sync --dry-run
+
+tip: for a full environment refresh (rules + skills + agents) run ./setup.sh
+     from the repo root instead of 'skillgenie update --all'.
         """,
     )
 
     sub = parser.add_subparsers(dest="command", required=True)
 
     # list
-    sub.add_parser("list", help="List available skills in this repo")
+    sub.add_parser(
+        "list",
+        help="List every skill in ./skills/ with its description.",
+        description="List every skill folder in ./skills/ that contains a SKILL.md, "
+                    "printing each skill name and the first line of its description.",
+    )
 
     # read
-    p_read = sub.add_parser("read", help="Read a skill's SKILL.md content")
-    p_read.add_argument("skill", help="Skill name")
+    p_read = sub.add_parser(
+        "read",
+        help="Print a skill's full SKILL.md content.",
+        description="Print the full SKILL.md for <skill>. Looks in ./skills/<skill>/ "
+                    "first, then falls back to ~/.agents/skills/<skill>/. Useful for "
+                    "pasting a skill's instructions into an agent chat.",
+    )
+    p_read.add_argument("skill", help="Skill name (run 'skillgenie list' to see options)")
 
     # status
-    sub.add_parser("status", help="Show install status per runtime")
+    sub.add_parser(
+        "status",
+        help="Show which runtime has which skill installed.",
+        description="Print an install matrix: one row per skill in ./skills/, one "
+                    "column per runtime target, showing whether each runtime's skill "
+                    "directory contains that skill.",
+    )
 
     # validate
-    p_validate = sub.add_parser("validate", help="Validate cross-agent skill compatibility")
-    p_validate.add_argument("skill", nargs="?", help="Skill name (omit for all)")
-    p_validate.add_argument("--all", action="store_true", help="All skills")
+    p_validate = sub.add_parser(
+        "validate",
+        help="Check SKILL.md frontmatter for cross-agent compatibility.",
+        description="Validate SKILL.md frontmatter against the AgentSkills/OpenClaw/"
+                    "Hermes/OpenCode/Kiro/Devin compatibility rules: required fields "
+                    "(name, description, metadata), name format, description length, "
+                    "single-line metadata JSON, etc. Run before committing skill changes.",
+    )
+    p_validate.add_argument("skill", nargs="?", help="Skill name (omit to validate all)")
+    p_validate.add_argument("--all", action="store_true", help="Validate all skills (default when no skill is given)")
 
     # shared flags for install / update
     def add_target_flags(p):
-        p.add_argument("skill", nargs="?", help="Skill name (omit with --all)")
-        p.add_argument("--all",      action="store_true", help="All skills")
+        p.add_argument("skill", nargs="?", help="Skill name (omit and use --all for every skill)")
+        p.add_argument("--all",      action="store_true", help="Apply to all skills in ./skills/")
         g = p.add_mutually_exclusive_group()
-        g.add_argument("--global", "-g",   action="store_true", dest="global",   help="All supported runtimes")
+        g.add_argument("--global", "-g",   action="store_true", dest="global",   help="All supported runtimes (overrides auto-detect)")
         g.add_argument("--agents",          action="store_true", dest="agents",   help="AgentSkills root (~/.agents/skills/)")
         g.add_argument("--claude", "-cc",  action="store_true", dest="claude",   help="Claude Code only (~/.claude/skills/)")
-        g.add_argument("--openclaw", "-oc",action="store_true", dest="openclaw", help="OpenClaw only (~/.openclaw/skills/)")
-        g.add_argument("--hermes",          action="store_true", dest="hermes",   help="Hermes only (~/.hermes/skills/)")
+        g.add_argument("--openclaw", "-oc",action="store_true", dest="openclaw", help="OpenClaw only (~/.openclaw/skills/) [copy]")
+        g.add_argument("--hermes",          action="store_true", dest="hermes",   help="Hermes only (~/.hermes/skills/) [copy]")
         g.add_argument("--kiro",            action="store_true", dest="kiro",     help="Kiro only (~/.kiro/skills/)")
         g.add_argument("--codex",           action="store_true", dest="codex",    help="Codex only (~/.codex/skills/)")
         g.add_argument("--opencode",        action="store_true", dest="opencode", help="OpenCode only (~/.config/opencode/skills/)")
-        g.add_argument("--devin",           action="store_true", dest="devin",    help="Devin CLI + Desktop, formerly Windsurf (~/.config/devin/skills/)")
+        g.add_argument("--devin",           action="store_true", dest="devin",    help="Devin CLI + Desktop, formerly Windsurf (~/.config/devin/skills/) [copy]")
         g.add_argument("--antigravity",     action="store_true", dest="antigravity", help="Gemini Antigravity only (~/.gemini/antigravity/skills/)")
         g.add_argument("--cursor",          action="store_true", dest="cursor",   help="Cursor only (~/.cursor/skills/)")
         g.add_argument("--copilot",         action="store_true", dest="copilot",  help="GitHub Copilot only (~/.github/skills/)")
         g.add_argument("--copilot-cli",     action="store_true", dest="copilot_cli", help="GitHub Copilot CLI/app only (~/.copilot/skills/)")
         g.add_argument("--windsurf",        action="store_true", dest="windsurf", help="Windsurf only (~/.codeium/windsurf/skills/)")
         g.add_argument("--windsurf-next",   action="store_true", dest="windsurf_next", help="Windsurf Next only (~/.codeium/windsurf-next/skills/)")
-        p.add_argument("--dry-run", action="store_true", help="Show actions without executing")
+        p.add_argument("--dry-run", action="store_true", help="Show what would be installed/updated without writing anything")
 
-    p_install = sub.add_parser("install", help="Install skill(s)")
+    p_install = sub.add_parser(
+        "install",
+        help="Install skill(s) into one or more runtime directories.",
+        description="Copy or symlink a skill from ./skills/<name>/ into the chosen "
+                    "runtime skill directory (e.g. ~/.claude/skills/). With no target "
+                    "flag, auto-detects every runtime present on this machine. "
+                    "Symlink targets track the repo live; copy targets (OpenClaw, "
+                    "Hermes, Devin) snapshot the skill at install time.",
+    )
     add_target_flags(p_install)
 
-    p_update = sub.add_parser("update", help="Update (re-install) skill(s)")
+    p_update = sub.add_parser(
+        "update",
+        help="Update (re-install) skill(s) — refresh after editing or pulling.",
+        description="Re-install a skill into one or more runtime directories. "
+                    "Functionally identical to 'install', but signals that you are "
+                    "refreshing an already-installed skill with new content from "
+                    "./skills/<name>/. Use after editing a SKILL.md or pulling "
+                    "upstream changes. Run 'skillgenie validate' first.",
+    )
     add_target_flags(p_update)
+
+    # sync
+    p_sync = sub.add_parser(
+        "sync",
+        help="Pull remote skill repos from skills.yaml and install picked skills.",
+        description="Read the 'remote:' section of skills.yaml, clone (first run) or "
+                    "pull (subsequent runs) each declared repo into "
+                    "~/.cache/skill-genie-remotes/, and install the picked skills into "
+                    "~/.agents/skills/. With --global, also link/copy each synced skill "
+                    "into every detected native runtime directory. Use after editing "
+                    "skills.yaml or to refresh third-party skills. Requires pyyaml.",
+    )
+    p_sync.add_argument("--global", "-g", action="store_true", dest="global",
+                        help="Also install synced skills into every detected native runtime dir")
+    p_sync.add_argument("--copy", action="store_true",
+                        help="Copy skills instead of symlinking (snapshots, like setup.sh --copy)")
+    p_sync.add_argument("--clean", action="store_true",
+                        help="Wipe ~/.cache/skill-genie-remotes/ first (force re-clone)")
+    p_sync.add_argument("--dry-run", action="store_true",
+                        help="Show what would be cloned/pulled/installed without writing anything")
 
     args = parser.parse_args()
 
@@ -437,6 +679,7 @@ examples:
         "status":  cmd_status,
         "install": cmd_install,
         "update":  cmd_update,
+        "sync":    cmd_sync,
     }
     dispatch[args.command](args)
 
