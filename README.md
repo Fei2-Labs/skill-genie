@@ -64,8 +64,12 @@ skillgenie list            # List all skills in this repo
 skillgenie read <name>     # Print a skill's full instructions
 skillgenie validate        # Check AgentSkills/OpenClaw/Hermes compatibility
 skillgenie status          # Show install status per runtime
-skillgenie install <name>  # Install a specific skill
-skillgenie install --all   # Install all skills
+skillgenie install <name>  # Install a specific skill (local ./skills/)
+skillgenie install --all   # Install all local skills
+skillgenie update <name>   # Re-install a skill after editing it
+skillgenie sync            # Pull all remote repos in skills.yaml -> ~/.agents/skills/
+skillgenie sync --global   # Also link synced skills into every native runtime dir
+skillgenie sync --clean    # Wipe cache and re-clone every remote repo
 ```
 
 ## Customization
