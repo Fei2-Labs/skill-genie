@@ -39,7 +39,7 @@ from pathlib import Path
 
 REPO_ROOT     = Path(os.path.realpath(__file__)).parent / "skills"
 MANIFEST_PATH = Path(os.path.realpath(__file__)).parent / "skills.yaml"
-REMOTE_CACHE  = Path.home() / ".cache" / "skill-genie-remotes"
+REMOTE_CACHE  = Path.home() / ".local" / "share" / "skill-genie-remotes"
 AGENTS_DIR    = Path.home() / ".agents" / "skills"
 CLAUDE_DIR    = Path.home() / ".claude" / "skills"
 OPENCLAW_DIR  = Path.home() / ".openclaw" / "skills"
@@ -380,10 +380,35 @@ def load_manifest():
 
 
 def sync_repo(entry, is_dry, do_clean, copy_mode):
-    """Clone or pull one remote repo; return list of (skill_name, src_path)."""
-    repo = entry["repo"]
+    """Clone/pull a remote repo, or use a local path; return list of (skill_name, src_path).
+
+    Entry may declare either:
+      repo: owner/name   — clone into REMOTE_CACHE, pull on subsequent runs
+      local: /abs/path   — use an existing local checkout directly (no clone, no pull)
+    """
     base_path = entry.get("path", "")
     picks = entry.get("pick", []) or []
+
+    # Local checkout — use directly, no clone/pull/cache
+    local_path = entry.get("local")
+    if local_path:
+        repo_dir = Path(os.path.expanduser(local_path))
+        if not repo_dir.is_dir():
+            err(f"local path does not exist: {repo_dir}")
+            return []
+        info(f"Using local repo: {repo_dir}")
+        found = []
+        for skill in picks:
+            skill_name = os.path.basename(skill)
+            skill_path = (repo_dir / base_path / skill) if base_path else (repo_dir / skill)
+            if skill_path.is_dir():
+                found.append((skill_name, skill_path))
+            else:
+                warn(f"Not found: {repo_dir}/{skill}")
+        return found
+
+    # Remote repo — clone or pull into REMOTE_CACHE
+    repo = entry["repo"]
     repo_dir = REMOTE_CACHE / repo.replace("/", "_")
 
     if do_clean and repo_dir.exists():
@@ -518,8 +543,9 @@ commands:
               pulling upstream changes.
   sync        Clone/pull every remote repo in skills.yaml and install the
               picked skills into ~/.agents/skills/ (and, with --global, into
-              every detected native runtime dir). Use after editing skills.yaml
-              or to refresh third-party skills.
+              every detected native runtime dir). Entries with a 'local:'
+              path use your existing checkout directly (no clone, no pull).
+              Use after editing skills.yaml or to refresh third-party skills.
 
 target flags (install / update / sync):
   --global / -g      All supported runtimes (overrides auto-detect).
@@ -656,10 +682,12 @@ tip: for a full environment refresh (rules + skills + agents) run ./setup.sh
         help="Pull remote skill repos from skills.yaml and install picked skills.",
         description="Read the 'remote:' section of skills.yaml, clone (first run) or "
                     "pull (subsequent runs) each declared repo into "
-                    "~/.cache/skill-genie-remotes/, and install the picked skills into "
-                    "~/.agents/skills/. With --global, also link/copy each synced skill "
-                    "into every detected native runtime directory. Use after editing "
-                    "skills.yaml or to refresh third-party skills. Requires pyyaml.",
+                    "~/.local/share/skill-genie-remotes/, and install the picked skills "
+                    "into ~/.agents/skills/. Entries with a 'local:' path use your "
+                    "existing checkout directly (no clone, no pull). With --global, also "
+                    "link/copy each synced skill into every detected native runtime "
+                    "directory. Use after editing skills.yaml or to refresh third-party "
+                    "skills. Requires pyyaml.",
     )
     p_sync.add_argument("--global", "-g", action="store_true", dest="global",
                         help="Also install synced skills into every detected native runtime dir")
