@@ -1,9 +1,11 @@
 # Skills manifest — all sources declared here
-# Run `setup.sh` to sync everything to ~/.agents/skills/
+# Run `setup.sh` or `skillgenie sync` to sync everything to ~/.agents/skills/
 
 # Local skills: all dirs with SKILL.md in this repo are auto-included.
 
-# Third-party skills
+# Third-party skills — two forms:
+#   repo: owner/name   → cloned to ~/.local/share/skill-genie-remotes/, pulled on sync
+#   local: /abs/path   → use an existing checkout directly (no clone, no duplicate)
 remote:
   - repo: mattpocock/skills
     path: skills
