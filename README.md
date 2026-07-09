@@ -78,10 +78,17 @@ On first run, `setup.sh` creates `skills.yaml` from `skills.yaml.example`. Edit 
 
 ```yaml
 remote:
+  # Remote repo — cloned to ~/.local/share/skill-genie-remotes/, pulled on subsequent syncs
   - repo: owner/repo-name
     path: path/to/skills
     pick:
       - skill-folder-name
+
+  # Local checkout — use an existing repo directly (no clone, no duplicate copy)
+  - local: /Users/you/Projects/some-repo
+    path: .claude/skills
+    pick:
+      - some-skill
 ```
 
 Your `skills.yaml` is gitignored — it won't be overwritten by updates.
