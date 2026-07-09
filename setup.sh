@@ -264,58 +264,14 @@ for skill_dir in "$SKILLGENIE_PATH"/*/; do
 done
 echo "  ✓ Local skills linked from skill-genie"
 
-# 4b. Remote skills (read from skills.yaml)
-CACHE_DIR="$HOME/.cache/skill-genie-remotes"
-mkdir -p "$CACHE_DIR"
-
-python3 - "$DOTFILES_DIR/skills.yaml" "$CACHE_DIR" "$SKILLS_DEST" "$COPY_MODE" <<'PYTHON'
-import sys, os, subprocess, shutil
-from pathlib import Path
-
-try:
-    import yaml
-except ImportError:
-    print("  ⚠ pyyaml not installed, skipping remote skills (pip3 install pyyaml)")
-    sys.exit(0)
-
-manifest = Path(sys.argv[1])
-cache_dir = Path(sys.argv[2])
-dest = Path(sys.argv[3])
-copy_mode = sys.argv[4] == "true"
-
-data = yaml.safe_load(manifest.read_text())
-remotes = data.get("remote", [])
-
-for entry in remotes:
-    repo = entry["repo"]
-    base_path = entry.get("path", "")
-    picks = entry.get("pick", [])
-    repo_dir = cache_dir / repo.replace("/", "_")
-
-    if not repo_dir.exists():
-        print(f"  Cloning {repo}...")
-        subprocess.run(["git", "clone", "--depth", "1", f"https://github.com/{repo}.git", str(repo_dir)],
-                       capture_output=True)
-    else:
-        subprocess.run(["git", "-C", str(repo_dir), "pull", "--quiet"], capture_output=True)
-
-    for skill in picks:
-        skill_name = os.path.basename(skill)
-        skill_path = repo_dir / base_path / skill if base_path else repo_dir / skill
-        if skill_path.is_dir():
-            link = dest / skill_name
-            if copy_mode:
-                if link.exists() or link.is_symlink():
-                    shutil.rmtree(link, ignore_errors=True)
-                shutil.copytree(skill_path, link, symlinks=True)
-            else:
-                link.unlink(missing_ok=True)
-                link.symlink_to(skill_path)
-        else:
-            print(f"  ⚠ Not found: {repo}/{skill}")
-
-print("  ✓ Remote skills synced")
-PYTHON
+# 4b. Remote skills (read from skills.yaml) — delegates to skillgenie sync
+if [[ -f "$DOTFILES_DIR/skills.yaml" ]]; then
+  if $COPY_MODE; then
+    "$DOTFILES_DIR/skillgenie" sync --copy
+  else
+    "$DOTFILES_DIR/skillgenie" sync
+  fi
+fi
 
 # ── 4c. Optional skills (only if tool is installed) ───────────────────────────
 echo "→ Checking optional tool skills..."
