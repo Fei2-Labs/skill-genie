@@ -20,7 +20,7 @@ Targets:
   (no flag)          Auto-detect: all runtimes found on this machine
 
 Install backends:
-  Claude Code, Codex, Cursor, Antigravity, Copilot, Windsurf, Kiro, OpenCode → symlink
+  Claude Code, Codex, Cursor, Antigravity, Copilot, Kiro, OpenCode → symlink
   OpenClaw     →  shutil.copytree  →  ~/.openclaw/skills/<skill>/
   Hermes       →  shutil.copytree  →  ~/.hermes/skills/<skill>/
   Devin CLI    →  shutil.copytree  →  ~/.config/devin/skills/<skill>/
@@ -52,8 +52,6 @@ ANTIGRAVITY_DIR = Path.home() / ".gemini" / "antigravity" / "skills"
 CURSOR_DIR    = Path.home() / ".cursor" / "skills"
 COPILOT_DIR   = Path.home() / ".github" / "skills"
 COPILOT_CLI_DIR = Path.home() / ".copilot" / "skills"
-WINDSURF_DIR  = Path.home() / ".codeium" / "windsurf" / "skills"
-WINDSURF_NEXT_DIR = Path.home() / ".codeium" / "windsurf-next" / "skills"
 
 SKIP_DIRS = {".git", ".tmp-claude-code-security-review-ref", "__pycache__", "node_modules"}
 
@@ -70,8 +68,6 @@ TARGETS = {
     "cursor": ("Cursor", CURSOR_DIR, "symlink"),
     "copilot": ("GitHub Copilot", COPILOT_DIR, "symlink"),
     "copilot-cli": ("GitHub Copilot CLI/app", COPILOT_CLI_DIR, "symlink"),
-    "windsurf": ("Windsurf", WINDSURF_DIR, "symlink"),
-    "windsurf-next": ("Windsurf Next", WINDSURF_NEXT_DIR, "symlink"),
 }
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
@@ -147,8 +143,6 @@ def detect_targets() -> list[str]:
         "cursor": lambda: shutil.which("cursor") or CURSOR_DIR.parent.exists(),
         "copilot": lambda: shutil.which("gh") and COPILOT_DIR.parent.exists(),
         "copilot-cli": lambda: shutil.which("copilot") or COPILOT_CLI_DIR.parent.exists(),
-        "windsurf": lambda: WINDSURF_DIR.parent.exists(),
-        "windsurf-next": lambda: WINDSURF_NEXT_DIR.parent.exists(),
     }
     for name, present in checks.items():
         if present():
@@ -525,7 +519,7 @@ def main():
             "live in ./skills/. Skills are distributed to per-runtime directories\n"
             "(~/.claude/skills/, ~/.config/devin/skills/, ~/.agents/skills/, ...)\n"
             "so every supported agent (Claude Code, Devin, Codex, Kiro, OpenClaw,\n"
-            "Hermes, OpenCode, Cursor, Copilot, Windsurf, Antigravity) picks them up.\n\n"
+            "Hermes, OpenCode, Cursor, Copilot, Antigravity) picks them up.\n\n"
             "Run 'skillgenie <command> -h' for per-command details."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -562,8 +556,6 @@ target flags (install / update / sync):
   --cursor           Cursor                  (~/.cursor/skills/)
   --copilot          GitHub Copilot          (~/.github/skills/)
   --copilot-cli      GitHub Copilot CLI/app  (~/.copilot/skills/)
-  --windsurf         Windsurf (legacy)       (~/.codeium/windsurf/skills/)
-  --windsurf-next    Windsurf Next (legacy)  (~/.codeium/windsurf-next/skills/)
   --dry-run          Show what would happen without writing anything.
 
 examples:
@@ -645,13 +637,11 @@ tip: for a full environment refresh (rules + skills + agents) run ./setup.sh
         g.add_argument("--kiro",            action="store_true", dest="kiro",     help="Kiro only (~/.kiro/skills/)")
         g.add_argument("--codex",           action="store_true", dest="codex",    help="Codex only (~/.codex/skills/)")
         g.add_argument("--opencode",        action="store_true", dest="opencode", help="OpenCode only (~/.config/opencode/skills/)")
-        g.add_argument("--devin",           action="store_true", dest="devin",    help="Devin CLI + Desktop, formerly Windsurf (~/.config/devin/skills/) [copy]")
+        g.add_argument("--devin",           action="store_true", dest="devin",    help="Devin CLI + Desktop (~/.config/devin/skills/) [copy]")
         g.add_argument("--antigravity",     action="store_true", dest="antigravity", help="Gemini Antigravity only (~/.gemini/antigravity/skills/)")
         g.add_argument("--cursor",          action="store_true", dest="cursor",   help="Cursor only (~/.cursor/skills/)")
         g.add_argument("--copilot",         action="store_true", dest="copilot",  help="GitHub Copilot only (~/.github/skills/)")
         g.add_argument("--copilot-cli",     action="store_true", dest="copilot_cli", help="GitHub Copilot CLI/app only (~/.copilot/skills/)")
-        g.add_argument("--windsurf",        action="store_true", dest="windsurf", help="Windsurf only (~/.codeium/windsurf/skills/)")
-        g.add_argument("--windsurf-next",   action="store_true", dest="windsurf_next", help="Windsurf Next only (~/.codeium/windsurf-next/skills/)")
         p.add_argument("--dry-run", action="store_true", help="Show what would be installed/updated without writing anything")
 
     p_install = sub.add_parser(
