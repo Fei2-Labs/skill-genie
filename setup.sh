@@ -320,7 +320,7 @@ fi
 if command -v opencode &>/dev/null || [[ -d "$HOME/.config/opencode" ]]; then
   link_to_native "$HOME/.config/opencode/skills" "opencode"
 fi
-# Devin CLI + Devin Desktop; both read ~/.config/devin/skills
+# Devin (CLI + Desktop); both read ~/.config/devin/skills
 if command -v devin &>/dev/null || [[ -d "$HOME/.config/devin" ]] || [[ -d "$HOME/.devin" ]] || [[ -d "$HOME/.devin-next" ]]; then
   link_to_native "$HOME/.config/devin/skills" "devin"
 fi
