@@ -15,7 +15,7 @@ Targets:
   --hermes           Install into Hermes       (~/.hermes/skills/) via file copy
   --opencode         Install into OpenCode     (~/.config/opencode/skills/)
   --kiro             Install into Kiro         (~/.kiro/skills/)
-  --devin            Install into Devin CLI    (~/.config/devin/skills/)
+  --devin            Install into Devin       (~/.config/devin/skills/)
   --global / -g      All supported targets
   (no flag)          Auto-detect: all runtimes found on this machine
 
@@ -23,7 +23,7 @@ Install backends:
   Claude Code, Codex, Cursor, Antigravity, Copilot, Kiro, OpenCode → symlink
   OpenClaw     →  shutil.copytree  →  ~/.openclaw/skills/<skill>/
   Hermes       →  shutil.copytree  →  ~/.hermes/skills/<skill>/
-  Devin CLI    →  shutil.copytree  →  ~/.config/devin/skills/<skill>/
+  Devin        →  shutil.copytree  →  ~/.config/devin/skills/<skill>/
 """
 
 import argparse
@@ -63,7 +63,7 @@ TARGETS = {
     "kiro": ("Kiro", KIRO_SKILLS_DIR, "symlink"),
     "codex": ("Codex", CODEX_DIR, "symlink"),
     "opencode": ("OpenCode", OPENCODE_DIR, "symlink"),
-    "devin": ("Devin (CLI + Desktop)", DEVIN_DIR, "copy"),
+    "devin": ("Devin", DEVIN_DIR, "copy"),
     "antigravity": ("Gemini Antigravity", ANTIGRAVITY_DIR, "symlink"),
     "cursor": ("Cursor", CURSOR_DIR, "symlink"),
     "copilot": ("GitHub Copilot", COPILOT_DIR, "symlink"),
@@ -551,7 +551,7 @@ target flags (install / update / sync):
   --kiro             Kiro                    (~/.kiro/skills/)
   --codex            Codex                   (~/.codex/skills/)
   --opencode         OpenCode                (~/.config/opencode/skills/)
-  --devin            Devin CLI + Desktop     (~/.config/devin/skills/) [copy]
+  --devin            Devin (CLI + Desktop)   (~/.config/devin/skills/) [copy]
   --antigravity      Gemini Antigravity      (~/.gemini/antigravity/skills/)
   --cursor           Cursor                  (~/.cursor/skills/)
   --copilot          GitHub Copilot          (~/.github/skills/)
@@ -637,7 +637,7 @@ tip: for a full environment refresh (rules + skills + agents) run ./setup.sh
         g.add_argument("--kiro",            action="store_true", dest="kiro",     help="Kiro only (~/.kiro/skills/)")
         g.add_argument("--codex",           action="store_true", dest="codex",    help="Codex only (~/.codex/skills/)")
         g.add_argument("--opencode",        action="store_true", dest="opencode", help="OpenCode only (~/.config/opencode/skills/)")
-        g.add_argument("--devin",           action="store_true", dest="devin",    help="Devin CLI + Desktop (~/.config/devin/skills/) [copy]")
+        g.add_argument("--devin",           action="store_true", dest="devin",    help="Devin (CLI + Desktop) (~/.config/devin/skills/) [copy]")
         g.add_argument("--antigravity",     action="store_true", dest="antigravity", help="Gemini Antigravity only (~/.gemini/antigravity/skills/)")
         g.add_argument("--cursor",          action="store_true", dest="cursor",   help="Cursor only (~/.cursor/skills/)")
         g.add_argument("--copilot",         action="store_true", dest="copilot",  help="GitHub Copilot only (~/.github/skills/)")

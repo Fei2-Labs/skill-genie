@@ -39,7 +39,7 @@ _skillgenie() {
           '--kiro[Kiro only]' \
           '--codex[Codex only]' \
           '--opencode[OpenCode only]' \
-          '--devin[Devin CLI only]' \
+          '--devin[Devin (CLI + Desktop)]' \
           '--antigravity[Gemini Antigravity only]' \
           '--cursor[Cursor only]' \
           '--copilot[GitHub Copilot only]' \
