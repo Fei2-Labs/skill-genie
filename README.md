@@ -11,7 +11,7 @@ Every AI coding agent (Claude Code, Codex, Kiro, Cursor, Gemini) has its own con
 Skill Genie fixes this:
 - **One repo** — all your skills, rules, and agents version-controlled together
 - **One command** — `./setup.sh` distributes everything to the right places
-- **Every agent** — native path support for OpenClaw, Hermes, Devin, OpenCode, Kiro, Codex, Claude Code, Gemini Antigravity, Cursor, Windsurf, GitHub Copilot, and GitHub Copilot CLI/app
+- **Every agent** — native path support for OpenClaw, Hermes, Devin, OpenCode, Kiro, Codex, Claude Code, Gemini Antigravity, Cursor, GitHub Copilot, and GitHub Copilot CLI/app
 
 ## Quick Start
 
@@ -113,18 +113,14 @@ Rules and skills are only installed for agents detected on your machine. Rules a
 | Devin (CLI + Desktop) | `devin` in PATH, or `~/.config/devin/`, `~/.devin/`, `~/.devin-next/` exists | Reads project/global rules on demand | `~/.config/devin/skills/` + `~/.agents/skills/` |
 | Claude Code | `claude` in PATH or `~/.claude/` exists | `~/.claude/CLAUDE.md` → `router.md` | `~/.claude/skills/` |
 | Codex | `codex` in PATH or `~/.codex/` exists | `~/.codex/AGENTS.md` → `router.md` | `~/.codex/skills/` |
-| Windsurf _(legacy)_ | `~/.codeium/windsurf/` exists | `~/.codeium/windsurf/memories/global_rules.md` → `router.md` | `~/.codeium/windsurf/skills/` |
-| Windsurf Next _(legacy)_ | `~/.codeium/windsurf-next/` exists | `~/.codeium/windsurf-next/memories/global_rules.md` → `router.md` | `~/.codeium/windsurf-next/skills/` |
 | Gemini Antigravity | `antigravity` in PATH | — | `~/.gemini/antigravity/skills/` |
 | Cursor | `cursor` in PATH | — | `~/.cursor/skills/` |
 | GitHub Copilot | `gh` in PATH + `~/.github/` exists | — | `~/.github/skills/` |
 | GitHub Copilot CLI/app | `copilot` in PATH or `~/.copilot/` exists | `~/.copilot/copilot-instructions.md` / `AGENTS.md` | `~/.copilot/skills/` + `~/.agents/skills/` |
 
-> **Windsurf → Devin Desktop:** the Windsurf editor was rebranded to Devin Desktop (Cognition, June 2026). Devin Desktop and the Devin CLI both load global skills from `~/.config/devin/skills/` — covered by the **Devin** target. The legacy `~/.codeium/windsurf*` paths are kept for installs still on the old brand during the transition.
-
 ## Skill Compatibility
 
-Skills in `skills/` follow the AgentSkills `SKILL.md` shape used by Claude Code, OpenClaw, Hermes, OpenCode, Kiro, Devin, Codex, Cursor, Windsurf, and other local skill-aware agents:
+Skills in `skills/` follow the AgentSkills `SKILL.md` shape used by Claude Code, OpenClaw, Hermes, OpenCode, Kiro, Devin, Codex, Cursor, and other local skill-aware agents:
 
 - Every skill directory has a root `SKILL.md`.
 - Frontmatter includes single-line `name`, `description`, and `license` fields.

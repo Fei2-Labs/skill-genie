@@ -44,8 +44,6 @@ _skillgenie() {
           '--cursor[Cursor only]' \
           '--copilot[GitHub Copilot only]' \
           '--copilot-cli[GitHub Copilot CLI/app only]' \
-          '--windsurf[Windsurf only]' \
-          '--windsurf-next[Windsurf Next only]' \
           '--dry-run[Show actions without executing]'
         ;;
       validate)

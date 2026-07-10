@@ -203,23 +203,6 @@ if command -v codex &>/dev/null || [[ -d "$HOME/.codex" ]]; then
   echo "  ✓ Codex: $CODEX_FILE"
 fi
 
-# ── 3b. Windsurf: symlink router rules ───────────────────────────────────────
-WINDSURF_RULES="$HOME/.codeium/windsurf/memories/global_rules.md"
-if [[ -d "$HOME/.codeium/windsurf" ]]; then
-  echo "→ Setting up Windsurf rules..."
-  mkdir -p "$(dirname "$WINDSURF_RULES")"
-  ln -sf "$RULES_DIR/router.md" "$WINDSURF_RULES"
-  echo "  ✓ Windsurf: $WINDSURF_RULES"
-fi
-
-WINDSURF_NEXT_RULES="$HOME/.codeium/windsurf-next/memories/global_rules.md"
-if [[ -d "$HOME/.codeium/windsurf-next" ]]; then
-  echo "→ Setting up Windsurf Next rules..."
-  mkdir -p "$(dirname "$WINDSURF_NEXT_RULES")"
-  ln -sf "$RULES_DIR/router.md" "$WINDSURF_NEXT_RULES"
-  echo "  ✓ Windsurf Next: $WINDSURF_NEXT_RULES"
-fi
-
 fi # end !SKILLS_ONLY
 
 # ── 3. Agents: sync custom agent definitions ─────────────────────────────────
@@ -337,7 +320,7 @@ fi
 if command -v opencode &>/dev/null || [[ -d "$HOME/.config/opencode" ]]; then
   link_to_native "$HOME/.config/opencode/skills" "opencode"
 fi
-# Devin CLI + Devin Desktop (formerly Windsurf); both read ~/.config/devin/skills
+# Devin CLI + Devin Desktop; both read ~/.config/devin/skills
 if command -v devin &>/dev/null || [[ -d "$HOME/.config/devin" ]] || [[ -d "$HOME/.devin" ]] || [[ -d "$HOME/.devin-next" ]]; then
   link_to_native "$HOME/.config/devin/skills" "devin"
 fi
@@ -348,8 +331,6 @@ command -v gh &>/dev/null && [[ -d "$HOME/.github" ]] && link_to_native "$HOME/.
 if command -v copilot &>/dev/null || [[ -d "$HOME/.copilot" ]]; then
   link_to_native "$HOME/.copilot/skills" "copilot-cli"
 fi
-[[ -d "$HOME/.codeium/windsurf" ]] && link_to_native "$HOME/.codeium/windsurf/skills" "windsurf" || true
-[[ -d "$HOME/.codeium/windsurf-next" ]] && link_to_native "$HOME/.codeium/windsurf-next/skills" "windsurf-next" || true
 
 if [[ -z "$linked_agents" ]]; then
   echo "  – No additional agents detected, skipping"

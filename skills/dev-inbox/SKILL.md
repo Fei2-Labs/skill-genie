@@ -88,7 +88,7 @@ Detect the environment and pick the best destination. The goal is **future disco
    - Why discoverable: Agent can `gh issue list --state open --label <type>`
    - Merge logic: Search open issues with same label + similar title keywords. If found → append checklist item. If unsure → ask user.
 
-2. **Agent memory system available** (Windsurf memories, Claude memory, etc.)
+2. **Agent memory system available** (Devin memories, Claude memory, etc.)
    - Action: Write to memory with `[TODO]` prefix and type/priority metadata
    - Why discoverable: Automatically loaded on next session start
 
