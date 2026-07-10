@@ -98,7 +98,7 @@ Custom agents from `agents/` are linked to `~/.codex/agents/` when present.
 
 Detected if `opencode` is in PATH or `~/.config/opencode/` exists. Skills to `~/.config/opencode/skills/` and the shared `~/.agents/skills/` root.
 
-### Devin CLI
+### Devin (CLI + Desktop)
 
 Detected if `devin` is in PATH or `~/.config/devin/` exists. Skills to `~/.config/devin/skills/`; Devin also detects repo-local `.agents/skills/` files.
 
