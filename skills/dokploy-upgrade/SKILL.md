@@ -2,7 +2,7 @@
 name: "dokploy-upgrade"
 description: "Upgrade Dokploy on a VPS running Docker Swarm. Covers version check, breaking-change review, pre-flight health checks, the official install.sh update path, host-mode port conflict handling, and post-upgrade verification. Use when the user asks to upgrade/update Dokploy on any fleet host."
 license: "MIT"
-metadata: {"version":"1.0.0","category":"infrastructure","license":"MIT","tags":["infrastructure","dokploy","docker-swarm","devops","upgrade"],"hermes":{"tags":["infrastructure","dokploy","docker-swarm","devops","upgrade"]}}
+metadata: {"version":"1.1.0","category":"infrastructure","license":"MIT","tags":["infrastructure","dokploy","docker-swarm","devops","upgrade"],"hermes":{"tags":["infrastructure","dokploy","docker-swarm","devops","upgrade"]}}
 ---
 
 # Dokploy Upgrade
@@ -19,7 +19,8 @@ Upgrade a Dokploy PaaS instance running in Docker Swarm on a VPS.
 ## Required Inputs
 
 - SSH alias for the target host (e.g. `shuttleup`, `otamatone`)
-- Optional: specific target version (defaults to latest release)
+- Optional: specific target version. Resolve and pin a release tag before updating;
+  do not use the mutable `latest` image tag for a production upgrade.
 
 ## Procedure
 
@@ -43,8 +44,8 @@ Compare current vs latest. If already latest, stop and report.
 
 ### 3. Review breaking changes
 
-If it's a minor/major version jump (e.g. 0.28 → 0.29), fetch the release notes
-for the target version and the intermediate minor versions. Look for:
+Fetch the release notes for every release between the installed and target
+versions, including patch releases. Look for:
 - Database migrations
 - Breaking config changes
 - Required manual steps
@@ -57,8 +58,13 @@ Report any concerns to the user before proceeding.
 ssh <host> "docker service ls --format '{{.Name}}\t{{.Replicas}}\t{{.Image}}'"
 ```
 
-All services must show `1/1` (or expected replica count). Do not proceed if
-any service is unhealthy.
+Every service's running replica count must equal its desired replica count.
+Do not assume `1/1`: applications can intentionally use more replicas. Stop
+if this command prints a service:
+
+```bash
+ssh <host> "docker service ls --format '{{.Name}} {{.Replicas}}' | awk '{split(\$2, replicas, \"/\"); if (replicas[1] != replicas[2]) print}'"
+```
 
 Also check node availability:
 
@@ -66,21 +72,33 @@ Also check node availability:
 ssh <host> "docker node ls --format '{{.Hostname}}\t{{.Status}}\t{{.Availability}}'"
 ```
 
-### 5. Run the upgrade
-
-**To latest:**
+Check that the control-plane replacement has adequate local headroom:
 
 ```bash
-ssh <host> "curl -sSL https://dokploy.com/install.sh | sh -s update"
+ssh <host> "df -h /; free -h; swapon --show"
+```
+
+Record the current Dokploy image tag before continuing. It is the rollback
+target.
+
+### 5. Run the upgrade
+
+**To latest (only when an exact release tag is not required):**
+
+```bash
+ssh <host> "curl --fail --silent --show-error --location https://dokploy.com/install.sh | sh -s update"
 ```
 
 **To a specific version:**
 
 ```bash
-ssh <host> "export DOKPLOY_VERSION=v0.29.11 && curl -sSL https://dokploy.com/install.sh | sh -s update"
+ssh <host> "export DOKPLOY_VERSION=<target-version> && curl --fail --silent --show-error --location https://dokploy.com/install.sh | sh -s update"
 ```
 
-The script pulls the new image and runs `docker service update --image ...`.
+Use the specific-version form for production. The script pulls the new image
+and runs `docker service update --image ...`.
+It can return before the replacement task is fully running, so it is not the
+completion signal.
 
 ### 6. Handle "host-mode port already in use"
 
@@ -94,7 +112,8 @@ overall progress: 0 out of 1 tasks
 ```
 
 **This is normal.** The old container eventually releases the port and the new
-one starts. Wait for the command to complete — do not interrupt.
+one starts. Wait for the command to complete, then poll for task convergence —
+do not treat the command return as proof of a healthy upgrade.
 
 If it genuinely stalls (more than ~2 minutes of the same message), check:
 
@@ -109,27 +128,31 @@ ssh <host> "docker service inspect dokploy --format '{{.UpdateStatus.State}} {{.
 ### 7. Post-upgrade verification
 
 ```bash
-# Image updated
-ssh <host> "docker service inspect dokploy --format '{{.Spec.TaskTemplate.ContainerSpec.Image}}'"
+# Wait up to two minutes for the exact image and a running Dokploy task.
+ssh <host> '
+  set -e
+  for attempt in $(seq 1 24); do
+    image=$(docker service inspect dokploy --format "{{.Spec.TaskTemplate.ContainerSpec.Image}}")
+    replicas=$(docker service ls --format "{{.Name}} {{.Replicas}}" | sed -n "s/^dokploy //p")
+    state=$(docker service ps dokploy --no-trunc --format "{{.CurrentState}}" | head -1)
+    if [ "$image" = "dokploy/dokploy:<target-version>" ] && [ "$replicas" = "1/1" ] && printf "%s" "$state" | grep -q "^Running"; then
+      exit 0
+    fi
+    sleep 5
+  done
+  echo "Dokploy did not converge within two minutes" >&2
+  exit 1
+'
 
-# Service healthy
-ssh <host> "docker service ls --format '{{.Name}}\t{{.Replicas}}\t{{.Image}}' | grep dokploy"
-
-# Container running and healthy
-ssh <host> "docker ps --format '{{.Names}}\t{{.Image}}\t{{.Status}}' | grep dokploy"
-
-# Update status
-ssh <host> "docker service inspect dokploy --format '{{.UpdateStatus.State}} {{.UpdateStatus.Message}}'"
-
-# UI reachable (Dokploy runs on :3000)
-ssh <host> "curl -sS -o /dev/null -w '%{http_code}' http://localhost:3000"
-
-# All other services still healthy
-ssh <host> "docker service ls --format '{{.Name}}\t{{.Replicas}}\t{{.Image}}'"
+# Verify the panel and every Swarm service.
+ssh <host> "curl --fail --silent --show-error --max-time 10 --output /dev/null http://127.0.0.1:3000/"
+ssh <host> "docker service ls --format '{{.Name}} {{.Replicas}}' | awk '{split(\$2, replicas, \"/\"); if (replicas[1] != replicas[2]) print}'"
 ```
 
-Expected: image tag matches target version, container `Up (healthy)`, update
-status `completed`, UI returns `200`, all services `1/1`.
+Expected: the exact image tag is running, the Dokploy task is `Running`, the
+panel returns HTTP `200`, and the final service-convergence command prints
+nothing. Do not require Docker's `healthy` state: Dokploy may not define a
+container healthcheck.
 
 ### 8. Update host documentation
 
@@ -146,10 +169,13 @@ Commit the change.
 If the upgrade fails and Dokploy is broken:
 
 ```bash
-ssh <host> "export DOKPLOY_VERSION=<old-version> && curl -sSL https://dokploy.com/install.sh | sh -s update"
+ssh <host> "export DOKPLOY_VERSION=<old-version> && curl --fail --silent --show-error --location https://dokploy.com/install.sh | sh -s update"
 ```
 
-This re-pulls the old image and rolls the service back.
+Use the same `--fail --silent --show-error --location` curl options as the
+upgrade. Then rerun the full post-upgrade convergence and HTTP checks with
+`<old-version>` as the target. This re-pulls the old image and rolls the
+service back only after the old control plane has been verified.
 
 ## Notes
 
