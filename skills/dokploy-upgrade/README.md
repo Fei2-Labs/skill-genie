@@ -4,7 +4,7 @@ Upgrade Dokploy on a VPS running Docker Swarm.
 
 ## What it does
 
-`dokploy-upgrade` upgrades a Dokploy PaaS instance running in Docker Swarm via the official `install.sh` update path, with pre-flight health checks, breaking-change review, host-mode port conflict handling, and post-upgrade verification.
+`dokploy-upgrade` upgrades a Dokploy PaaS instance running in Docker Swarm via the official `install.sh` update path, with release-note review, resource and Swarm pre-flight checks, host-mode port conflict handling, and verified convergence.
 
 ## When to use
 
@@ -16,10 +16,10 @@ Upgrade Dokploy on a VPS running Docker Swarm.
 
 - Current version detection via `docker service inspect`
 - Latest version check against GitHub releases
-- Breaking-change review for minor/major version jumps
-- Pre-flight health check (all Swarm services must be healthy)
-- Official `install.sh` update path (supports pinning a specific version)
+- Release-note review for every version crossed
+- Pre-flight health and resource checks (disk, memory, swap, and Swarm convergence)
+- Official `install.sh` update path with a pinned target version and HTTP-failure-safe download
 - Handling of the `host-mode port already in use` Swarm update behavior
-- Post-upgrade verification (image, container health, UI HTTP 200, all services)
-- Rollback procedure via version pinning
+- Post-upgrade polling for the exact image, a running Swarm task, UI HTTP 200, and all services converged
+- Rollback procedure via version pinning and the same verification gate
 - Host documentation update step
