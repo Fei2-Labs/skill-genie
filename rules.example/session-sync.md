@@ -2,6 +2,13 @@
 
 Rules for how sessions start: reading project files, checking git upstream, handling handoffs.
 
+- At the start of every session, read the machine-wide private memory index when
+  it exists:
+  ```bash
+  [ -f ~/.shared-memory/global/MEMORY.md ] && cat ~/.shared-memory/global/MEMORY.md
+  ```
+  Load an individual global memory only when its index description is relevant
+  to the task.
 - At the start of every session in a git repository, enable real-time worktree
   memory when the shared-memory skill is installed:
   ```bash
