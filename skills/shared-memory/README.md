@@ -25,8 +25,11 @@ This lets Claude Code, Codex, Kiro, Devin, and other agents share both:
 
 - Shared in repo (git-tracked): `.agents/memory/`
 - Private local layer (not in git): `~/.shared-memory/<project-slug>/`
+- Global private layer (not in git): `~/.shared-memory/global/`
 
 Use this for decisions, conventions, glossary, user preferences (private), etc.
+The global index is read at session start; project-specific files remain
+on-demand to keep context bounded.
 
 ### B) Real-time worktree layer
 

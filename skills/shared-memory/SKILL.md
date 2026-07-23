@@ -3,7 +3,7 @@ name: "shared-memory"
 description: "Read and write shared state for ANY AI agent with a dual-layer model: durable cross-agent knowledge (`.agents/memory` + optional private local layer) and real-time cross-worktree runtime memory (`.trellis/shared` symlinked to `<git-common-dir>/trellis-shared`). Use for project memory, handoffs, and multi-worktree coordination."
 license: "MIT"
 allowed-tools: "Bash, Read, Write, Edit, Glob, Grep"
-metadata: {"version":"1.1.1","category":"cross-agent-coordination","triggers":["save to shared memory","remember this for all agents","shared memory","cross-agent memory","worktree shared memory","cross-worktree handoff","agent shared state"],"license":"MIT","tags":["shared-memory","cross-agent-coordination","project-memory","worktree","handoff"],"hermes":{"tags":["shared-memory","cross-agent-coordination","project-memory","worktree","handoff"]}}
+metadata: {"version":"1.1.2","category":"cross-agent-coordination","triggers":["save to shared memory","remember this for all agents","shared memory","global memory","cross-agent memory","worktree shared memory","cross-worktree handoff","agent shared state"],"license":"MIT","tags":["shared-memory","cross-agent-coordination","project-memory","worktree","handoff"],"hermes":{"tags":["shared-memory","cross-agent-coordination","project-memory","worktree","handoff"]}}
 ---
 
 # Shared Memory — durable knowledge + real-time worktree state
@@ -16,6 +16,13 @@ Use one skill for two different concerns:
 Keep these concerns separate in storage and mutation rules.
 
 ## Layer model
+
+### Layer K0: global private memory (machine-wide)
+
+- Path: `~/.shared-memory/global/`
+- Purpose: reusable operating preferences and lessons that apply across projects
+- Format: markdown files + `MEMORY.md` index
+- Read its index at the start of every session; load entries on demand
 
 ### Layer K1: shared durable knowledge (git-tracked)
 
@@ -46,9 +53,11 @@ REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 SLUG="$(basename "$REPO_ROOT" | tr '[:upper:]' '[:lower:]')"
 
 # Durable layers
+K0="$HOME/.shared-memory/global"
 K1="$REPO_ROOT/.agents/memory"
 K2="$HOME/.shared-memory/$SLUG"
 
+[ -f "$K0/MEMORY.md" ] && cat "$K0/MEMORY.md"
 [ -f "$K1/MEMORY.md" ] && cat "$K1/MEMORY.md"
 [ -f "$K2/MEMORY.md" ] && cat "$K2/MEMORY.md"
 
@@ -61,6 +70,7 @@ Read indexes first, then load specific files on demand.
 ## Operation 2 — Write durable memory (K1/K2)
 
 Classify each write as:
+- `global` -> K0 (`~/.shared-memory/global`) for machine-wide private lessons
 - `shared` -> K1 (`.agents/memory`) and enters git
 - `private` -> K2 (`~/.shared-memory/<slug>`) and stays local
 
