@@ -3,7 +3,7 @@ name: "shared-memory"
 description: "Read and write shared state for ANY AI agent with a dual-layer model: durable cross-agent knowledge (`.agents/memory` + optional private local layer) and real-time cross-worktree runtime memory (`.trellis/shared` symlinked to `<git-common-dir>/trellis-shared`). Use for project memory, handoffs, and multi-worktree coordination."
 license: "MIT"
 allowed-tools: "Bash, Read, Write, Edit, Glob, Grep"
-metadata: {"version":"1.1.0","category":"cross-agent-coordination","triggers":["save to shared memory","remember this for all agents","shared memory","cross-agent memory","worktree shared memory","cross-worktree handoff","agent shared state"],"license":"MIT","tags":["shared-memory","cross-agent-coordination","project-memory","worktree","handoff"],"hermes":{"tags":["shared-memory","cross-agent-coordination","project-memory","worktree","handoff"]}}
+metadata: {"version":"1.1.1","category":"cross-agent-coordination","triggers":["save to shared memory","remember this for all agents","shared memory","cross-agent memory","worktree shared memory","cross-worktree handoff","agent shared state"],"license":"MIT","tags":["shared-memory","cross-agent-coordination","project-memory","worktree","handoff"],"hermes":{"tags":["shared-memory","cross-agent-coordination","project-memory","worktree","handoff"]}}
 ---
 
 # Shared Memory — durable knowledge + real-time worktree state
@@ -100,6 +100,10 @@ Also ensure `.gitignore` has:
 ```gitignore
 .trellis/shared
 ```
+
+Install the Skill Genie session-start rules so every new agent session runs the
+idempotent linker before it reads handoffs. Merely installing this skill does
+not make a client invoke it automatically.
 
 ## Operation 4 — Write runtime state (R)
 

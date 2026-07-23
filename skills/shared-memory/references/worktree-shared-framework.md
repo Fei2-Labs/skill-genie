@@ -56,6 +56,8 @@ Do not replace committed specs/tasks with runtime files.
    .trellis/shared
    ```
 4. Test in another worktree by creating a file under `.trellis/shared/handoffs/` and reading it from sibling worktree.
+5. Install a session-start rule that runs the linker in each new agent session.
+   The link is per worktree, while the runtime root is shared per repository.
 
 ## Security notes
 

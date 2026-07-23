@@ -9,6 +9,7 @@ AGENTS_DEST="$HOME/.agents/agents"
 KIRO_DIR="$HOME/.kiro/steering"
 CLAUDE_FILE="$HOME/.claude/CLAUDE.md"
 CODEX_FILE="$HOME/.codex/AGENTS.md"
+COPILOT_FILE="$HOME/.copilot/copilot-instructions.md"
 SKILLGENIE_BIN_PATH=""
 
 FULL=false
@@ -201,6 +202,14 @@ if command -v codex &>/dev/null || [[ -d "$HOME/.codex" ]]; then
   mkdir -p "$(dirname "$CODEX_FILE")"
   ln -sf "$RULES_DIR/router.md" "$CODEX_FILE"
   echo "  ✓ Codex: $CODEX_FILE"
+fi
+
+# ── 4. GitHub Copilot: symlink router rules ──────────────────────────────────
+if command -v copilot &>/dev/null || [[ -d "$HOME/.copilot" ]]; then
+  echo "→ Setting up GitHub Copilot rules..."
+  mkdir -p "$(dirname "$COPILOT_FILE")"
+  ln -sf "$RULES_DIR/router.md" "$COPILOT_FILE"
+  echo "  ✓ GitHub Copilot: $COPILOT_FILE"
 fi
 
 fi # end !SKILLS_ONLY
