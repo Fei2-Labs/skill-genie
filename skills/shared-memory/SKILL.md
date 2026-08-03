@@ -3,7 +3,7 @@ name: "shared-memory"
 description: "Read and write shared state for ANY AI agent with a dual-layer model: durable cross-agent knowledge (`.agents/memory` + optional private local layer) and real-time cross-worktree runtime memory (`.trellis/shared` symlinked to `<git-common-dir>/trellis-shared`). Use for project memory, handoffs, and multi-worktree coordination."
 license: "MIT"
 allowed-tools: "Bash, Read, Write, Edit, Glob, Grep"
-metadata: {"version":"1.1.2","category":"cross-agent-coordination","triggers":["save to shared memory","remember this for all agents","shared memory","global memory","cross-agent memory","worktree shared memory","cross-worktree handoff","agent shared state"],"license":"MIT","tags":["shared-memory","cross-agent-coordination","project-memory","worktree","handoff"],"hermes":{"tags":["shared-memory","cross-agent-coordination","project-memory","worktree","handoff"]}}
+metadata: {"version":"1.1.3","category":"cross-agent-coordination","triggers":["save to shared memory","remember this for all agents","shared memory","global memory","cross-agent memory","worktree shared memory","cross-worktree handoff","agent shared state"],"license":"MIT","tags":["shared-memory","cross-agent-coordination","project-memory","worktree","handoff"],"hermes":{"tags":["shared-memory","cross-agent-coordination","project-memory","worktree","handoff"]}}
 ---
 
 # Shared Memory — durable knowledge + real-time worktree state
@@ -101,6 +101,8 @@ bash skills/shared-memory/templates/link_shared_memory.sh
 Script contract:
 - Resolves absolute git common dir
 - Creates `trellis-shared/{handoffs,knowledge,agents,events}`
+- Migrates pre-existing branch-local handoffs on first setup when the shared
+  handoff directory is empty
 - Creates `.trellis/shared` symlink if missing
 - Fails loudly on conflicting existing path
 - Never `rm -rf` user content implicitly
