@@ -3,7 +3,7 @@ name: "handoff-receiver"
 description: "Receive a prior session handoff and continue execution safely by validating repo state, resuming from next steps, and refreshing the handoff artifact."
 license: "MIT"
 allowed-tools: "Bash, Read, Write, Glob, Grep"
-metadata: {"version":"1.3.2","category":"session-memory","triggers":["take over this handoff","continue from handoff","resume from handoff","pick this up from previous session","handoff receiver"],"license":"MIT","tags":["session-memory","handoff","continuation","workflow"],"hermes":{"tags":["session-memory","handoff","continuation","workflow"]}}
+metadata: {"version":"1.3.3","category":"session-memory","triggers":["take over this handoff","continue from handoff","resume from handoff","pick this up from previous session","handoff receiver"],"license":"MIT","tags":["session-memory","handoff","continuation","workflow"],"hermes":{"tags":["session-memory","handoff","continuation","workflow"]}}
 ---
 
 # Handoff Receiver
@@ -14,14 +14,18 @@ Goal: continue delivery with minimal drift, no scope expansion, and clear state 
 
 ## Step 1: Locate the active handoff and index
 
-1. Prefer `.trellis/handoffs/CURRENT` when present.
-2. Otherwise use `docs/handoffs/CURRENT` when present.
-3. Otherwise use `CURRENT` in project root.
-4. Read the matching `INDEX.md` in the same handoff directory.
-5. Only if no pointer exists, fall back to the latest legacy handoff file.
+1. Prefer `.trellis/shared/handoffs/CURRENT` when present.
+2. Otherwise use `.trellis/handoffs/CURRENT`.
+3. Otherwise use `docs/handoffs/CURRENT`.
+4. Otherwise use `CURRENT` in project root.
+5. Read the matching `INDEX.md` in the same handoff directory.
+6. Only if no pointer exists, fall back to the latest legacy handoff file.
 
 ```bash
-if [ -f ".trellis/handoffs/CURRENT" ]; then
+if [ -f ".trellis/shared/handoffs/CURRENT" ]; then
+  cat .trellis/shared/handoffs/CURRENT
+  echo ".trellis/shared/handoffs/INDEX.md"
+elif [ -f ".trellis/handoffs/CURRENT" ]; then
   cat .trellis/handoffs/CURRENT
   echo ".trellis/handoffs/INDEX.md"
 elif [ -f "docs/handoffs/CURRENT" ]; then
