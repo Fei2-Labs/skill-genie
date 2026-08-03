@@ -1,10 +1,10 @@
 ---
 name: "dev-inbox"
-description: "Triage and route anything that comes up during a session — bugs, ideas, improvements, small fixes — to the right place. Use when the user or you notice something that may not belong to the current task."
+description: "Triage and persist work outside the explicit active objective. Use at message intake when a message contains multiple requests, an item is unrelated or deferred, the user asks to remember, track, log, or handle something later, or invokes dev-inbox. After resume or context compaction, audit requested-but-unrecorded items before continuing."
 license: "MIT"
 argument-hint: "Describe the problem, idea, or improvement"
 allowed-tools: "Bash, Read, Write, Grep, Glob"
-metadata: {"version":"1.0.2","category":"workflow","triggers":["记一下","记下来","以后再说","这个先不管","open an issue","log this","track this","dev inbox","inbox","/dev-inbox"],"license":"MIT","tags":["workflow","task-triage","issue-tracking","session-management"],"hermes":{"tags":["workflow","task-triage","issue-tracking","session-management"]}}
+metadata: {"version":"1.0.3","category":"workflow","triggers":["记一下","记下来","以后再说","这个先不管","open an issue","log this","track this","dev inbox","inbox","/dev-inbox"],"license":"MIT","tags":["workflow","task-triage","issue-tracking","session-management"],"hermes":{"tags":["workflow","task-triage","issue-tracking","session-management"]}}
 ---
 
 # Dev Inbox
@@ -15,10 +15,18 @@ This skill works in any context: software development, writing, design, or any t
 
 ---
 
-## When to Activate
+## Intake Gate
 
-- **Proactive**: You notice the user said something unrelated to the current task (a bug, idea, improvement, or tangent). Intervene immediately with a suggestion.
-- **Reactive**: The user explicitly says "记一下", "log this", "open an issue", "以后再说", "track this", or invokes `dev-inbox`.
+Run this gate before acting on every multi-request message:
+
+1. Identify the explicit active objective from the active task artifact or the user's latest scoped instruction.
+2. Split every bullet, sentence-level request, and aside into atomic items.
+3. Classify each item as active-objective work, a blocking prerequisite, or unrelated/deferred inbox work.
+4. Route explicit inbox items before returning to active-objective work.
+
+Conversation history, open files, and `git diff` are context, not proof that an item belongs to the active objective. Mere presence in the current conversation does not make a topic current-task work.
+
+After a resume, handoff, or context compaction, audit the recovered context for any explicit recording request that lacks a confirmed destination. Persist it before continuing the active objective.
 
 ---
 
@@ -28,7 +36,7 @@ This skill works in any context: software development, writing, design, or any t
 User says something
 │
 ├─ Is it part of the current task?
-│   (Current task = current conversation + open files + git diff)
+│   (Current task = active task artifact or latest explicitly scoped objective)
 │   ├─ YES → Do it directly. Stop here.
 │   └─ NO ↓
 │
@@ -63,6 +71,19 @@ Priority: `high` / `normal` / `low`
 
 ## Interaction Pattern
 
+### Explicit request
+
+Treat an explicit request to record or defer an item as consent. This includes phrases such as "记一下", "以后再说", "log this", "track this", and direct `dev-inbox` invocation.
+
+1. Classify the item.
+2. Check for an existing related record.
+3. Persist or merge it without asking for confirmation again.
+4. Report the record location, then return to the active objective.
+
+Ask one focused question only when deduplication is genuinely ambiguous.
+
+### Proactive inference
+
 When you identify something that doesn't belong to the current task, respond with a **concrete suggestion** — not an open question:
 
 > This doesn't seem related to the current task. I suggest recording it as:
@@ -73,6 +94,27 @@ When you identify something that doesn't belong to the current task, respond wit
 > Confirm?
 
 The user responds with one word (yes/no/adjust). Then execute.
+
+---
+
+## Regression Examples
+
+### Multi-topic explicit request
+
+User:
+
+> 继续修 Browser UI。另外打开会话特别慢，用 Dev-inbox 记一下，后面再说。
+
+Expected order:
+
+1. Split the Browser UI work and session-opening performance problem into separate items.
+2. Deduplicate and persist the performance item first because the user explicitly requested recording.
+3. Report where it was recorded.
+4. Return to the Browser UI objective.
+
+### Resume recovery
+
+If a resume summary says the user requested an item be recorded but no destination or confirmation exists, treat it as unresolved. Deduplicate and persist it before resuming the active objective.
 
 ---
 
@@ -210,9 +252,12 @@ Create it at: [repo URL]/issues/new
 
 - Do not interrupt the user's flow with long explanations. Keep triage to 2–3 lines.
 - Do not ask open-ended questions like "What do you want to do with this?" — propose a concrete action.
+- Do not ask for confirmation after an explicit recording or deferral request; the request is consent.
 - Do not create records that can't be found later. Always state the discovery path.
 - Do not duplicate: always check for existing related records first.
 - Do not use this skill for things that ARE part of the current task — just do them.
+- Do not treat every topic in the conversation, open files, or `git diff` as part of the active objective.
+- Do not resume active work while a recovered explicit recording request remains unresolved.
 - Do not generate a file and leave it disconnected. The record must be in a system the agent will check.
 
 ---
