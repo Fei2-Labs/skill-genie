@@ -6,8 +6,14 @@ Usage:
   skillgenie list
   skillgenie read <skill>
   skillgenie status
+  skillgenie doctor [--fix] [--prune]
   skillgenie install <skill>|--all [--claude|-cc] [--openclaw|-oc] [--hermes] [--opencode] [--global|-g] [--dry-run]
   skillgenie update  <skill>|--all [--claude|-cc] [--openclaw|-oc] [--hermes] [--opencode] [--global|-g] [--dry-run]
+
+Note:
+  install/update/sync refuse to run from a linked git worktree — symlinks into a
+  worktree break the moment it is deleted, silently disabling the skill. Always
+  install from the main checkout, and run `skillgenie doctor --fix` to repair.
 
 Targets:
   --claude / -cc     Install into Claude Code  (~/.claude/skills/)
@@ -85,6 +91,44 @@ def warn(msg): print(f"  {YELLOW}⚠{RESET} {msg}")
 def err(msg):  print(f"  {RED}✗{RESET} {msg}", file=sys.stderr)
 def info(msg): print(f"  {CYAN}→{RESET} {msg}")
 def dry(msg):  print(f"  {DIM}[dry-run]{RESET} {msg}")
+
+
+def worktree_info() -> tuple[bool, Path | None]:
+    """Detect whether this checkout is a linked git worktree.
+
+    Returns (is_linked_worktree, main_checkout_path).
+    Installing from a worktree is forbidden: symlinks would break the moment the
+    worktree is removed, silently disabling every skill installed from it.
+    """
+    repo = REPO_ROOT.parent
+    try:
+        git_dir = subprocess.run(
+            ["git", "-C", str(repo), "rev-parse", "--absolute-git-dir"],
+            capture_output=True, text=True, check=True,
+        ).stdout.strip()
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return False, None
+    if "/worktrees/" not in git_dir:
+        return False, None
+    main_git_dir = Path(git_dir.split("/worktrees/")[0])
+    return True, main_git_dir.parent
+
+
+def guard_not_worktree(command: str):
+    """Abort if skills would be installed from a linked git worktree."""
+    is_worktree, main_checkout = worktree_info()
+    if not is_worktree:
+        return
+    err(f"Refusing to {command}: this checkout is a linked git worktree.")
+    print(f"    worktree: {REPO_ROOT.parent}")
+    print(
+        "    Skills installed from a worktree become broken symlinks as soon as "
+        "the worktree is removed."
+    )
+    if main_checkout:
+        print(f"    Run this from the main checkout instead: {main_checkout}")
+    print(f"    Then run: skillgenie doctor --fix")
+    sys.exit(1)
 
 
 def parse_frontmatter(skill_md: Path) -> dict:
@@ -319,6 +363,7 @@ def install_skill(skill: str, targets: list[str], is_dry: bool) -> bool:
 
 
 def cmd_install(args):
+    guard_not_worktree("install skills")
     targets  = resolve_targets(args)
     is_dry   = args.dry_run
     is_all   = args.all
@@ -355,6 +400,148 @@ def cmd_install(args):
 def cmd_update(args):
     args._update = True
     cmd_install(args)
+
+
+# ── doctor (health check for installed skill links) ───────────────────────────
+
+def diagnose_entry(entry: Path) -> tuple[str, str] | None:
+    """Classify one installed skill entry.
+
+    Returns (severity, reason) or None when healthy.
+    severity is "broken" (fixable/removable) or "stale" (works, but wrong source).
+    """
+    name = entry.name
+    canonical = REPO_ROOT / name
+
+    if entry.is_symlink():
+        target = Path(os.readlink(entry))
+        if not entry.exists():
+            if "/worktrees/" in str(target) or "copilot-worktrees" in str(target):
+                return "broken", f"dangling link into a removed worktree: {target}"
+            return "broken", f"dangling link: {target}"
+        resolved = entry.resolve()
+        if canonical.exists() and resolved != canonical.resolve():
+            if "worktree" in str(resolved):
+                return "stale", f"points at a worktree instead of the main repo: {resolved}"
+            return None
+        return None
+
+    if entry.is_dir():
+        if (entry / "SKILL.md").exists():
+            return None
+        # Namespace/category folders group nested skills and have no SKILL.md
+        if (entry / "DESCRIPTION.md").exists() or any(entry.glob("*/SKILL.md")):
+            return None
+        return "broken", "directory has no SKILL.md"
+
+    return "broken", "not a skill directory or symlink"
+
+
+def remote_skill_names() -> set[str]:
+    """Skill names declared in skills.yaml remotes — repaired by 'sync', not 'doctor --fix'."""
+    if not MANIFEST_PATH.exists():
+        return set()
+    try:
+        import yaml
+    except ImportError:
+        return set()
+    try:
+        data = yaml.safe_load(MANIFEST_PATH.read_text()) or {}
+    except Exception:
+        return set()
+    names = set()
+    for entry in data.get("remote", []) or []:
+        for picked in entry.get("pick", []) or []:
+            names.add(Path(str(picked)).name)
+    return names
+
+
+def cmd_doctor(args):
+    is_fix = args.fix
+    is_dry = args.dry_run
+    available = set(all_skills())
+    remotes = remote_skill_names()
+
+    is_worktree, main_checkout = worktree_info()
+    print(f"\n{BOLD}Skill install health{RESET}\n")
+    if is_worktree:
+        warn(f"This checkout is a linked git worktree ({REPO_ROOT.parent})")
+        if main_checkout:
+            print(f"    Skills should be installed from: {main_checkout}")
+
+    problems = 0
+    fixed = 0
+    removed = 0
+
+    for target, (label, base, mode) in TARGETS.items():
+        if not base.exists():
+            continue
+        entries = sorted(p for p in base.iterdir() if not p.name.startswith("."))
+        issues = []
+        for entry in entries:
+            verdict = diagnose_entry(entry)
+            if verdict:
+                issues.append((entry, *verdict))
+        if not issues:
+            continue
+
+        print(f"  {BOLD}{label}{RESET} {DIM}({base}){RESET}")
+        for entry, severity, reason in issues:
+            problems += 1
+            color = RED if severity == "broken" else YELLOW
+            source = ""
+            if entry.name in available:
+                source = f" {DIM}[in ./skills/]{RESET}"
+            elif entry.name in remotes:
+                source = f" {DIM}[skills.yaml remote]{RESET}"
+            print(f"    {color}{entry.name}{RESET} — {reason}{source}")
+
+            if not is_fix:
+                continue
+            if entry.name in available:
+                action = f"relink → {REPO_ROOT / entry.name}"
+                if is_dry:
+                    dry(f"{entry.name}: {action}")
+                else:
+                    try:
+                        remove_existing(entry)
+                        if mode == "copy":
+                            shutil.copytree(REPO_ROOT / entry.name, entry, symlinks=True)
+                        else:
+                            entry.symlink_to(REPO_ROOT / entry.name)
+                        ok(f"{entry.name}: {action}")
+                        fixed += 1
+                    except Exception as e:
+                        err(f"{entry.name}: {e}")
+            elif entry.name in remotes:
+                info(f"{entry.name}: third-party skill — run 'skillgenie sync' to restore")
+            elif severity == "broken":
+                if not args.prune:
+                    info(f"{entry.name}: not in ./skills/ — rerun with --prune to remove")
+                elif is_dry:
+                    dry(f"{entry.name}: remove dangling entry")
+                else:
+                    try:
+                        remove_existing(entry)
+                        ok(f"{entry.name}: removed")
+                        removed += 1
+                    except Exception as e:
+                        err(f"{entry.name}: {e}")
+        print()
+
+    if problems == 0:
+        ok("All installed skills resolve correctly")
+        return
+
+    print(f"  {BOLD}{problems}{RESET} problem(s) found")
+    if is_fix:
+        print(f"  {GREEN}{fixed}{RESET} relinked, {GREEN}{removed}{RESET} removed")
+        if not is_dry and (fixed or removed):
+            info("Restart your agent session so it reloads the skill list")
+    else:
+        info("Rerun with --fix to relink, add --prune to drop unknown dangling entries")
+    if not is_fix:
+        sys.exit(1)
 
 
 # ── sync (remote repos from skills.yaml) ──────────────────────────────────────
@@ -465,6 +652,7 @@ def install_remote_skill(skill_name, src_path, targets, is_dry, copy_mode):
 
 
 def cmd_sync(args):
+    guard_not_worktree("sync skills")
     if not MANIFEST_PATH.exists():
         err(f"Manifest not found: {MANIFEST_PATH}")
         err("Create one from skills.yaml.example: cp skills.yaml.example skills.yaml")
@@ -528,6 +716,9 @@ commands:
   list        List every skill folder in ./skills/ with its description.
   read        Print a skill's full SKILL.md (from repo or ~/.agents/skills/).
   status      Show an install matrix: which runtime has which skill installed.
+  doctor      Check every runtime dir for broken/dangling skill links and repair
+              them (--fix). A dangling link makes the skill invisible to the
+              agent, so it silently never triggers.
   validate    Check SKILL.md frontmatter for cross-agent compatibility.
               Run this before committing skill changes.
   install     Copy/symlink a skill into one or more runtime skill directories.
@@ -562,6 +753,9 @@ examples:
   skillgenie list
   skillgenie read research-to-wechat
   skillgenie status
+  skillgenie doctor                 # report broken skill links
+  skillgenie doctor --fix           # relink them to ./skills/<name>/
+  skillgenie doctor --fix --prune   # also drop links to skills no longer in repo
   skillgenie validate
   skillgenie validate close-loop
   skillgenie install research-to-wechat
@@ -666,6 +860,26 @@ tip: for a full environment refresh (rules + skills + agents) run ./setup.sh
     )
     add_target_flags(p_update)
 
+    # doctor
+    p_doctor = sub.add_parser(
+        "doctor",
+        help="Check installed skill links for breakage and repair them.",
+        description="Scan every runtime skill directory for entries that no longer "
+                    "resolve — dangling symlinks (typically left behind when the git "
+                    "worktree they were installed from was deleted), directories "
+                    "missing SKILL.md, and links pointing at a worktree instead of the "
+                    "main checkout. A broken entry is invisible to the agent, so the "
+                    "skill silently never triggers. Use --fix to relink them at "
+                    "./skills/<name>/, and --prune to drop dangling entries that no "
+                    "longer exist in this repo.",
+    )
+    p_doctor.add_argument("--fix", action="store_true",
+                          help="Repair problems by relinking to ./skills/<name>/")
+    p_doctor.add_argument("--prune", action="store_true",
+                          help="With --fix, also delete dangling entries not present in ./skills/")
+    p_doctor.add_argument("--dry-run", action="store_true",
+                          help="Show what --fix/--prune would do without writing anything")
+
     # sync
     p_sync = sub.add_parser(
         "sync",
@@ -695,6 +909,7 @@ tip: for a full environment refresh (rules + skills + agents) run ./setup.sh
         "read":    cmd_read,
         "validate": cmd_validate,
         "status":  cmd_status,
+        "doctor":  cmd_doctor,
         "install": cmd_install,
         "update":  cmd_update,
         "sync":    cmd_sync,

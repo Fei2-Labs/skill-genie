@@ -386,6 +386,14 @@ fi
 echo ""
 echo "✅ Done. All rules and skills are in place."
 
+# ── 6b. Health check ──────────────────────────────────────────────────────────
+# A dangling skill link is invisible to the agent — the skill silently never
+# triggers. Surface it here rather than letting it rot.
+echo ""
+echo "→ Checking skill link health..."
+"$DOTFILES_DIR/skillgenie" doctor || \
+  echo "  ⚠ Run 'skillgenie doctor --fix' to repair the entries listed above."
+
 # ── 7. Zsh completions ────────────────────────────────────────────────────────
 if [[ -f "$DOTFILES_DIR/completions/_skillgenie" ]]; then
   mkdir -p "$HOME/.zsh/completions"

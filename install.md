@@ -147,7 +147,16 @@ skillgenie list              # List all available skills
 skillgenie read <name>       # Print a skill's content
 skillgenie validate          # Check AgentSkills/OpenClaw/Hermes compatibility
 skillgenie status            # Show install status per runtime
+skillgenie doctor            # Report broken/dangling skill links (exit 1 if any)
+skillgenie doctor --fix      # Relink broken entries to ./skills/<name>/
 ```
+
+A dangling link is the most common cause of "this skill never triggers": the agent
+scans the skill directory, finds nothing readable, and the skill is simply absent
+from its list. This usually happens when skills were installed from a git worktree
+that was later deleted, which is why `install`/`update`/`sync` refuse to run from a
+worktree. Run `skillgenie doctor --fix` from the main checkout, then restart your
+agent session.
 
 ## Uninstall
 

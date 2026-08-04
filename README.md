@@ -64,6 +64,8 @@ skillgenie list            # List all skills in this repo
 skillgenie read <name>     # Print a skill's full instructions
 skillgenie validate        # Check AgentSkills/OpenClaw/Hermes compatibility
 skillgenie status          # Show install status per runtime
+skillgenie doctor          # Report broken/dangling skill links
+skillgenie doctor --fix    # Relink broken entries to ./skills/<name>/
 skillgenie install <name>  # Install a specific skill (local ./skills/)
 skillgenie install --all   # Install all local skills
 skillgenie update <name>   # Re-install a skill after editing it
@@ -71,6 +73,18 @@ skillgenie sync            # Pull all remote repos in skills.yaml -> ~/.agents/s
 skillgenie sync --global   # Also link synced skills into every native runtime dir
 skillgenie sync --clean    # Wipe cache and re-clone every remote repo
 ```
+
+### Always install from the main checkout
+
+`install`, `update`, and `sync` refuse to run from a linked git worktree. Skills are
+installed as symlinks, so a skill installed from a worktree silently stops existing
+the moment that worktree is deleted — the agent simply never sees it and the skill
+never triggers, with no error anywhere.
+
+If that already happened, `skillgenie doctor` finds the dangling links and
+`skillgenie doctor --fix` repoints them at `./skills/<name>/`. Add `--prune` to drop
+entries that no longer exist in this repo. Restart your agent session afterwards so
+it reloads the skill list.
 
 ## Customization
 
