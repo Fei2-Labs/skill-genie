@@ -311,6 +311,9 @@ command -v claude &>/dev/null && link_to_native "$HOME/.claude/skills" "claude" 
 if command -v kiro &>/dev/null || [[ -d "$HOME/.kiro" ]]; then
   link_to_native "$HOME/.kiro/skills" "kiro"
 fi
+if [[ -d "$HOME/.kiro/crew" ]]; then
+  link_to_native "$HOME/.kiro/crew/skills" "kirocrew"
+fi
 if command -v openclaw &>/dev/null || [[ -d "$HOME/.openclaw" ]]; then
   link_to_native "$HOME/.openclaw/skills" "openclaw"
 fi
