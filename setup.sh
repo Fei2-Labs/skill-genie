@@ -356,12 +356,62 @@ link_agent_to_native() {
   linked_agent_targets="$linked_agent_targets $agent_name"
 }
 
+# Convert MD agent to Kiro Crew JSON format
+convert_agent_to_json() {
+  local md_file="$1" json_file="$2"
+  python3 -c "
+import json, re, sys
+
+text = open(sys.argv[1]).read()
+m = re.match(r'^---\n(.*?)\n---\n?(.*)', text, re.DOTALL)
+if not m:
+    sys.exit(0)
+
+front, body = m.group(1), m.group(2).strip()
+fields = {}
+for line in front.splitlines():
+    km = re.match(r'^(\w+):\s*(.+)', line)
+    if km:
+        k, v = km.group(1), km.group(2).strip().strip('\"').strip(\"'\")
+        fields[k] = v
+
+# Map model names to Kiro Crew format
+model_map = {
+    'opus': 'claude-opus-4.6',
+    'sonnet': 'claude-sonnet-4-20250514',
+    'haiku': 'claude-haiku-4.5',
+}
+model = fields.get('model', 'claude-sonnet-4-20250514')
+model = model_map.get(model, model)
+
+agent_json = {
+    'name': fields.get('name', ''),
+    'description': fields.get('description', ''),
+    'model': model,
+    'prompt': body,
+}
+
+with open(sys.argv[2], 'w') as f:
+    json.dump(agent_json, f, indent=2, ensure_ascii=False)
+    f.write('\n')
+" "$md_file" "$json_file"
+}
+
+link_agent_to_kirocrew() {
+  local native_dir="$1" agent_name="$2"
+  mkdir -p "$native_dir"
+  # Kiro Crew reads JSON only — convert MD agent to JSON
+  convert_agent_to_json "$AGENTS_DEST/$agent_name.md" "$native_dir/$agent_name.json"
+  linked_agent_targets="$linked_agent_targets $agent_name(json)"
+}
+
 for agent_file in "$AGENTS_DEST"/*.md; do
   [[ -f "$agent_file" ]] || continue
   agent_name="$(basename "$agent_file" .md)"
   command -v claude &>/dev/null || [[ -d "$HOME/.claude" ]] && [[ "$agent_name" == "dev-inbox-planner" ]] && link_agent_to_native "$HOME/.claude/agents" "$agent_name"
   command -v codex &>/dev/null || [[ -d "$HOME/.codex" ]] && [[ "$agent_name" == "dev-inbox-planner" ]] && link_agent_to_native "$HOME/.codex/agents" "$agent_name"
   command -v kiro &>/dev/null || [[ -d "$HOME/.kiro" ]] && [[ "$agent_name" == "dev-inbox-planner" ]] && link_agent_to_native "$HOME/.kiro/agents" "$agent_name"
+  [[ -d "$HOME/.kiro/crew" ]] && head -1 "$agent_file" | grep -q '^---$' && link_agent_to_kirocrew "$HOME/.kiro/agents" "$agent_name"
   command -v copilot &>/dev/null || [[ -d "$HOME/.copilot" ]] && [[ "$agent_name" == "dev-inbox-planner" ]] && link_agent_to_native "$HOME/.copilot/agents" "$agent_name"
 done
 
