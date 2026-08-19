@@ -121,6 +121,7 @@ Rules and skills are only installed for agents detected on your machine. Rules a
 | Agent | Detection | Rules | Skills |
 |-------|-----------|-------|--------|
 | Kiro | `kiro` in PATH or `~/.kiro/` exists | `~/.kiro/steering/*.md` (all topic files) | `~/.kiro/skills/` + `~/.agents/skills/` |
+| Kiro Crew | `~/.kiro/crew/` exists | — | `~/.kiro/crew/skills/` |
 | OpenClaw | `openclaw` in PATH or `~/.openclaw/` exists | Reads linked/global rules on demand | `~/.openclaw/skills/` + `~/.agents/skills/` |
 | Hermes | `hermes` in PATH or `~/.hermes/` exists | Reads linked/global rules on demand | `~/.hermes/skills/` + `~/.agents/skills/` |
 | OpenCode | `opencode` in PATH or `~/.config/opencode/` exists | Reads project/global rules on demand | `~/.config/opencode/skills/` + `~/.agents/skills/` |

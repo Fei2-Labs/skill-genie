@@ -21,12 +21,13 @@ Targets:
   --hermes           Install into Hermes       (~/.hermes/skills/) via file copy
   --opencode         Install into OpenCode     (~/.config/opencode/skills/)
   --kiro             Install into Kiro         (~/.kiro/skills/)
+  --kirocrew         Install into Kiro Crew    (~/.kiro/crew/skills/)
   --devin            Install into Devin       (~/.config/devin/skills/)
   --global / -g      All supported targets
   (no flag)          Auto-detect: all runtimes found on this machine
 
 Install backends:
-  Claude Code, Codex, Cursor, Antigravity, Copilot, Kiro, OpenCode → symlink
+  Claude Code, Codex, Cursor, Antigravity, Copilot, Kiro, Kiro Crew, OpenCode → symlink
   OpenClaw     →  shutil.copytree  →  ~/.openclaw/skills/<skill>/
   Hermes       →  shutil.copytree  →  ~/.hermes/skills/<skill>/
   Devin        →  shutil.copytree  →  ~/.config/devin/skills/<skill>/
@@ -51,6 +52,7 @@ CLAUDE_DIR    = Path.home() / ".claude" / "skills"
 OPENCLAW_DIR  = Path.home() / ".openclaw" / "skills"
 HERMES_DIR    = Path.home() / ".hermes" / "skills"
 KIRO_SKILLS_DIR = Path.home() / ".kiro" / "skills"
+KIROCREW_DIR  = Path.home() / ".kiro" / "crew" / "skills"
 CODEX_DIR     = Path.home() / ".codex" / "skills"
 OPENCODE_DIR  = Path.home() / ".config" / "opencode" / "skills"
 DEVIN_DIR     = Path.home() / ".config" / "devin" / "skills"
@@ -67,6 +69,7 @@ TARGETS = {
     "openclaw": ("OpenClaw", OPENCLAW_DIR, "copy"),
     "hermes": ("Hermes", HERMES_DIR, "copy"),
     "kiro": ("Kiro", KIRO_SKILLS_DIR, "symlink"),
+    "kirocrew": ("Kiro Crew", KIROCREW_DIR, "symlink"),
     "codex": ("Codex", CODEX_DIR, "symlink"),
     "opencode": ("OpenCode", OPENCODE_DIR, "symlink"),
     "devin": ("Devin", DEVIN_DIR, "copy"),
@@ -180,6 +183,7 @@ def detect_targets() -> list[str]:
         "openclaw": lambda: shutil.which("openclaw") or OPENCLAW_DIR.parent.exists(),
         "hermes": lambda: shutil.which("hermes") or HERMES_DIR.parent.exists(),
         "kiro": lambda: shutil.which("kiro") or KIRO_SKILLS_DIR.parent.exists(),
+        "kirocrew": lambda: KIROCREW_DIR.parent.exists(),
         "codex": lambda: shutil.which("codex") or CODEX_DIR.parent.exists(),
         "opencode": lambda: shutil.which("opencode") or OPENCODE_DIR.parent.exists(),
         "devin": lambda: shutil.which("devin") or DEVIN_DIR.parent.exists() or (Path.home() / ".devin").exists() or (Path.home() / ".devin-next").exists(),
@@ -740,6 +744,7 @@ target flags (install / update / sync):
   --openclaw / -oc   OpenClaw                (~/.openclaw/skills/)   [copy]
   --hermes           Hermes                  (~/.hermes/skills/)     [copy]
   --kiro             Kiro                    (~/.kiro/skills/)
+  --kirocrew         Kiro Crew               (~/.kiro/crew/skills/)
   --codex            Codex                   (~/.codex/skills/)
   --opencode         OpenCode                (~/.config/opencode/skills/)
   --devin            Devin (CLI + Desktop)   (~/.config/devin/skills/) [copy]
@@ -829,6 +834,7 @@ tip: for a full environment refresh (rules + skills + agents) run ./setup.sh
         g.add_argument("--openclaw", "-oc",action="store_true", dest="openclaw", help="OpenClaw only (~/.openclaw/skills/) [copy]")
         g.add_argument("--hermes",          action="store_true", dest="hermes",   help="Hermes only (~/.hermes/skills/) [copy]")
         g.add_argument("--kiro",            action="store_true", dest="kiro",     help="Kiro only (~/.kiro/skills/)")
+        g.add_argument("--kirocrew",        action="store_true", dest="kirocrew", help="Kiro Crew only (~/.kiro/crew/skills/)")
         g.add_argument("--codex",           action="store_true", dest="codex",    help="Codex only (~/.codex/skills/)")
         g.add_argument("--opencode",        action="store_true", dest="opencode", help="OpenCode only (~/.config/opencode/skills/)")
         g.add_argument("--devin",           action="store_true", dest="devin",    help="Devin (CLI + Desktop) (~/.config/devin/skills/) [copy]")
