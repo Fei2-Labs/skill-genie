@@ -53,7 +53,7 @@ def scan_imports(path: Path, stdlib: set[str]) -> list[str]:
     if path.suffix.lower() != ".py":
         return issues
     roots = import_roots(path)
-    allowed = stdlib | {"__future__", "common"}
+    allowed = stdlib | {"__future__", "common", "jev", "run_debate"}
     bad = sorted(module for module in roots if module not in allowed)
     for module in bad:
         issues.append(f"{path}: non-stdlib import: {module}")

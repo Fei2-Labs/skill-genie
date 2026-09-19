@@ -42,3 +42,18 @@ jobs:
 
       - name: Validate output
         run: python3 scripts/validate_output.py --file logs/ci-output.md
+
+      - name: Debate divergence (Round 1 must not be uniform agreement)
+        run: python3 scripts/test_debate_divergence.py
+
+      - name: Jev fallback suite (every failure mode must degrade to baseline)
+        run: python3 scripts/test_jev_fallback.py
+
+      - name: Run debate with --jev and no key (must fall back, not fail)
+        run: |
+          python3 scripts/run_debate.py \
+            --topic "CI sanity check debate topic" \
+            --company-file config/company.yaml \
+            --output logs/ci-jev-fallback.md \
+            --jev
+          python3 scripts/validate_output.py --file logs/ci-jev-fallback.md
