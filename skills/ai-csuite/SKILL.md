@@ -20,8 +20,44 @@ This skill is operational via local scripts in `scripts/`:
 - `run_debate.py`: generates full multi-round debate + CEO decision
 - `validate_output.py`: validates required output sections and fields
 - `security_scan.py`: checks for suspicious code patterns for release safety
+- `jev.py`: optional TypeSafe judgments, inert unless `--jev` is passed
 
 No hidden network execution, no obfuscation, and no credential reads are required.
+
+## Optional Jev Judgments
+
+By default every judgment in this skill is deterministic: topic classification is
+keyword matching, consensus is a vote count, confidence is a fixed `7`, and the
+escalation rules below are documented but not checked. Passing `--jev` to
+`run_debate.py` replaces those with real judgments from TypeSafe's Jev model.
+
+```bash
+python3 scripts/run_debate.py --topic "$ARGUMENTS" --company-file config/company.yaml --output logs/latest-decision.md --jev
+```
+
+What Jev decides, in two requests:
+
+1. Topic category (`Choice` over the six decision areas).
+2. After round 1 positions exist: consensus (`Choice` over the positions actually
+   argued), reversibility (`Choice`), CEO confidence (`Score`, mapped to 0-10),
+   and the five escalation rules (one `Noul` each, run in parallel).
+
+Escalations at probability `>= 0.5` are rendered into the CEO brief risk flags
+with their probability. Tune that threshold against real decisions rather than
+treating it as a fixed rule.
+
+Requires `TYPESAFE_API_KEY` in the environment. Without `--jev` the skill never
+touches the network.
+
+Fallback is total, and the output is byte-identical to a run without `--jev`.
+A missing key, an unreachable or slow endpoint, a rejected key, a rate limit, a
+malformed body, or a well-formed answer with an out-of-range or wrong-typed value
+all degrade to the deterministic path with a warning; none of them fail the run.
+Validation is atomic — a single bad field discards the whole verdict, so a run
+never mixes judged values with static ones.
+
+`scripts/test_jev_fallback.py` exercises 25 failure modes and asserts each one
+reproduces the baseline output exactly. Run it after touching `jev.py`.
 
 ## Required Inputs
 
@@ -123,6 +159,19 @@ Always enforce:
 4. Deadlock after final round must show both sides
 5. Radical position flips must be flagged
 
+Rules 1, 2, 3, 4 and a groupthink check are evaluated automatically under `--jev`.
+Without `--jev` they are your responsibility when presenting the result.
+
+## Consensus Mechanics
+
+Each role opens with its own category-specific position, so Round 1 is genuinely
+contested rather than the same recommendation repeated. Consensus is a weighted
+pick: a role whose remit covers the category counts double. When the top two
+positions tie, the brief reports a deadlock and states that the CEO is breaking
+the tie rather than ratifying agreement. Roles that lost are named under
+`Key Tensions`, and a debate with no dissent says so explicitly instead of
+presenting unanimity as strength.
+
 ## Quality Guardrails
 
 1. Round 1 cannot be uniform agreement
@@ -137,7 +186,11 @@ Distribution-safe expectations:
 - plaintext markdown and Python source only
 - no encoded payloads, no runtime decoding
 - no `eval`/`exec`/shell injection behavior
-- no automatic outbound network calls
+- no automatic outbound network calls; the only outbound call is to
+  `api.typesafe.ai`, reached solely via stdlib `urllib` and solely when the
+  operator passes `--jev`
+- reads `TYPESAFE_API_KEY` from the environment only on that opt-in path, and
+  never logs or writes it
 - only local read/write in skill directory (`config/`, `logs/`)
 
 ## Compatibility
