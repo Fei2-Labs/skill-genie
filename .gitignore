@@ -8,3 +8,9 @@ ai-csuite/ai-csuite-framework-prd.md
 wip/
 skills.yaml
 rules/
+
+# ai-csuite company profiles hold real business context (revenue, runway,
+# legal entity, constraints). Keep them local; only company.yaml ships as
+# the worked example.
+skills/ai-csuite/config/*.yaml
+!skills/ai-csuite/config/company.yaml
