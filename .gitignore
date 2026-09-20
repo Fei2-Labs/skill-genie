@@ -7,7 +7,14 @@ ai-csuite/ai-csuite-framework-prd.md
 *.zip
 wip/
 skills.yaml
-rules/
+# The real global agent rules are kept in a separate private repo and are
+# reachable from here through a symlink. Do NOT collapse these back into a
+# bare `rules/`: that pattern matches only a directory, so it stops covering
+# the path the moment it is a link, and the rules become committable here.
+# The backup patterns catch local copies too. Only rules.example/ is public.
+rules
+rules.bak*
+rules.pre-symlink-*
 
 # ai-csuite company profiles hold real business context (revenue, runway,
 # legal entity, constraints). Keep them local; only company.yaml ships as
