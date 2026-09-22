@@ -1,5 +1,9 @@
 # Skills manifest — all sources declared here
 # Run `setup.sh` or `skillgenie sync` to sync everything to ~/.agents/skills/
+#
+# Copy this file to `skills.yaml` and edit it. The real `skills.yaml` is
+# gitignored: it is your personal manifest and may point at private repos.
+# Only this example, which lists public sources, is tracked.
 
 # Local skills: all dirs with SKILL.md in this repo are auto-included.
 
@@ -10,8 +14,6 @@ remote:
   - repo: mattpocock/skills
     path: skills
     pick:
-      - personal/edit-article
-      - personal/obsidian-vault
       - misc/git-guardrails-claude-code
       - misc/migrate-to-shoehorn
       - misc/scaffold-exercises
@@ -41,6 +43,41 @@ remote:
     path: .claude/skills
     pick:
       - ui-ux-pro-max
+
+  # Not a standard skills/ layout — the skill lives at the repo root, so no `path`
+  - repo: tt-a1i/archify
+    pick:
+      - archify
+
+  # TypeSafe official skill
+  - repo: typesafe-ai/skills
+    path: skills
+    pick:
+      - typesafe-ai
+
+  # Cloudflare official skills
+  - repo: cloudflare/skills
+    path: skills
+    pick:
+      - cloudflare
+      - cloudflare-email-service
+      - cloudflare-one
+      - cloudflare-one-migrations
+      - turnstile-spin
+      - agents-sdk
+      - durable-objects
+      - wrangler
+      - workers-best-practices
+      - web-perf
+
+  # Cloudflare official security audit skill (separate repo)
+  - repo: cloudflare/security-audit-skill
+    path: skills
+    pick:
+      - security-audit
+
+# Private repos go in your own skills.yaml, never here. A private entry looks
+# the same as a public one; the clone uses your `gh` git credentials.
 
 # Optional: only installed if the tool is detected on this machine
 optional:
