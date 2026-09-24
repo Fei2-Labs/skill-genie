@@ -111,3 +111,99 @@ state. Fix is a hard refresh / new chat, not a reinstall.
 ### Next Steps
 
 - None - task complete
+
+---
+
+## Session 2: Worktree decision skill, then a repo-wide identifier leak
+
+**Date**: 2026-09-24 / 25
+**Task**: Resume the paused worktree handoff; publish; then contain a leak it exposed
+**Branch**: `main`
+
+### Summary
+
+Took over a handoff paused since 2026-06-18 and shipped the
+`git-worktree-decision` skill, published it to ClawHub, and fixed a
+misspelled CLI name in the tracked rules template. Verifying an unrelated
+registry artifact then surfaced real identifiers inside tracked files of
+this PUBLIC repo, which turned the session into a containment exercise:
+redact, then rewrite history across all branches, then rename two remote
+branches whose names carried a person's name.
+
+### Main Changes
+
+| Commit | Change |
+|------|--------|
+| `e872aa2` | `git-worktree-decision` skill (the paused handoff's deliverable) |
+| `64defbd` | rules.example: corrected the ClawHub CLI binary name |
+| `1fdf93f` | Replaced real identifiers in two skills with placeholders |
+| (history) | `git-filter-repo` over 294 commits; force-pushed `main` |
+
+Published `git-worktree-decision@1.0.0` to ClawHub (scan `scanner.llm.clean`).
+Renamed two remote branches whose names embedded a personal name, a company
+name, and a username, preserving 5 unmerged commits, then deleted the old
+names. Full pre-rewrite backup: `~/skill-genie-backup-*.bundle`.
+
+### Lessons
+
+- **A rule can encode its own failure.** The publishing rule named a CLI
+  binary that does not exist, and its last line said to skip and inform the
+  user when that binary is missing. Every agent following it looked up the
+  wrong name, landed in the skip branch, and reported a missing tool.
+  Publishing had silently never run. A graceful-degradation clause turns a
+  typo into permanent silence — when a rule has a skip path, verify the
+  condition that triggers it, not just the happy path.
+
+- **A denylist is itself sensitive.** While reporting a scan I printed the
+  list of terms being scanned for. That list is an enumeration of real
+  identifiers; echoing it leaked exactly what it exists to protect. Keep it
+  in a mode-600 file, match against it, and report hits as redacted spans —
+  never the pattern set.
+
+- **Redact-and-commit is not removal.** Two files this session had already
+  been "fixed" by a follow-up commit. `-S` search across all branches still
+  found the originals in history. A new commit hides a value from the tip;
+  only a rewrite removes it.
+
+- **Binary blobs defeat text scanning.** `.pyc` files embed the compiler's
+  absolute source path, so they carried a home-directory path that
+  `git grep` cannot see and `--replace-text` cannot fix. They needed
+  `--invert-paths`. Any scan that only greps text is blind to this class.
+
+- **Branch names are unscanned surface.** Two remote branches carried a real
+  name and a username. Branch names live outside commit content, so every
+  pre-push content scan this project has run was structurally incapable of
+  catching them. Scan refs, not just diffs.
+
+- **Check ownership before assuming a published copy is yours.** Two skill
+  names in the registry belong to other authors. The affected skills here
+  were never published at all — the remediation item did not exist.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `e872aa2` | feat(skills): add git-worktree-decision |
+| `64defbd` | fix(rules.example): ClawHub CLI name |
+| `1fdf93f` | fix(skills): replace real identifiers with placeholders |
+
+Earlier hashes recorded in Session 1 are invalid: the rewrite changed every
+commit id in this repo.
+
+### Testing
+
+- [OK] `skillgenie validate` → 35/35 compatible
+- [OK] Denylist scan across all 5 remote branches → 0 hits
+- [OK] `-S` scan across full rewritten history (294 commits) → 0 hits
+- [OK] ClawHub publication verified visible, not assumed from exit code
+
+### Status
+
+[OK] **Completed** — containment done; residual risk below
+
+### Next Steps
+
+- Old objects may remain reachable on GitHub by full SHA until GC; a Support
+  ticket would be needed to force collection.
+- Clones on other machines cannot fast-forward across the rewrite and must
+  be re-cloned or hard-reset.
