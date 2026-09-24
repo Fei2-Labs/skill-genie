@@ -21,3 +21,9 @@ rules.pre-symlink-*
 # the worked example.
 skills/ai-csuite/config/*.yaml
 !skills/ai-csuite/config/company.yaml
+
+# Trellis session handoffs quote the incidents they came from: production
+# hostnames, deployment instance names, credential-entry names. That context
+# is what makes a handoff useful, and exactly what must not ship in a public
+# repo. The workspace journal is de-identified by hand and stays tracked.
+.trellis/handoffs/
