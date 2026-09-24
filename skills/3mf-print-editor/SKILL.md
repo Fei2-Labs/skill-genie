@@ -1,8 +1,8 @@
 ---
 name: "3mf-print-editor"
-description: "Guideline for directly editing 3D-printing project files (.3mf), verified against BambuStudio specifically: cutting or otherwise modifying mesh geometry, wiring objects into the 3MF XML correctly, arranging multiple print plates in BambuStudio's shared multi-plate coordinate system, and setting print/project parameters. Use whenever a user asks to edit, cut, split, merge, reposition, rearrange, or reconfigure a BambuStudio .3mf project file by hand instead of through the slicer GUI. Other slicers (OrcaSlicer, PrusaSlicer, etc.) use similar-looking .3mf files but are NOT verified to follow the same plate-offset math or config schema — treat this skill's multi-plate guidance as BambuStudio-specific."
+description: "Guideline for directly creating or editing 3D-printing project files (.3mf), verified against BambuStudio specifically: generating or modifying mesh geometry, wiring objects into the 3MF XML correctly, arranging multiple print plates in BambuStudio's shared multi-plate coordinate system, setting compatible print/project parameters, and validating the result in the target BambuStudio application. Use whenever a user asks to create, edit, cut, split, merge, reposition, rearrange, or reconfigure a BambuStudio .3mf project file programmatically instead of through the slicer GUI. Other slicers (OrcaSlicer, PrusaSlicer, etc.) use similar-looking .3mf files but are NOT verified to follow the same plate-offset math or config schema — treat this skill's multi-plate guidance as BambuStudio-specific."
 license: "MIT"
-metadata: {"version":"1.0.0","category":"3d-printing","license":"MIT","tags":["3d-printing","3mf","bambustudio","orcaslicer","mesh-editing","slicer"],"hermes":{"tags":["3d-printing","3mf","bambustudio","orcaslicer","mesh-editing","slicer"]}}
+metadata: {"version":"1.0.2","category":"3d-printing","license":"MIT","tags":["3d-printing","3mf","bambustudio","orcaslicer","mesh-editing","slicer"],"hermes":{"tags":["3d-printing","3mf","bambustudio","orcaslicer","mesh-editing","slicer"]}}
 ---
 
 # 3MF Print Editor
@@ -30,6 +30,7 @@ is the single most common source of silent failure (see Pitfall #1).
 - "调整模型位置/旋转/缩放" — reposition, rotate, scale an object in a project file
 - "改一下打印设置" — change bed size, plate count, filament/printer profile in a project file
 - "帮我重新打包这个 3mf" — merge multiple STL/3MF sources into one project
+- "直接生成 3mf，我在 Bambu Studio 里打开" — create a new BambuStudio project from generated meshes
 - Any task that requires opening a `.3mf` as a zip and hand-editing its XML/config instead of using the slicer UI
 
 Do NOT use this skill just to *view* or *slice* a file — only when the file itself needs to be programmatically
@@ -153,6 +154,14 @@ plate_origin = (col * stride_x, -row * stride_y)
 Read the bed size from `Metadata/project_settings.config`'s `printable_area` (four `"XxY"` corner strings) and
 `printable_height`. For the common 256×256 bed, `stride_x = stride_y = 307.2`.
 
+The printable-area polygon is not the whole placement constraint. Resolve the selected printer's inherited machine
+profile and read `bed_exclude_area`; project files may omit this key because BambuStudio supplies it from the installed
+machine profile. Normalize every mesh to plate-local XY coordinates and test its actual triangle footprint against
+each excluded polygon. A bounding box inside `printable_area` is insufficient. For the verified
+`Bambu Lab P1S 0.4 nozzle` profile, the installed profile overrides the common value with the left-front rectangle
+`["0x0", "18x0", "18x28", "0x28"]`. Long diagonal parts should use the diagonal/orientation that stays clear of
+that rectangle, with margin, rather than merely fitting inside 256×256 mm.
+
 **Every object's build-item transform (`3D/3dmodel.model` `<item transform="...">`) and its matching
 `<assemble_item transform="...">` in `model_settings.config` must be in this shared global space**: local
 plate-centered position **plus** that plate's `plate_origin` offset. If you center every object at its own plate's
@@ -180,6 +189,12 @@ key → value (often the value is itself a stringified array/percentage). Common
 When a user asks to "改打印设置" (change print settings), find the exact key(s) in this JSON, change only those
 values, and leave the rest of the (very large) file untouched — do not reformat or reorder it.
 
+Treat configuration enum values as versioned application data, not generic slicer vocabulary. In the currently
+verified BambuStudio workflow, `"sparse_infill_pattern": "rectilinear"` triggers a compatibility warning and is
+silently replaced with `"cubic"`. Write `"cubic"` for this profile unless the user's exact target BambuStudio
+version has been positively verified to accept another requested value. Do not copy enum values blindly from an
+older template just because the JSON is syntactically valid.
+
 `Metadata/slice_info.config` and `Metadata/filament_sequence.json` are usually safe to leave as-is unless the user
 is specifically changing slicing/AMS filament-sequencing behavior.
 
@@ -194,8 +209,17 @@ Always run these checks on the rebuilt package before handing it back:
    on the correct side of the cut plane for each piece.
 4. **Plate placement math**: recompute each object's expected global position from §4's formula and diff it
    against what you wrote into the build item — don't eyeball it.
-5. **Repack as a proper zip** (`[Content_Types].xml` at minimum should be present; ordering isn't strict but keep
+5. **Printable and excluded-area geometry**: normalize each object's XY triangles to its plate-local origin, confirm
+   all geometry lies inside `printable_area`, then reject any triangle that touches or intersects the selected
+   machine profile's `bed_exclude_area`. Resolve inherited installed profiles when the project JSON omits the key.
+6. **Repack as a proper zip** (`[Content_Types].xml` at minimum should be present; ordering isn't strict but keep
    the file complete) and re-extract it fresh to confirm the zip itself isn't corrupt.
+7. **Project-settings compatibility**: parse `Metadata/project_settings.config` as JSON and reject known stale or
+   unsupported enums. In particular, reject `sparse_infill_pattern=rectilinear`; use `cubic` for the verified P1S
+   profile.
+8. **Open in the target BambuStudio GUI** when it is installed and the user intends to open the file there. A clean
+   ZIP/XML check or `--info` parse is not enough: confirm that opening the project produces no compatibility-value
+   replacement dialog. Treat any replacement warning as a failed validation, fix the setting, rebuild, and reopen.
 
 Use `scripts/mesh_tools.py`'s `validate_package(dir)` to run 1–3 automatically over an extracted tree.
 
@@ -221,6 +245,12 @@ they explicitly ask you to.
    GUI cut tool.
 7. **Editing `project_settings.config` by reformatting the whole file** — it's huge; touch only the specific keys
    requested.
+8. **BambuStudio says a setting came from a newer version and replaces `rectilinear` with `cubic`** — the JSON enum
+   is incompatible even though the package is structurally valid. Write `cubic`, rebuild the 3MF, and reopen it in
+   the target GUI to verify that the warning is gone.
+9. **BambuStudio says an object is too close to the exclusion/shielded area** — checking only the bed's outer bounds
+   missed the machine-specific `bed_exclude_area`. Resolve the active printer profile (including inheritance), test
+   the actual plate-local triangle footprint, then rotate or translate the object away from the excluded polygon.
 
 ## References
 

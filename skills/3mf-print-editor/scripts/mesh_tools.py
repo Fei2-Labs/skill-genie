@@ -179,16 +179,32 @@ def validate_package(extracted_dir: str | Path) -> list[str]:
     extracted_dir = Path(extracted_dir)
     problems: list[str] = []
 
-    # 1. XML well-formedness for every .model/.config/.rels file
+    # 1. XML well-formedness. project_settings.config is JSON, despite its suffix.
     xml_globs = ["**/*.model", "**/*.rels", "**/*.config"]
     xml_files: list[Path] = []
     for pattern in xml_globs:
         xml_files.extend(extracted_dir.glob(pattern))
     for f in xml_files:
+        if f.name == "project_settings.config":
+            continue
         try:
             ET.parse(f)
         except ET.ParseError as exc:
             problems.append(f"XML parse error in {f.relative_to(extracted_dir)}: {exc}")
+
+    # Project settings must be valid JSON and use enums accepted by the target profile.
+    project_settings_path = extracted_dir / "Metadata" / "project_settings.config"
+    if project_settings_path.exists():
+        try:
+            project_settings = json.loads(project_settings_path.read_text())
+        except (json.JSONDecodeError, OSError) as exc:
+            problems.append(f"JSON parse error in Metadata/project_settings.config: {exc}")
+        else:
+            if project_settings.get("sparse_infill_pattern") == "rectilinear":
+                problems.append(
+                    "unsupported BambuStudio sparse_infill_pattern=rectilinear; "
+                    "use cubic for the verified P1S profile"
+                )
 
     # 2 & 3. Mesh integrity + watertightness for every object file
     try:
