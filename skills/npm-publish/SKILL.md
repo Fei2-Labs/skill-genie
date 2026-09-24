@@ -2,12 +2,35 @@
 name: "npm-publish"
 description: "Publish an NPM package to the registry, handling authentication via browser-based login with 2FA/security key support."
 license: "MIT"
-metadata: {"version":"1.0.2","triggers":["publish to npm","npm publish","publish package","deploy to npm"],"tags":["npm","package-publishing","release","developer-tools"],"hermes":{"tags":["npm","package-publishing","release","developer-tools"]}}
+metadata: {"version":"1.1.0","triggers":["publish to npm","npm publish","publish package","deploy to npm"],"tags":["npm","package-publishing","release","developer-tools"],"hermes":{"tags":["npm","package-publishing","release","developer-tools"]}}
 ---
 
 # NPM Publish Skill
 
 Publish an NPM package to the registry. Handles authentication including 2FA and security key (WebAuthn) flows.
+
+## CRITICAL: agent shells have no TTY — wrap npm in a pty
+
+An AI agent's `bash` tool is **not a TTY**. `npm login` and `npm publish` detect
+this and **redact the web-auth/OTP URL as `***`** (and `setup-token`-style flows
+hang silently). The URL is also redacted in the debug log. Result: you cannot open
+the auth page and wrongly conclude "the user must run it."
+
+**Fix: run the npm command under a pseudo-tty with `script -q`** so npm prints the
+REAL URL, then parse it from the log and `open` it. The agent does everything
+except the irreducible 2FA factor (security-key tap / authenticator code).
+
+```bash
+# Run in BACKGROUND (it blocks waiting for auth):
+script -q /tmp/npm.log npm publish --access public      # or: npm login
+# Then, after ~5s, extract the real URL and open it:
+URL=$(grep -oE 'https://www.npmjs.com/(auth|login)/cli/[a-z0-9-]+' /tmp/npm.log | head -1)
+open "$URL"        # macOS default browser (has the user's session + security key)
+```
+
+Only ask the user to run it themselves as a last resort. Do NOT punt just because
+the first non-pty attempt showed `***`. (If `npm publish` errors `EOTP` with a
+`***` URL, that is exactly this no-TTY problem — re-run it under `script -q`.)
 
 ## Prerequisites
 
@@ -62,14 +85,15 @@ NPM requires browser-based authentication when 2FA or security keys are enabled.
 
 #### 4a: Start npm login (opens browser for 2FA)
 
+Run under a pty (see the CRITICAL section) so the URL isn't redacted, in the
+background:
+
 ```bash
-npm login
+script -q /tmp/npm-login.log npm login --auth-type=web
 ```
 
-This prints a URL like:
-```
-https://www.npmjs.com/login?next=/login/cli/<uuid>
-```
+It prints a URL like `https://www.npmjs.com/login?next=/login/cli/<uuid>`. If you
+ran WITHOUT `script -q` the URL shows as `***` — re-run with the pty.
 
 #### 4b: Open the login URL in the user's default browser
 
@@ -179,11 +203,26 @@ Must return the correct username before proceeding.
 
 ### Step 5: Publish
 
+Publishing triggers a SECOND 2FA challenge (`EOTP`) even after login. Run it under
+a pty so the OTP URL is real, in the background, then open the URL:
+
 ```bash
-npm publish --access public
+script -q /tmp/npm-pub.log npm publish --access public
+# after ~5s:
+URL=$(grep -oE 'https://www.npmjs.com/auth/cli/[a-z0-9-]+' /tmp/npm-pub.log | head -1); open "$URL"
 ```
 
+The user taps their security key / enters their authenticator in the opened page;
+the publish then completes on its own (you'll see `+ <pkg>@<version>`).
+
+Alternative if the user has an authenticator-app TOTP (not security-key-only):
+`npm publish --access public --otp=<6-digit-code>` — fully headless, no pty needed.
+
 For scoped packages (`@scope/name`), `--access public` is required on first publish.
+
+> The `npm warn publish "bin[...]" script name ... was invalid and removed` warning
+> is COSMETIC — `npm pack` keeps `bin` intact; verify with
+> `npm pack && tar -xzO -f *.tgz package/package.json | grep -A3 '"bin"'` if unsure.
 
 **If publish fails with E403:**
 - Check if the package version already exists: `npm view <package>@<version>`
@@ -210,6 +249,9 @@ Confirm the published version matches.
 | E403 Forbidden | Version already published or no permission | Bump version or check scope access |
 | E404 Not Found | Scope doesn't exist or no publish rights | Create scope on npmjs.com or request access |
 | WebAuthn not working in Playwright | Headless mode or wrong browser | Use `channel: 'chrome'` + `headless: false` |
+| Auth/OTP URL shows as `***` | Command ran without a TTY (agent shell) | Re-run under `script -q /tmp/x.log <cmd>`, parse + `open` the URL |
+| `EOTP` on publish even after login | Publish needs its own 2FA | Run publish under `script -q` (or `--otp=<code>` for TOTP) |
+| `bin ... was invalid and removed` warn | Cosmetic npm publish warning | Ignore — `npm pack` keeps `bin`; verify the tarball if worried |
 | Token expired | NPM tokens have limited lifetime | Re-run Step 4 |
 
 ## Security Notes
