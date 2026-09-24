@@ -1,0 +1,194 @@
+# Scheduled upstream sync.
+#
+# Clean merge  → pushes a branch and opens a PR (full CI adjudicates).
+# Conflicted   → opens an ISSUE with the conflicts pre-classified, and stops.
+#
+# A conflicted merge needs a person before it needs a branch, so this never
+# pushes a half-resolved tree. It also never merges its own PR: a green tick is
+# not proof the merge is semantically correct (see the skill, rule 3).
+#
+# Copy to .github/workflows/ and adjust the cron. Requires .fork-sync.yml at the
+# repo root.
+name: Upstream Sync
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"   # Mondays 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: upstream-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # merge needs real history, not a shallow clone
+
+      - name: Read manifest
+        id: cfg
+        run: |
+          set -euo pipefail
+          test -f .fork-sync.yml || { echo "::error::.fork-sync.yml missing"; exit 1; }
+          {
+            echo "remote=$(yq -r '.upstream.remote // "upstream"' .fork-sync.yml)"
+            echo "branch=$(yq -r '.upstream.branch // "main"' .fork-sync.yml)"
+            echo "fork_branch=$(yq -r '.upstream.fork_branch // "main"' .fork-sync.yml)"
+            tmpl=$(yq -r '.upstream.sync_branch // "sync/upstream-{date}"' .fork-sync.yml)
+            echo "sync_branch=${tmpl//\{date\}/$(date +%Y%m%d)}"
+            echo "url=$(yq -r '.upstream.url // ""' .fork-sync.yml)"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Add upstream remote
+        env:
+          REMOTE: ${{ steps.cfg.outputs.remote }}
+          URL: ${{ steps.cfg.outputs.url }}
+        run: |
+          set -euo pipefail
+          if ! git remote get-url "$REMOTE" >/dev/null 2>&1; then
+            if [ -z "$URL" ]; then
+              echo "::error::remote '$REMOTE' is not configured and .fork-sync.yml sets no upstream.url"
+              exit 1
+            fi
+            git remote add "$REMOTE" "$URL"
+          fi
+          git fetch "$REMOTE" "${{ steps.cfg.outputs.branch }}"
+
+      - name: Assess
+        id: assess
+        env:
+          UP: ${{ steps.cfg.outputs.remote }}/${{ steps.cfg.outputs.branch }}
+        run: |
+          set -euo pipefail
+          behind=$(git rev-list --count "HEAD..${UP}")
+          echo "behind=$behind" >> "$GITHUB_OUTPUT"
+          if [ "$behind" -eq 0 ]; then
+            echo "clean=skip" >> "$GITHUB_OUTPUT"; echo "Already current."; exit 0
+          fi
+          git log --oneline --no-decorate "HEAD..${UP}" | head -30 > /tmp/incoming.txt
+          # merge-tree probes the merge without touching the working tree:
+          # exit 0 = clean; exit 1 = conflicts, named after the tree OID on line 1.
+          # Reading the exit code the wrong way round reports a conflicted merge as
+          # clean and pushes a broken branch, so keep both branches explicit. Note
+          # a pipe would mask the exit status — capture first, slice after.
+          if probe=$(git merge-tree --name-only --write-tree HEAD "$UP" 2>/dev/null); then
+            echo "clean=yes" >> "$GITHUB_OUTPUT"
+          else
+            printf '%s\n' "$probe" | tail -n +2 | grep -v '^$' > /tmp/conflicts.txt || true
+            if [ ! -s /tmp/conflicts.txt ]; then
+              echo "::error::merge-tree could not analyse the merge (unrelated histories, or git < 2.38)"
+              exit 1
+            fi
+            echo "clean=no" >> "$GITHUB_OUTPUT"
+          fi
+
+      # ── clean: branch + PR, and let the real CI matrix judge it ────────────
+      - name: Open sync PR
+        if: steps.assess.outputs.clean == 'yes'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          UP: ${{ steps.cfg.outputs.remote }}/${{ steps.cfg.outputs.branch }}
+          BR: ${{ steps.cfg.outputs.sync_branch }}
+          BASE: ${{ steps.cfg.outputs.fork_branch }}
+        run: |
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BR"
+          git merge --no-edit "$UP"
+          git push -u origin "$BR"
+
+          {
+            echo "Automated sync of \`$UP\` (${{ steps.assess.outputs.behind }} commit(s))."
+            echo
+            echo "### Before merging"
+            echo "A green tick is **not** sufficient. A textually clean merge can leave two"
+            echo "independently-added features unwired — read every function both sides touched."
+            echo
+            echo "- Divergences that must survive: \`.fork-sync.yml\` → \`divergences\`"
+            echo "- Checks red for infra reasons: \`.fork-sync.yml\` → \`known_red\`"
+            echo "- Triage each failure as real regression / stale expectation / environmental,"
+            echo "  and prove 'environmental' with a merge-base run."
+            echo
+            echo "<details><summary>Incoming commits</summary>"
+            echo; echo '```'; cat /tmp/incoming.txt; echo '```'
+            echo "</details>"
+          } > /tmp/body.md
+
+          gh pr create --base "$BASE" --head "$BR" \
+            --title "merge: sync $UP" --body-file /tmp/body.md \
+            --label upstream-sync || echo "::warning::branch pushed, PR creation failed"
+
+      # ── conflicted: issue only, pre-classified, no branch ─────────────────
+      - name: File conflict issue
+        if: steps.assess.outputs.clean == 'no'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          UP: ${{ steps.cfg.outputs.remote }}/${{ steps.cfg.outputs.branch }}
+        run: |
+          set -euo pipefail
+          # Classify each conflicted path against the manifest's policy globs.
+          classify() {
+            local path=$1 n i glob pol ks
+            n=$(yq -r '.conflict_policy | length // 0' .fork-sync.yml)
+            for ((i=0; i<n; i++)); do
+              glob=$(yq -r ".conflict_policy[$i].glob // \"\"" .fork-sync.yml)
+              [ -n "$glob" ] || continue
+              case "$path" in
+                $glob)
+                  pol=$(yq -r ".conflict_policy[$i].policy // \"manual\"" .fork-sync.yml)
+                  ks=$(yq -r ".conflict_policy[$i].keystone // false" .fork-sync.yml)
+                  [ "$ks" = "true" ] && printf '%s (KEYSTONE — needs a deliberate read)' "$pol" \
+                                     || printf '%s' "$pol"
+                  return ;;
+              esac
+            done
+            printf 'unclassified — decide, then add a glob to .fork-sync.yml'
+          }
+
+          {
+            echo "\`$UP\` has ${{ steps.assess.outputs.behind }} new commit(s) and **does not merge cleanly**."
+            echo
+            echo "No branch was pushed: a conflicted merge needs a person first."
+            echo
+            echo "### Conflicts, with the policy each resolves under"
+            echo
+            echo "| path | policy |"
+            echo "|---|---|"
+            while IFS= read -r f; do
+              [ -n "$f" ] || continue
+              echo "| \`$f\` | $(classify "$f") |"
+            done < /tmp/conflicts.txt
+            echo
+            echo "### Resolve locally"
+            echo '```bash'
+            echo "git fetch ${{ steps.cfg.outputs.remote }} ${{ steps.cfg.outputs.branch }}"
+            echo "./scripts/sync-upstream.sh          # classify again, locally"
+            echo "git checkout -b sync/upstream-\$(date +%Y%m%d) && git merge $UP"
+            echo "# resolve by policy; prefer the UNION where both sides only ADD entries"
+            echo "./scripts/sync-upstream.sh --gates  # gates, baselines, focused tests"
+            echo "./scripts/sync-upstream.sh --push"
+            echo '```'
+            echo
+            echo "<details><summary>Incoming commits</summary>"
+            echo; echo '```'; cat /tmp/incoming.txt; echo '```'
+            echo "</details>"
+          } > /tmp/issue.md
+
+          # Reuse one open issue per sync run rather than piling up duplicates.
+          existing=$(gh issue list --label upstream-sync --state open \
+                      --search "in:title conflicts" --json number -q '.[0].number' || true)
+          if [ -n "$existing" ] && [ "$existing" != "null" ]; then
+            gh issue comment "$existing" --body-file /tmp/issue.md
+          else
+            gh issue create --title "Upstream sync: $UP conflicts" \
+              --body-file /tmp/issue.md --label upstream-sync
+          fi
