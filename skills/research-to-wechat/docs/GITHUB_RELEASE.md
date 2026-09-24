@@ -38,8 +38,10 @@ Run these checks before publishing:
 
 ```bash
 # Run your current forbidden-term denylist scan against research-to-wechat/
-python3 '~/.agent/skills/skill-creator/scripts/package_skill.py' \
-  '~/My Apps/skill-genie/skills/research-to-wechat' \
+# Run from the skill-genie repo root; adjust the skill-creator path to wherever
+# your runtime installed it (e.g. ~/.agents/skills/skill-creator).
+python3 ~/.agents/skills/skill-creator/scripts/package_skill.py \
+  ./skills/research-to-wechat \
   /tmp/research-to-wechat-release-check
 ```
 
