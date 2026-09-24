@@ -162,7 +162,7 @@ so other agents find it automatically:
 | Codex / Aider / generic | `AGENTS.md` (root) | Section "## Shared memory" with line pointing at `.agents/memory/MEMORY.md` |
 | Claude Code | `CLAUDE.md` (root) — only if used | Same section |
 | Cursor | `.cursorrules` | Single line: `Shared memory lives at .agents/memory/MEMORY.md — read it before answering.` |
-| OpenClaw | `ACME-APP.md` or whatever the project uses | Same section |
+| OpenClaw | `<PROJECT>.md` or whatever the project uses | Same section |
 
 The skill should grep each bridge file for `.agents/memory/` and add the
 section if missing. Idempotent — never duplicate.
