@@ -39,7 +39,7 @@ Run these checks before publishing:
 ```bash
 # Run your current forbidden-term denylist scan against research-to-wechat/
 python3 '~/.agent/skills/skill-creator/scripts/package_skill.py' \
-  '~/Dropbox/My Apps/my-skills/research-to-wechat' \
+  '~/My Apps/skill-genie/skills/research-to-wechat' \
   /tmp/research-to-wechat-release-check
 ```
 
