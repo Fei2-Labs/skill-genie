@@ -12,7 +12,7 @@ if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
 from _wechat_design_catalog import build_design_catalog
-from _wechat_delivery_api import environment_report, save_draft, upload_images
+from _wechat_delivery_api import environment_report, save_draft, update_cover, upload_images
 from _wechat_delivery_render import render_article
 from _wechat_delivery_shared import dump_json, load_json, normalize_markdown_links
 
@@ -25,6 +25,7 @@ def build_parser() -> argparse.ArgumentParser:
     add_render(subparsers)
     add_upload(subparsers)
     add_save(subparsers)
+    add_update_cover(subparsers)
     return parser
 
 
@@ -74,6 +75,31 @@ def add_save(subparsers: argparse._SubParsersAction[argparse.ArgumentParser]) ->
     parser.add_argument("--digest", default="")
     parser.add_argument("--output")
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument(
+        "--settings-already-set",
+        action="store_true",
+        help="acknowledge that updating will wipe 原创/赞赏/合集, which must then be re-set in the editor",
+    )
+
+
+def add_update_cover(subparsers: argparse._SubParsersAction[argparse.ArgumentParser]) -> None:
+    parser = subparsers.add_parser(
+        "update-cover",
+        help="swap ONLY the cover of an existing draft, keeping the body verbatim (run BEFORE 原创/赞赏/合集 are set)",
+    )
+    parser.add_argument("--media-id", help="draft media_id to re-cover (or WECHAT_DRAFT_MEDIA_ID)")
+    parser.add_argument("--cover-image", required=True, help="path to the new cover image")
+    parser.add_argument("--cover-type", default="thumb", choices=["image", "thumb"])
+    parser.add_argument("--appid")
+    parser.add_argument("--secret")
+    parser.add_argument("--access-token")
+    parser.add_argument("--output")
+    parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument(
+        "--settings-already-set",
+        action="store_true",
+        help="acknowledge that updating will wipe 原创/赞赏/合集, which must then be re-set in the editor",
+    )
 
 
 def run_check(_: argparse.Namespace) -> None:
@@ -97,6 +123,7 @@ def run_upload(args: argparse.Namespace) -> None:
 
 
 def run_save(args: argparse.Namespace) -> None:
+    warn_settings_reset(args)
     result = save_draft(
         args.html,
         args.markdown,
@@ -115,10 +142,42 @@ def run_save(args: argparse.Namespace) -> None:
     dump_json(result, args.output)
 
 
+def run_update_cover(args: argparse.Namespace) -> None:
+    warn_settings_reset(args)
+    result = update_cover(
+        args.appid or os.getenv("WECHAT_APPID", ""),
+        args.secret or os.getenv("WECHAT_SECRET", ""),
+        args.access_token or os.getenv("WECHAT_ACCESS_TOKEN", ""),
+        args.media_id or os.getenv("WECHAT_DRAFT_MEDIA_ID", ""),
+        args.cover_image,
+        args.cover_type,
+        args.dry_run,
+    )
+    dump_json(result, args.output)
+
+
+def warn_settings_reset(args: argparse.Namespace) -> None:
+    """Updating an existing draft clears 原创/赞赏/合集, which the API cannot restore.
+
+    Verified 2026-09-25. These are editor-only fields, so anything set in the browser
+    is lost on the next update and has to be re-done by hand.
+    """
+    if args.dry_run or not (args.media_id or os.getenv("WECHAT_DRAFT_MEDIA_ID", "")):
+        return
+    if args.settings_already_set:
+        return
+    print(
+        "NOTE: updating an existing draft resets 原创 / 赞赏 / 合集 to unset.\n"
+        "      If they were already configured in the editor, re-set them after this\n"
+        "      push and click 保存为草稿. Pass --settings-already-set to silence this.",
+        file=sys.stderr,
+    )
+
+
 def main() -> int:
     parser = build_parser()
     args = parser.parse_args()
-    commands = {"check": run_check, "design-catalog": run_catalog, "render": run_render, "upload-images": run_upload, "save-draft": run_save}
+    commands = {"check": run_check, "design-catalog": run_catalog, "render": run_render, "upload-images": run_upload, "save-draft": run_save, "update-cover": run_update_cover}
     commands[args.command](args)
     return 0
 
