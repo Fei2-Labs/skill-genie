@@ -11,8 +11,9 @@ clawhub publish ./skills/<skill-name> --slug <skill-name> --version <new-version
 ```
 
 Rules:
-- Bump the version beyond what is currently on ClawHub (`clawhub list` to check).
+- Bump the version beyond what is currently on ClawHub (`clawhub inspect <slug>` shows the published version; `clawhub list` only lists local installs).
 - Update the `version` field in the skill's SKILL.md frontmatter to match.
+- ClawHub publishes every skill as **MIT-0**, whatever the frontmatter says; `publish` has no license flag. Set `license: "MIT-0"` and `metadata.license` to `MIT-0` so the repo and the registry state the same terms.
 - The `--changelog` must be a concise summary of what changed.
 - Always include `--tags` with comma-separated tags describing the skill's function (e.g. `session-memory,workflow,handoff`). Derive tags from the skill's category and purpose.
 - Do not publish if the skill has uncommitted changes — commit first.
