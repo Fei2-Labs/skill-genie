@@ -2,7 +2,7 @@
 name: "research-to-wechat"
 description: "A native research-first pipeline that turns a topic, notes, article, URL, or transcript into a sourced article with an evidence ledger, polished Markdown, inline visuals, cover image, WeChat-ready HTML, browser/API-ready draft assets, and optional multi-platform distribution. Use when the user wants 深度研究、改写成公众号、写作、排版、配图、HTML 转换、公众号草稿生成、多平台分发."
 license: "MIT"
-metadata: {"openclaw":{"emoji":"🔬","homepage":"https://github.com/Fei2-Labs/skill-genie","requires":{"anyBins":["python3"]},"primaryEnv":"WECHAT_APPID"},"version":"0.5.6","category":"content-generation","author":"Skill Genie","license":"MIT","tags":["wechat","research","content-generation","publishing"],"hermes":{"tags":["wechat","research","content-generation","publishing"]}}
+metadata: {"openclaw":{"emoji":"🔬","homepage":"https://github.com/Fei2-Labs/skill-genie","requires":{"anyBins":["python3"]},"primaryEnv":"WECHAT_APPID"},"version":"0.5.7","category":"content-generation","author":"Skill Genie","license":"MIT","tags":["wechat","research","content-generation","publishing"],"hermes":{"tags":["wechat","research","content-generation","publishing"]}}
 ---
 
 # Research to WeChat
@@ -17,6 +17,7 @@ Use this skill as a native, research-first article system. It does not route exe
 - Ask only when the answer changes source interpretation, structure frame, style fidelity, or draft delivery behavior.
 - Keep Markdown as the canonical article asset until the HTML handoff.
 - Save a draft only. Never publish live.
+- Never report a draft write as successful on the strength of the API response. Read the draft back first.
 - Separate verified fact, working inference, and open question.
 - Every major claim must be traceable to a source.
 - Every article must end with a "## 参考链接" or "## References" section listing all sources.
@@ -118,7 +119,7 @@ Determine this SKILL.md directory as `SKILL_DIR`, then use `${SKILL_DIR}/scripts
 | Script | Purpose |
 |--------|---------|
 | `scripts/fetch_wechat_article.py` | WeChat article fetch (mobile UA) |
-| `scripts/wechat_delivery.py` | Native WeChat delivery entrypoint (`check`, `design-catalog`, `render`, `upload-images`, `save-draft`) |
+| `scripts/wechat_delivery.py` | Native WeChat delivery entrypoint (`check`, `design-catalog`, `render`, `upload-images`, `save-draft`, `update-cover`) |
 | `scripts/install-openclaw.sh` | OpenClaw skill installer |
 
 ## Native Capability Contract
@@ -206,6 +207,38 @@ Run the article through these phases:
    - If a duplicate draft was accidentally created, delete it via API (`draft/delete`) immediately and keep only the original `media_id`.
    - `manifest.json` is the single source of truth for `media_id`.
 
+   **Cover = the 2.35:1 `cover.png`, `--cover-type image`. Never the square crop.**
+   The feed card and the article header both use the cover set on the draft. Use the wide `cover.png` (`--cover-type image`), not `cover-thumb.png` / `--cover-type thumb`: verified 2026-09-25, a square thumb gets center-cropped to the card's wide aspect and the bottom line of text is chopped off, so it reads as oversized and clipped. The wide cover keeps its one line of text in the visible band. `cover-thumb.png` is only a fallback where a square is explicitly required. Full rules — dimensions, the single-`thumb_media_id` two-crop reality, and crop-safe text layout — are in [cover-design-guide.md](references/cover-design-guide.md).
+
+   **To change ONLY the cover of an existing draft, use `update-cover` — not `save-draft`.**
+   `save-draft` rewrites the whole article from local html/markdown (risking body drift and needing a re-render). `update-cover` reads the live body back via `draft/get` and re-pushes only `thumb_media_id`, so the body cannot move:
+   ```bash
+   python3 "${SKILL_DIR}/scripts/wechat_delivery.py" update-cover \
+     --media-id "$MEDIA_ID" --cover-image imgs/cover.png --cover-type image
+   ```
+   It reads the draft back after writing (same BLOCKING verification as below) and, like every write, still resets 原创/赞赏/合集 — so run it BEFORE those are set in the editor.
+
+   **⛔ After every draft write, read the draft back (BLOCKING).**
+   `draft/update` returning `errcode:0` does **not** mean the content landed. Observed 2026-09-25: the API reported ok while the live draft still held the previous title and body. Never judge success from the write response, and never report success to the user from it.
+   ```bash
+   python3 -c "
+   import json,urllib.request,sys
+   token=open('/tmp/wx_token.txt').read().strip()
+   media_id=sys.argv[1]
+   req=urllib.request.Request('https://api.weixin.qq.com/cgi-bin/draft/get?access_token='+token,
+     data=json.dumps({'media_id':media_id}).encode(),headers={'Content-Type':'application/json'})
+   a=json.load(urllib.request.urlopen(req,timeout=30))['news_item'][0]
+   print('TITLE:',a['title']); print('LEN:',len(a['content']))
+   for p in sys.argv[2:]: print(('OK  ' if p in a['content'] else 'FAIL'),p)
+   " <media_id> <distinctive phrase from the new body> ...
+   ```
+   Compare the returned `title`/`digest` against `manifest.json` and probe the body for phrases unique to the latest revision (not phrases that also existed in the prior version — those cannot detect a stale draft). Any mismatch means re-push and re-verify.
+
+   **Backend-only fields the draft API cannot set.**
+   原创声明 (original declaration), 赞赏 (reward), and 合集 (album) are **not** in the `articles` schema — it accepts only `article_type`, `title`, `author`, `digest`, `content`, `content_source_url`, `thumb_media_id`, `need_open_comment`, `only_fans_can_comment`, `image_info`, `cover_info`, `product_info`. Setting them requires driving the mp.weixin.qq.com editor in a logged-in browser. Order within the editor matters: declare 原创 first (赞赏 stays disabled until it is), then 赞赏, then 合集, then click 保存为草稿 or everything is lost. Saving in the editor rewrites the draft `author` field to the 赞赏 account name. Check the project AGENTS file for the account's specific values.
+
+   **A later `draft/update` silently wipes all three.** Verified 2026-09-25: re-pushing content after setting them reset 原创 to 未声明, disabled 赞赏, and cleared 合集. Set them only once the body is final, and never call `draft/add`/`draft/update` afterwards. If the body must change again, the order is: edit → `draft/update` → read back → re-set all three in the editor → 保存为草稿.
+
    **Before draft save, run HTML compliance check** (must all pass):
    ```bash
    grep -c 'class=' article.html          # must be 0
@@ -260,6 +293,7 @@ The skill is complete only when all of these hold:
 - markdown and HTML agree on title, summary, cover, and image paths
 - HTML contains zero `class=` attributes, zero `<style>` tags, zero `<a href>` links, and outermost `<section>` has explicit `background`
 - `manifest.json` agrees with the actual output set and draft state
+- the saved draft was **read back via `draft/get`** and its title, digest, and revision-specific body phrases match the local files — the write call's `errcode:0` alone does not satisfy this
 - the article does not overclaim research effort or authorship
 - `wechat-compliance-check` returned zero violations on the final markdown
 - the workflow can stop safely at the highest-quality completed artifact if a later handoff fails

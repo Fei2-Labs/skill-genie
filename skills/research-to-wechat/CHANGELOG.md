@@ -2,6 +2,17 @@
 
 All notable changes to `research-to-wechat` will be documented in this file.
 
+## 0.5.7 - 2026-09-25
+
+### Added
+
+- `wechat_delivery.py update-cover` — swap ONLY an existing draft's cover, reading the live body back via `draft/get` and re-pushing only `thumb_media_id` so the article body cannot drift (no re-render, no `save-draft`)
+- `references/cover-design-guide.md` — cover/thumbnail dimensions, the single-`thumb_media_id` two-crop reality (wide 头图 and square 缩略图 are crops of one cover, not two API fields), crop-safe text layout, and the manual-settings ordering constraint
+
+### Fixed
+
+- SKILL.md now states the cover must be the wide 2.35:1 `cover.png` with `--cover-type image`; a square thumb gets center-cropped by the feed card and loses its bottom text line
+
 ## 0.4.2 - 2026-03-06
 
 ### Updated
