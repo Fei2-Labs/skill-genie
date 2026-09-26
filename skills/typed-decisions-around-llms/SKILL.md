@@ -1,8 +1,8 @@
 ---
 name: "typed-decisions-around-llms"
 description: "Decide WHERE a typed judgment model (TypeSafe's Jev or any System One model) belongs relative to a generative LLM, and who is allowed to authorize what. Use when adding a guardrail, router, verifier, or approval gate around an LLM; when converting a free-text 'LLM-as-judge' step into a typed decision; when a model's own confidence score is being used to authorize its own output; when choosing thresholds, confidence bands, or fallback behavior; or when reviewing an agent/tool-calling pipeline for who holds authority. This is the architecture question — placement, ordering, and authority. For API mechanics, primitive selection, and question wording use the typesafe-ai skill and the live docs instead."
-license: "MIT"
-metadata: {"version":"1.0.0","category":"engineering","license":"MIT","tags":["llm-architecture","guardrails","verification","routing","decision-layer","agent-safety","typesafe","jev"],"hermes":{"tags":["llm-architecture","guardrails","verification","routing","decision-layer","agent-safety","typesafe","jev"]}}
+license: "MIT-0"
+metadata: {"version":"1.0.1","category":"engineering","license":"MIT-0","tags":["llm-architecture","guardrails","verification","routing","decision-layer","agent-safety","typesafe","jev"],"hermes":{"tags":["llm-architecture","guardrails","verification","routing","decision-layer","agent-safety","typesafe","jev"]}}
 ---
 
 # Typed decisions around LLMs

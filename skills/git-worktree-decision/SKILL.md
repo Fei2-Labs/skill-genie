@@ -1,8 +1,8 @@
 ---
 name: "git-worktree-decision"
 description: "Decide whether a piece of work deserves its own git worktree, before creating one. Use when about to start work that would disturb a dirty or warm working tree, when an urgent fix interrupts work in progress, when launching concurrent/parallel agent sessions on one repo, when tempted to `git stash` or `git switch` to make room, or when worktrees have accumulated and you need to know which should never have existed. Covers the concurrency test, the shared-external-state blocker that makes worktrees backfire, and the teardown commitment. Not a worktree how-to: mechanics, per-worktree ports, and dependency symlinking are out of scope."
-license: "MIT"
-metadata: {"version":"1.0.0","category":"engineering","license":"MIT","tags":["git","worktree","decision","parallel-agents","workflow","engineering-judgment"],"hermes":{"tags":["git","worktree","decision","parallel-agents","workflow","engineering-judgment"]}}
+license: "MIT-0"
+metadata: {"version":"1.0.1","category":"engineering","license":"MIT-0","tags":["git","worktree","decision","parallel-agents","workflow","engineering-judgment"],"hermes":{"tags":["git","worktree","decision","parallel-agents","workflow","engineering-judgment"]}}
 ---
 
 # When to create a git worktree
