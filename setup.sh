@@ -79,6 +79,14 @@ install_skill() {
 
 install_file() {
   local src="$1" dest="$2"
+  # Skip when the link is already correct. Some agents keep their config dir
+  # on a read-only mount (a separate ZFS dataset, for one), where the rm below
+  # fails with EROFS even though nothing needed changing. Mirrors the
+  # already-linked check in link_to_native.
+  local real_src real_dest
+  real_src="$(readlink -f "$src" 2>/dev/null || true)"
+  real_dest="$(readlink -f "$dest" 2>/dev/null || true)"
+  [[ -n "$real_src" && "$real_src" == "$real_dest" ]] && return 0
   rm -f "$dest"
   ln -sfn "$src" "$dest"
 }
@@ -391,9 +399,21 @@ agent_json = {
     'prompt': body,
 }
 
-with open(sys.argv[2], 'w') as f:
-    json.dump(agent_json, f, indent=2, ensure_ascii=False)
-    f.write('\n')
+out = json.dumps(agent_json, indent=2, ensure_ascii=False) + '\n'
+
+# Already current — do not rewrite. The destination is sometimes a read-only
+# mount, and an unconditional write fails there even with nothing to change.
+try:
+    if open(sys.argv[2]).read() == out:
+        sys.exit(0)
+except OSError:
+    pass
+
+try:
+    with open(sys.argv[2], 'w') as f:
+        f.write(out)
+except OSError as exc:
+    print('  - skip %s: %s' % (sys.argv[2], exc.strerror), file=sys.stderr)
 " "$md_file" "$json_file"
 }
 
