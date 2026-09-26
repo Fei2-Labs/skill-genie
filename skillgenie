@@ -79,6 +79,14 @@ TARGETS = {
     "copilot-cli": ("GitHub Copilot CLI/app", COPILOT_CLI_DIR, "symlink"),
 }
 
+# Directories a runtime creates and manages inside its own skills dir. They are
+# not SkillGenie installs, so doctor must never report, relink, or prune them.
+# Claude Code: "synced" holds skills it downloads itself, nested in per-bucket
+# folders with a manifest.json, so no SKILL.md sits where doctor looks.
+RUNTIME_MANAGED = {
+    "claude": {"synced"},
+}
+
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
 RESET  = "\033[0m"
@@ -480,7 +488,11 @@ def cmd_doctor(args):
     for target, (label, base, mode) in TARGETS.items():
         if not base.exists():
             continue
-        entries = sorted(p for p in base.iterdir() if not p.name.startswith("."))
+        managed = RUNTIME_MANAGED.get(target, set())
+        entries = sorted(
+            p for p in base.iterdir()
+            if not p.name.startswith(".") and p.name not in managed
+        )
         issues = []
         for entry in entries:
             verdict = diagnose_entry(entry)
