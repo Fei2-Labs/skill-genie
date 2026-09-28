@@ -2,7 +2,7 @@
 
 All notable changes to `research-to-wechat` will be documented in this file.
 
-## 0.6.0 - 2026-09-28
+## 0.7.0 - 2026-09-28
 
 ### Added
 
@@ -20,7 +20,7 @@ All notable changes to `research-to-wechat` will be documented in this file.
 - Non-triggered workflows are unchanged: no review artifact, no `TYPESAFE_API_KEY`, zero provider calls
 - Gate thresholds are local screening policy, not calibrated legal probabilities and not readership predictions
 - SKILL.md frontmatter `license` and `metadata.license` now read `MIT-0`, matching the terms ClawHub publishes every skill under
-- 0.5.7 was never published to ClawHub; the registry moves from 0.5.6 to 0.6.0, which includes the 0.5.7 changes below
+- Released as 0.7.0, not 0.6.0: the ClawHub registry already holds an older, out-of-sequence 0.6.0 (2026-04-16), and version numbers there cannot be reused. 0.5.7 was never published, so the registry's `latest` moves from 0.5.6 to 0.7.0, which includes the 0.5.7 changes below
 
 ## 0.5.7 - 2026-09-25
 
