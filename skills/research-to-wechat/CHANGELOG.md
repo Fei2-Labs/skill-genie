@@ -2,6 +2,24 @@
 
 All notable changes to `research-to-wechat` will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- `references/original-rewrite.md` — canonical contract for the optional `rewriteMode: methodology-only`: activation (readable source material AND explicit rewrite intent, both required), the intake evidence record, positive/negative trigger examples, private source separation, methodology brief and exclusion ledger, the independent research ledger, persona resolution, the five Jev evaluation dimensions, gate policy `screening-policy-1`, round records, `rewrite-report.md`, and version binding after render normalization
+- `scripts/jev_rewrite.py` — standard-library-only screening evaluator with offline `--help`, `--policy`, `--example-input`, `--example-output`; credential comes from `TYPESAFE_API_KEY` in the environment
+- `tests/` — offline unit and documentation/regression tests; no network call and no WeChat write
+
+### Updated
+
+- SKILL.md, `references/execution-contract.md`, `references/style-engine.md`, `references/capability-map.md` — each source-preservation instruction now carries a clearly scoped exception that applies **only** in `rewriteMode: methodology-only`; Path A/Path B, capture, rendering, disclosure, factual-accuracy and draft-only behavior are otherwise unchanged
+- README.md and `docs/EXAMPLES.md` — document the mode with positive and negative trigger prompts, and the text-cover-brief versus actual-image limit
+
+### Notes
+
+- Non-triggered workflows are unchanged: no review artifact, no `TYPESAFE_API_KEY`, zero provider calls
+- Gate thresholds are local screening policy, not calibrated legal probabilities and not readership predictions
+
 ## 0.5.7 - 2026-09-25
 
 ### Added
