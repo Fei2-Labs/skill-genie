@@ -26,7 +26,7 @@ Use this skill as a native, research-first article system. It does not route exe
 - the renderer converts `[text](url)` into `text (url)` because WeChat forbids clickable links.
 - Never pretend the workflow did interviews, long field research, team debate, or hands-on testing when it did not.
 - Prefer visible disclosure of AI assistance and source scope.
-- Treat source capture as a runtime boundary: preserve title, author, description, body text, and image list before rewriting.
+- Treat source capture as a runtime boundary: preserve title, author, description, body text, and image list before rewriting. **Exception — `rewriteMode: methodology-only` only**: capture is still mandatory, but the captured original and its images are kept privately for comparison and are excluded from the deliverable; see [original-rewrite.md](references/original-rewrite.md).
 
 ## Operating Paths
 
@@ -37,6 +37,16 @@ Use this skill as a native, research-first article system. It does not route exe
 - `Path B: source-to-WeChat edition`
   use for: article text, markdown file, article URL, WeChat URL
   goal: preserve the useful source core, then rebuild it for WeChat reading and distribution
+  **Exception — `rewriteMode: methodology-only` only**: when the user supplied readable source material *and* explicitly asked for a rewrite, this preservation goal is superseded — keep only the abstract methodology and write an independently researched new article. See [original-rewrite.md](references/original-rewrite.md).
+
+Optional mode (orthogonal to the path choice):
+
+- `rewriteMode: methodology-only`
+  activate only when BOTH hold: readable source material was actually obtained, AND the user explicitly asked to rewrite / 改写 / 重写 / recreate an article from it.
+  do not activate for: topic only, render-only, save-only, translation-only, reference-only, voice-samples-only, or any explicit "不要改写" restriction.
+  ambiguous intent or failed source capture blocks the mode — ask one question, never keyword-match and never fall back to topic generation.
+  when inactive, everything below behaves exactly as written, no `TYPESAFE_API_KEY` is needed, and zero Jev calls are made.
+  full contract: [original-rewrite.md](references/original-rewrite.md).
 
 Default routing:
 - procedural or tool-teaching material -> `tutorial`
@@ -61,6 +71,7 @@ PDF policy:
 - save extracted figures to `imgs/source-fig-*.png`
 - record captions and page numbers in `source.md`
 - prefer source figures over generated visuals when they support the claim
+  **Exception — `rewriteMode: methodology-only` only**: extracted figures stay private comparison evidence; plan new visuals for the new article and keep `imgs/source-fig-*.png` out of the deliverable image set. See [original-rewrite.md](references/original-rewrite.md).
 
 Video policy:
 - a video source is valid only when the workflow can obtain the full spoken transcript
@@ -121,6 +132,7 @@ Determine this SKILL.md directory as `SKILL_DIR`, then use `${SKILL_DIR}/scripts
 | `scripts/fetch_wechat_article.py` | WeChat article fetch (mobile UA) |
 | `scripts/wechat_delivery.py` | Native WeChat delivery entrypoint (`check`, `design-catalog`, `render`, `upload-images`, `save-draft`, `update-cover`) |
 | `scripts/install-openclaw.sh` | OpenClaw skill installer |
+| `scripts/jev_rewrite.py` | Jev rewrite screening evaluator — **only** under `rewriteMode: methodology-only` ([original-rewrite.md](references/original-rewrite.md)) |
 
 ## Native Capability Contract
 

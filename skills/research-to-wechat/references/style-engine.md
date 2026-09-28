@@ -238,6 +238,15 @@ reference.
 - preserve all data points and named sources from original material
 - log any structural removal in the evidence ledger
 
+**Exception — `rewriteMode: methodology-only` only**: "original material" means the
+user's supplied source, and in this mode it is deliberately not carried over. Data
+points, named sources, cases, and structure from the supplied source are excluded via
+the exclusion ledger; the integrity rule then applies to the new article's own
+independently verified evidence. Author Mode above also does not apply to the source's
+author — resolve the user's persona separately, and declare assumptions when it cannot
+be confirmed. See [original-rewrite.md](original-rewrite.md). Outside this mode both
+rules are unchanged.
+
 ## Writing Checklists
 
 ### deep-analysis checklist (出稿前自检)
