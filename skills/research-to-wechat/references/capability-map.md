@@ -12,6 +12,7 @@ Use this file to keep `research-to-wechat` native. Do not resolve external skill
   - for PDF papers and reports, extract all figures, charts, tables, and diagrams into `imgs/source-fig-*.png`
   - for video URLs, obtain the full transcript before writing
   requirement: preserve title, author, description, body text, image list, and source subtype when available
+  **Exception — `rewriteMode: methodology-only` only**: capture is unchanged and still required, but the captured original and its extracted figures are private comparison evidence, excluded from the deliverable image set, from `--upload-map`, and from `manifest.json.outputs.wechat.images`. The "prefer source figures" preference in `inline-visuals` does not apply in this mode. See [original-rewrite.md](original-rewrite.md).
 
 - `markdown-polish`
   use for: canonical article cleanup before visuals and HTML rendering

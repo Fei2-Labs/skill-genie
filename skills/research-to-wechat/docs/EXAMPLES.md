@@ -67,6 +67,65 @@ Use these examples to show how the skill should be invoked from different starti
 manifest.json 里请把 outputs.wechat.markdown/html/cover_image/title/author/digest/images 写完整。
 ```
 
+## Conditional original rewrite (`rewriteMode: methodology-only`)
+
+See [references/original-rewrite.md](../references/original-rewrite.md) for the full
+contract. These prompts trigger the mode — supplied readable material **plus** an
+explicit rewrite instruction:
+
+```text
+下面是原文全文，请只保留它的方法论，独立调研后改写成一篇全新的公众号原创文章。
+不要沿用原文的数据、案例、图表和句式，新证据要逐条记录来源、日期和访问情况。
+每一轮用真实 Jev 评估侵权风险、同质化、传播、标题和头图方向，通过前不要当成已验收稿。
+```
+
+```text
+这个 PDF 里的方法我想用，保留方法论重新写一篇，配图重新规划，不要复用原文图表。
+```
+
+```text
+这是完整逐字稿，基于它重新创作一篇文章，用我自己的人设和说话方式；
+我的人设如果你不确定，先声明假设，不要虚构我的经历。
+```
+
+Rendering, cover and draft steps stay the same. The evaluator's offline commands:
+
+```bash
+python3 scripts/jev_rewrite.py --help
+python3 scripts/jev_rewrite.py --policy
+python3 scripts/jev_rewrite.py --example-input
+python3 scripts/jev_rewrite.py --example-output
+```
+
+### Requests that must NOT trigger the rewrite mode
+
+```text
+# topic only — Path A, no source material
+围绕"AI Agent 的落地成本"写一篇深度分析。
+
+# render-only
+这篇文章用 native dark 渲染转 HTML，别改内容。
+
+# save-only
+文章我定稿了，直接保存到公众号草稿箱。
+
+# translation-only
+把这篇英文文章翻译成中文，不要重写。
+
+# reference-only
+这篇你先读一下当背景资料，我等下再说要写什么。
+
+# voice-samples-only
+这三篇是我以前写的，模仿我的节奏写一篇新选题的文章。
+
+# explicit no-rewrite restriction
+请不要重写核心观点，只做结构优化、配图、封面和 HTML 转换。
+```
+
+Ambiguous requests get one clarifying question. If only the title or abstract could be
+fetched, the mode is blocked and the workflow asks for a readable source — it never
+falls back to topic-only generation.
+
 ## Delivery ladder request
 
 ```text
@@ -132,3 +191,6 @@ The result should leave behind:
 - skipping the normalization checklist or writing framework self-check
 - assuming official draft delivery is ready before `WECHAT_APPID/WECHAT_SECRET` and media requirements are confirmed
 - direct live publishing when the request says draft only
+- treating a supplied source as a rewrite request when no rewrite was asked for
+- reporting a `rewriteMode: methodology-only` draft as accepted while its screening status is `needs_revision`, `blocked`, or `stale`
+- describing a Jev score as legal clearance or as a real-world virality probability

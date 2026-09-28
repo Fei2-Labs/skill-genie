@@ -32,6 +32,7 @@ Blocking rule for PDF sources:
 For WeChat article URLs:
 - use `python3 "${SKILL_DIR}/scripts/fetch_wechat_article.py" "<URL>" --json`
 - preserve title, author, description, content, and image list before rewriting
+- **Exception — `rewriteMode: methodology-only` only**: still capture all of it, but keep it as private comparison evidence; the captured images stay out of the deliverable image set. See [original-rewrite.md](original-rewrite.md).
 
 For generic URLs:
 - use browser tools to capture the same fields
@@ -49,6 +50,12 @@ If the route is `Path B`, also record:
 - original structure and useful sections
 - what must be preserved verbatim or semantically
 - what should be rewritten for WeChat readability
+
+**Exception — `rewriteMode: methodology-only` only**: nothing is preserved verbatim or
+semantically. Replace the "what must be preserved" record with the methodology brief and
+exclusion ledger in [original-rewrite.md](original-rewrite.md) §3. Activation requires
+readable source material AND explicit rewrite intent; outside this mode the rule above
+is unchanged.
 
 ## Phase 2: Brief and Research Architecture
 
@@ -134,6 +141,7 @@ Apply the normalization checklist before refinement:
 - standardize tables
 - remove scraped UI remnants
 - preserve statistics, named sources, and substantive paragraphs unless they are demonstrably wrong
+  - **Exception — `rewriteMode: methodology-only` only**: this preservation rule does not apply to the original's material. The original's statistics, cases, and paragraphs are excluded by design and may not be re-cited through a substitute source; preserve instead the independently verified evidence of the new article. See [original-rewrite.md](original-rewrite.md) §3–§4.
 
 ## Phase 5: Refinement and Visual Layer
 
@@ -142,6 +150,7 @@ Make `article-formatted.md` the canonical article.
 Before generating visuals:
 - keep placeholders only when they improve comprehension or structure
 - prefer extracted source figures when they directly support the surrounding claim
+  - **Exception — `rewriteMode: methodology-only` only**: this preference does not apply. Extracted source figures are private comparison evidence and are excluded from the deliverable image set, from `--upload-map`, and from `manifest.json.outputs.wechat.images`; plan new visuals from the new article. See [original-rewrite.md](original-rewrite.md).
 - keep at least 300 words between major visuals unless the article structure truly needs more density
 
 For each approved image position, build:

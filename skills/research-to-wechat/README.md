@@ -19,6 +19,7 @@ curl -fsSL https://raw.githubusercontent.com/Fei2-Labs/skill-genie/main/research
 - Pencil MCP server for article design templates from `design.pen`
 - Official WeChat credentials for draft delivery: `WECHAT_APPID`, `WECHAT_SECRET`
 - Optional draft update target: `WECHAT_DRAFT_MEDIA_ID`
+- Optional rewrite screening (`rewriteMode: methodology-only` only): `TYPESAFE_API_KEY`
 
 ## Design Runtime
 
@@ -112,6 +113,30 @@ Use this when the user starts from:
 - WeChat URL
 
 In Path B, the workflow preserves the useful source core first, then rebuilds it for WeChat readability, visuals, digest, and draft delivery.
+
+### Optional: `rewriteMode: methodology-only`
+
+An orthogonal opt-in mode for one narrow case: you supplied readable source material
+**and** explicitly asked for a rewrite. The workflow then keeps only the abstract
+methodology, researches independently, writes a new article in your voice, and screens
+each revision with real Jev judgments before it is treated as ready.
+
+It does **not** activate for a topic alone, render-only, save-only, translation-only,
+"read this for reference", style samples, or any explicit "不要改写" restriction.
+Ambiguous intent or a failed source capture blocks the mode instead of guessing.
+
+When the mode is not triggered, nothing changes: no review artifacts, no
+`TYPESAFE_API_KEY`, and no provider call. The evaluator is standard-library only and
+reads its credential from `TYPESAFE_API_KEY` in the environment at request time:
+
+```bash
+python3 scripts/jev_rewrite.py --help
+python3 scripts/jev_rewrite.py --policy
+```
+
+Scores are a screening aid. They are model judgments, not legal clearance, not a
+non-infringement guarantee, and not a prediction of real readership. Full rules:
+[references/original-rewrite.md](references/original-rewrite.md).
 
 ## Supported inputs
 

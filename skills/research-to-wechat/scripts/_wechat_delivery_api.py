@@ -5,7 +5,9 @@ from __future__ import annotations
 import json
 import mimetypes
 import os
+import re
 import uuid
+from html import unescape
 from pathlib import Path
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
@@ -36,7 +38,102 @@ def save_draft(html_path: str, markdown_path: str, appid: str, secret: str, acce
     data = post_json(draft_url(token, media_id), payload)
     result = decode_json(data)
     result["draftStatus"] = "updated" if media_id else "created"
+    saved_id = media_id or str(result.get("media_id", ""))
+    result["verification"] = verify_draft(saved_id, article, token)
     return result
+
+
+def update_cover(appid: str, secret: str, access_token: str, media_id: str, cover_image: str, cover_type: str, dry_run: bool) -> dict[str, object]:
+    """Swap ONLY the cover of an existing draft, preserving the body verbatim.
+
+    Added 2026-09-25. save-draft rewrites the whole article from local html/markdown,
+    which risks body drift and needs a re-render just to change a picture. This reads
+    the live draft back with draft/get, uploads the new cover, and draft/update's the
+    same media_id changing ONLY thumb_media_id -- title / author / digest / content /
+    comment flags are echoed straight back from the live draft, so the body cannot move.
+
+    Like every other write here it still resets 原创 / 赞赏 / 合集 (editor-only fields
+    the API cannot touch), so only run it BEFORE those are set in the browser.
+    """
+    require_value("media_id", media_id)
+    require_value("cover_image", cover_image)
+    if dry_run:
+        return {"draftStatus": "dry-run", "coverType": cover_type, "mediaId": media_id, "cover": Path(cover_image).name}
+    token = access_token or fetch_access_token(appid, secret)
+    live = decode_json(post_json(f"https://api.weixin.qq.com/cgi-bin/draft/get?access_token={token}", {"media_id": media_id}))
+    items = live.get("news_item") or []
+    if not items:
+        raise SystemExit(f"Draft {media_id} has no news_item to update; nothing to re-cover.")
+    saved = items[0]
+    old_thumb = str(saved.get("thumb_media_id", ""))
+    new_thumb = upload_cover_image(cover_image, token, cover_type)
+    article = {
+        "title": str(saved.get("title", "")),
+        "author": str(saved.get("author", "")),
+        "digest": str(saved.get("digest", "")),
+        "content": str(saved.get("content", "")),
+        "content_source_url": str(saved.get("content_source_url", "")),
+        "thumb_media_id": new_thumb,
+        "need_open_comment": int(saved.get("need_open_comment", 0) or 0),
+        "only_fans_can_comment": int(saved.get("only_fans_can_comment", 0) or 0),
+    }
+    decode_json(post_json(draft_url(token, media_id), {"media_id": media_id, "index": 0, "articles": article}))
+    result: dict[str, object] = {
+        "draftStatus": "cover-updated",
+        "mediaId": media_id,
+        "coverType": cover_type,
+        "oldThumbMediaId": old_thumb,
+        "newThumbMediaId": new_thumb,
+    }
+    result["verification"] = verify_draft(media_id, article, token)
+    return result
+
+
+def verify_draft(media_id: str, article: dict[str, str], token: str) -> dict[str, object]:
+    """Read the draft back. A write returning errcode:0 does not mean it landed.
+
+    Observed 2026-09-25: draft/update reported ok while the live draft still held
+    the previous revision's title and body. Never treat the write response as proof.
+    """
+    if not media_id:
+        return {"checked": False, "reason": "no media_id to read back"}
+    live = decode_json(post_json(f"https://api.weixin.qq.com/cgi-bin/draft/get?access_token={token}", {"media_id": media_id}))
+    items = live.get("news_item") or []
+    if not items:
+        raise SystemExit(f"Draft readback failed: {media_id} has no news_item. Content did NOT land; re-push before reporting success.")
+    saved = items[0]
+    mismatches = [field for field in ("title", "digest") if str(saved.get(field, "")) != str(article.get(field, ""))]
+    missing = missing_text(str(article.get("content", "")), str(saved.get("content", "")))
+    if mismatches or missing:
+        detail = ", ".join(mismatches + ([f"body text {m!r} absent" for m in missing]))
+        raise SystemExit(f"Draft readback mismatch: {detail}. The write reported success but the live draft differs. Re-push and re-verify; do NOT report success.")
+    return {"checked": True, "media_id": media_id, "title": saved.get("title", ""), "contentLength": len(str(saved.get("content", "")))}
+
+
+def missing_text(local_html: str, live_html: str) -> list[str]:
+    """Which paragraphs of the pushed body are absent from the live draft.
+
+    WeChat rewrites the markup it is given, so the HTML never round-trips byte for
+    byte. Compare the visible text instead, and check every paragraph rather than a
+    sample: a stale draft typically differs in only a few paragraphs, which is
+    exactly what sampling walks past.
+    """
+    live = visible_text(live_html)
+    chunks = [c for c in visible_text(local_html).split("\n") if len(c) >= 12]
+    return [c for c in dict.fromkeys(chunks) if c not in live]
+
+
+def visible_text(html: str) -> str:
+    """Body text as WeChat stores it, for comparing a pushed article to the live draft.
+
+    WeChat rewrites the markup it is given and drops <head> entirely, so neither the
+    HTML nor the document title survives a round trip. Only the rendered body text does.
+    """
+    text = re.sub(r"<head\b.*?</head>", "", html, flags=re.DOTALL | re.IGNORECASE)
+    text = re.sub(r"<(script|style)\b.*?</\1>", "", text, flags=re.DOTALL | re.IGNORECASE)
+    text = re.sub(r"<[^>]+>", "\n", text)
+    text = unescape(text)
+    return "\n".join(line.strip() for line in text.split("\n") if line.strip())
 
 
 def fetch_access_token(appid: str, secret: str) -> str:
