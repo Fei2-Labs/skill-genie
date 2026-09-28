@@ -36,3 +36,11 @@ skills/ai-csuite/config/*.yaml
 # is what makes a handoff useful, and exactly what must not ship in a public
 # repo. The workspace journal is de-identified by hand and stays tracked.
 .trellis/handoffs/
+
+# Task artifacts and code-specs are working notes for one developer's session:
+# PRDs, research dumps, verification logs, provider scores. No task or spec file
+# has ever been tracked here, so this only makes the existing convention
+# explicit and stops a stray `git add .` from committing them. Trade-off: the
+# Phase 3.3 code-spec knowledge stays local instead of accumulating in the repo.
+.trellis/tasks/
+.trellis/spec/
