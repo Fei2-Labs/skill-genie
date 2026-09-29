@@ -44,7 +44,7 @@ The helper's 20-second socket timeout is not a total deadline. The documented GN
 
 A static indicator scan of all three skill files and the contract found no private absolute paths, private-network IP addresses, or recognized credential-shaped strings. Fixtures are visibly fictitious. This is a bounded static check, not proof that every possible secret format is absent.
 
-Task research is not a sanitized publication payload: two research files contain 46 local absolute-path occurrences. Matched values were not printed. No recognized credential-shaped strings were found in the task scan. Do not publish or bulk-stage all task artifacts without a separate sanitization review.
+Task research was reviewed before commit. Local absolute paths, caller-specific browser paths, and observed CDP endpoint details were replaced with neutral placeholders; no recognized credential-shaped strings were found. Research artifacts are task evidence, not skill runtime configuration.
 
 ## User-owned configuration follow-up — 2026-09-27
 
