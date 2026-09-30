@@ -207,3 +207,37 @@ commit id in this repo.
   ticket would be needed to force collection.
 - Clones on other machines cannot fast-forward across the rewrite and must
   be re-cloned or hard-reset.
+
+
+## Session 2: 完成 ChatGPT 网页委托 skill 安全检查与发布
+
+**Date**: 2026-09-29
+**Task**: 完成 ChatGPT 网页委托 skill 安全检查与发布
+**Branch**: `feat/chatgpt-web-delegation`
+
+### Summary
+
+完成 caller-owned ChatGPT web delegation skill；29 项离线测试和 37 项 skill 校验通过；脱敏任务研究中的本机路径与 CDP 细节；提交并归档任务；ClawHub 扫描 clean，但发布仍处于 pending.publication，未谎报为公开。保留其他 session 的 research-to-wechat、humanizer、wechat-compliance 改动。
+
+### Main Changes
+
+(Add details)
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `cab68e3` | (see git log) |
+| `c7c7810` | (see git log) |
+
+### Testing
+
+- [OK] (Add test results)
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- None - task complete
