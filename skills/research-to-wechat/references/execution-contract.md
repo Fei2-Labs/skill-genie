@@ -254,7 +254,12 @@ grep -c '——' article-formatted.md
 grep -c '！' article-formatted.md
 
 # 5. WeChat compliance (sensitive words)
-# Run wechat-compliance-check skill scan; ALWAYS hits must be fixed, CONTEXT hits need human judgment
+# COMPLIANCE_SKILL_DIR must resolve to the installed sibling skill; if absent, block.
+COMPLIANCE_SKILL_DIR="${COMPLIANCE_SKILL_DIR:-$(dirname "${SKILL_DIR}")/wechat-compliance-check}"
+test -f "${COMPLIANCE_SKILL_DIR}/scripts/compliance_scan.py" || { echo "❌ compliance scanner unavailable"; exit 2; }
+python3 "${COMPLIANCE_SKILL_DIR}/scripts/compliance_scan.py" article-formatted.md --json
+# Exit 0 is required. Exit 1: rewrite listed fragments and rerun, at most 5 rounds.
+# Exit 2/3: blocked; do not render or save the draft.
 ```
 
 **HTML integrity:**

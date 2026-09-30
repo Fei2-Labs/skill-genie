@@ -23,6 +23,23 @@ Do **not** use for pure translation, summarization, or factual research unless t
 - When the draft lacks evidence, **narrow the claim** or mark the gap as `[need: specific number / example / source]`. Do not invent.
 - Detector score is at most an external risk signal, never the quality target.
 
+## Jev revision loop (optional, bounded)
+
+When a transparent editing task needs an additional quality check, run one round with:
+
+```bash
+python3 scripts/humanlike_check.py --round N < input.json > round-N.json
+python3 scripts/humanlike_check.py --session session.json --summarize rounds/*.json
+```
+
+The input object contains `source`, `revision`, `lang` (`zh` or `en`), `genre`, and a 1-based `round`. Keep a private `session.json` manifest containing the exact source and each round's exact revision; `--session` is required for summarization and binds hashes, deterministic fact extraction, language, genre, and round order to that manifest. The evaluator runs the integrity gates before accepting a score: a heuristic comparison of numbers, dates, quotes, URLs, and name candidates, plus Jev checks for unsupported new facts and meaning preservation. The extraction is not exhaustive, so Jev's integrity judgment remains required; a high style or quality score never overrides a failed gate. Failed or unverified rounds are not eligible for the best revision, and records after a target or patience stop are rejected.
+
+For general genres, Jev's Noul is an internal writing-style proxy. It is not proof of authorship, a detector result, or a promise of any external detector outcome. The ideal target is `0.99`; the default budget is five rounds, with a stop after two consecutive rounds without improvement. On a budget or patience stop, the highest-scoring gate-passing revision is accepted only at `0.90` or above; otherwise the result is `needs_revision`. Measured public-domain human prose ranged from `0.82` to `0.96`, so `0.99` is aspirational and may not be reached honestly.
+
+Application and academic genres—personal statement, cover letter, application essay, academic abstract, and academic submission—also enter the bounded loop, but academic/application mode **does not ask for or optimize a human-authorship Noul**. It uses a separate editorial-quality Score for clarity, precision, genre fit, and source fidelity, with the same `0.90` normalized floor. It makes no claim of genuine authorship and does not promise to pass plagiarism or AI detectors. An explicit request to evade an academic-integrity or detector review is refused; transparent editing remains available.
+
+Missing credentials, network failures, malformed provider responses, near-boundary Noul integrity judgments (Noul has no provider confidence field, so uncertainty is derived from distance to 0.5), explicit low-confidence judgments, and tampered audit records are fail-closed (`blocked`); no score is produced. Keep each round record, including the validated provider response, gates, score, and input identity. Do not put credentials or private article text into fixtures or logs.
+
 ## Workflow
 
 1. **Scope the task** — extract: text to rewrite, target genre/platform, audience, tone, length limit (e.g. 280 chars for X free tier), whether new facts are allowed, any author writing sample, and edit depth (light / standard / heavy). If text + genre are clear, do not ask — proceed. Ask at most **one** clarifying question, only when continuing would produce the wrong genre, wrong voice, or fabricated content.

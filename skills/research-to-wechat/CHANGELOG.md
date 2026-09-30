@@ -2,6 +2,20 @@
 
 All notable changes to `research-to-wechat` will be documented in this file.
 
+## 0.7.1 - 2026-09-29
+
+### Added
+
+- Phase 6 now invokes the installed sibling `wechat-compliance-check` scanner
+  as a blocking executable gate with a bounded rewrite-and-rescan loop.
+- Missing scanner, Jev failure, and malformed word-list outcomes now block only
+  the WeChat delivery path; non-WeChat workflows remain unchanged.
+
+### Notes
+
+- The gate guarantees zero hits against the current word list and Jev checks,
+  not approval by WeChat's changing and unpublished moderation rules.
+
 ## 0.7.0 - 2026-09-28
 
 ### Added

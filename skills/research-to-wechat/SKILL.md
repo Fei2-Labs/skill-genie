@@ -197,7 +197,13 @@ Run the article through these phases:
    # exclamation marks (must be 0)
    grep -c '！' article-formatted.md
    ```
-6. **微信敏感词合规检查**（⛔ 必须通过才能继续）：用 `wechat-compliance-check` 扫描 `article-formatted.md`，有命中则改写后重新扫描，直到零违规。
+6. **微信敏感词合规检查**（⛔ 必须通过才能继续）：解析与本技能并列安装的 `wechat-compliance-check` 目录为 `COMPLIANCE_SKILL_DIR`，然后执行：
+   ```bash
+   COMPLIANCE_SKILL_DIR="${COMPLIANCE_SKILL_DIR:-$(dirname "${SKILL_DIR}")/wechat-compliance-check}"
+   test -f "${COMPLIANCE_SKILL_DIR}/scripts/compliance_scan.py" || { echo "compliance scanner unavailable; block WeChat delivery"; exit 2; }
+   python3 "${COMPLIANCE_SKILL_DIR}/scripts/compliance_scan.py" article-formatted.md --json
+   ```
+   退出码 0 才能继续；退出码 1 时只改写报告列出的片段并重扫，最多 5 轮，用尽后 `needs_revision`，不得交付；退出码 2 或 3 为 `blocked`，不得交付。无 scanner 时不得回退为通过，也不影响非公众号流程。
 7. refinement, visual strategy, and image evaluation
 
    **⛔ Pre-delivery compliance gate (BLOCKING — must execute before Phase 8):**
