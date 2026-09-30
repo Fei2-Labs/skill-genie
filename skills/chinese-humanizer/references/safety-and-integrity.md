@@ -36,6 +36,14 @@ For 申请文书 / 个人陈述 / 求职信 / 学术提交: you may improve clar
 
 简体 vs 繁体、大陆/台湾/香港/新加坡的词汇与语体差异影响"自然感"。If the target region is unclear and matters (e.g. 繁体台湾用语 vs 简体大陆用语), ask once or default to the region implied by the source text. Do not silently mix registers.
 
+## Jev revision loop / Jev 修订循环
+
+The optional `scripts/humanlike_check.py` loop has two modes. General genres use Jev's human-likeness Noul only as an internal writing-style proxy; it is not proof of a genuine author, not a detector result, and not a promise of passing any external detector. The ideal is 0.99, with a five-round budget, a two-round patience stop, and a 0.90 floor for a gate-passing best revision. The measured human baseline was 0.82–0.96, so 0.99 is aspirational rather than a promised outcome.
+
+申请文书、个人陈述、学术摘要、求职信及相关 academic/application genres are included in the same bounded revision loop, but they use an independent editorial-quality rubric (clarity, precision, genre fit, and source fidelity). Academic mode omits the human-authorship Noul entirely. It does not optimize for AI-detector or authorship results, claim genuine authorship, or promise to pass plagiarism or AI checks. A request to evade academic-integrity review is refused; transparent editing can still be offered.
+
+Every round applies the no-fabrication and meaning-preservation gates before a score can be selected. Deterministic extraction covers common numbers, dates, quotes, URLs, and name candidates as a conservative warning only; it is not exhaustive. Jev must assess unsupported facts and retained meaning. TypeSafe Noul answers do not currently report confidence, so the evaluator derives an uncertainty signal from distance to 0.5 and blocks near-boundary judgments; any explicitly low-confidence or malformed integrity judgment also fails closed. Never let a high quality or style score override a failed integrity gate. Keep raw validated provider responses and input identities for audit, but never store credentials or private article text in test fixtures.
+
 ## Mixed human-AI text
 
 Most user input is 人机混写 or AI-polished-after-human, not pure AI. Diagnose locally and fix selectively. Whole-piece rewriting tends to erase the most human parts — exactly what you want to keep.
