@@ -1,5 +1,0 @@
-{"file": ".trellis/spec/skills/chatgpt-web-delegation.md", "reason": "Routing contracts, branch consumption, and safe failure requirements"}
-{"file": ".trellis/tasks/09-26-chatgpt-web-delegation/research/jev-contract.md", "reason": "Current Jev HTTP contract and confidence semantics"}
-{"file": ".trellis/tasks/09-26-chatgpt-web-delegation/research/chatgpt-ui.md", "reason": "Observed browser availability and UI limitations"}
-{"file": ".trellis/tasks/09-26-chatgpt-web-delegation/research/browser-and-skills.md", "reason": "Existing browser skill conventions and available authenticated-session paths"}
-{"file": ".trellis/tasks/09-26-chatgpt-web-delegation/research/architecture-judgment.md", "reason": "Chosen scope and privacy gate with full Jev distributions"}
