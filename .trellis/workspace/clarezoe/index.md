@@ -8,8 +8,8 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 1
-- **Last Active**: 2026-09-24
+- **Total Sessions**: 2
+- **Last Active**: 2026-09-29
 <!-- @@@/auto:current-status -->
 
 ---
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~113 | Active |
+| `journal-1.md` | ~243 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 2 | 2026-09-29 | 完成 ChatGPT 网页委托 skill 安全检查与发布 | `cab68e3`, `c7c7810` | `feat/wechat-compliance-jev-gate` |
 | 1 | 2026-09-24 | Create, secure and publish ai-address-parser-debug skill | `27c5950` | `main` |
 <!-- @@@/auto:session-history -->
 
