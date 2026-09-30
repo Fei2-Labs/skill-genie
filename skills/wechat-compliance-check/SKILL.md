@@ -1,105 +1,80 @@
 ---
 name: "wechat-compliance-check"
-description: "扫描微信公众号文章中的违规敏感词并自动改写。覆盖翻墙工具、政治敏感、灰产、 破解逆向、引流卖货等 8 大类 100+ 敏感词。输出违规报告和改写后的安全版本。 Use when publishing WeChat articles, checking \"违规\", \"敏感词\", \"审核\", \"公众号合规\", or \"wechat compliance\"."
+description: "用确定性词库扫描与 Jev 语境、变体判定检查微信公众号文章。保证范围是对当前词库零命中，不承诺通过微信审核。"
 license: "MIT"
-metadata: {"openclaw":{"emoji":"🛡️","homepage":"https://github.com/nicekate/wechat-compliance-check"},"version":"1.0.2","tags":["wechat","compliance","content-safety","chinese-writing"],"hermes":{"tags":["wechat","compliance","content-safety","chinese-writing"]}}
+metadata: {"openclaw":{"homepage":"https://github.com/nicekate/wechat-compliance-check"},"version":"1.1.0","tags":["wechat","compliance","content-safety","chinese-writing"],"hermes":{"tags":["wechat","compliance","content-safety","chinese-writing"]}}
 ---
 
-# 微信公众号内容合规检查与改写
+# 微信公众号内容合规检查
 
-扫描文章中的微信平台违规敏感词，生成违规报告，并自动改写为安全表述。
+本技能以代码驱动扫描，不把词库对照交给模型自行完成。它能保证文章
+对**当前随技能发布的词库**没有确定性命中，并让 Jev 处理标为
+`[CONTEXT]` 的语境和整篇文章的规避表达检查。它**不承诺通过微信审核**：
+微信规则不公开且会变化，本技能也不检查图片文字或超出词库范围的平台检测类别。
 
-## 适用场景
+## 命令
 
-- 公众号文章发布前的合规自查
-- 已被判定违规的文章修复
-- 技术类文章中常见的敏感词替换（VPN、逆向、破解等）
-- 涉及海外平台、地缘政治内容的脱敏处理
+从本文件所在目录确定 `SKILL_DIR`，执行：
 
-## 使用方式
-
-```
-# 扫描文章
-/wechat-compliance-check path/to/article.md
-
-# 扫描并自动改写
-/wechat-compliance-check path/to/article.md --fix
-
-# 只输出报告不修改
-/wechat-compliance-check path/to/article.md --report-only
+```bash
+python3 "${SKILL_DIR}/scripts/compliance_scan.py" article.md --json
+python3 "${SKILL_DIR}/scripts/compliance_scan.py" article.md --json --no-jev
+python3 "${SKILL_DIR}/scripts/compliance_scan.py" --validate-wordlist
 ```
 
-## 检查流程
+可用选项：`--wordlist PATH` 指定词库，`--log-dir PATH` 指定原始请求/响应
+交换记录目录。默认词库是 `references/sensitive-words.md`。
 
-### Step 1: 加载敏感词库
+## 退出码和报告
 
-读取 [references/sensitive-words.md](references/sensitive-words.md) 中的完整敏感词库。
+| 退出码 | 含义 | 交付行为 |
+|---:|---|---|
+| 0 | `clean`：确定性零命中、语境安全、整文变体通过 | 可继续流程 |
+| 1 | `violations`：确定性命中、敏感语境或变体阈值失败 | 必须改写并重新扫描 |
+| 2 | `blocked`：缺凭据、Jev 不可用/非法/低置信度、预算超限或需要 Jev | 不得放行 |
+| 3 | 词库解析错误 | 不得放行 |
 
-### Step 2: 全文扫描
+即使 `[ALWAYS]` 命中，扫描器也会列出全部确定性命中；缺少
+`TYPESAFE_API_KEY` 不会阻止这些本地命中被报告，但任何需要 Jev 的步骤都
+返回 `blocked`。`--no-jev` 仅是离线诊断模式；存在 `[CONTEXT]` 命中时它
+绝不能返回 `clean`，也不能替代整文 Jev 检查。
 
-对输入文件逐行扫描，匹配 8 大类敏感词：
+JSON 报告包含 `deterministic_hits`、`context_hits`、`variant_scan`、
+`policy_version`、词库和文章哈希、`gaps`。每条命中包含行号、原文片段、
+类别、等级、标记、建议替换和段落。请求与响应原样落盘到日志目录，但
+报告和错误消息不回显凭据、原始 provider body 或异常文本。
 
-| 类别 | 风险等级 | 示例 |
-|------|---------|------|
-| 翻墙/代理工具 | 🔴 极高 | VPN、Clash、Shadowsocks、V2Ray、科学上网、梯子 |
-| 政治/地缘敏感 | 🔴 极高 | 中国封禁、GFW、防火墙、审查制度 |
-| 破解/逆向 | 🟡 高 | 逆向工程、破解、crack、hack、漏洞利用、注入 |
-| 封号/灰产 | 🟡 高 | 封号、封禁、转售、账号共享、代刷、薅羊毛 |
-| 引流/商业化 | 🟡 中 | 付费源码、购买、下单、加微信领取 |
-| 暴力/色情 | 🔴 极高 | （平台自动检测，本技能不覆盖） |
-| 赌博/诈骗 | 🔴 极高 | （平台自动检测，本技能不覆盖） |
-| 竞品/敏感品牌 | 🟡 中 | 视具体语境判断 |
+## 词库契约
 
-### Step 3: 生成违规报告
+词库只解析类别标题下 fenced block 内的条目。条目格式严格为：
 
-输出格式：
-
-```
-## 违规扫描报告
-
-文件：article.md
-扫描时间：2026-04-04 06:30
-总命中：12 处
-
-### 🔴 极高风险（3 处）
-- 第 903 行：`VPN` → 建议改为「虚拟专用网络」
-- 第 1098 行：`Clash` → 建议改为「网络规则工具」
-- 第 1017 行：`中国开发者封号潮` → 建议改为「部分地区开发者受限」
-
-### 🟡 高风险（6 处）
-- 第 871 行：`封号` → 建议改为「账号限制」
-- ...
-
-### ⚠️ 中风险（3 处）
-- 第 1826 行：`付费源码` → 建议改为「源码」
-- ...
+```text
+词 → 替换 | 🔴/🟡/⚠️ | [ALWAYS|CONTEXT|REGEX] 备注
 ```
 
-### Step 4: 自动改写（--fix 模式）
+坏行、未知等级、重复词、非法正则或未闭合 fenced block 都会以退出码 3
+失败，绝不静默跳过。ASCII 匹配不区分大小写；CJK 保持精确匹配；全角
+ASCII 会折叠为半角。条目可能带有更新器写入的来源、日期、Jev 分数和运行
+ID 元数据。词库现有条目及其可能重叠的子串和宽泛类别标签是源数据，扫描器
+逐条报告，不擅自去重或重新解释。
 
-当使用 `--fix` 参数时，自动执行改写：
+## 判定边界
 
-1. 备份原文件为 `{filename}.bak-{timestamp}`
-2. 按敏感词库中的替换规则逐一替换
-3. 对于需要上下文判断的词（如「注入」在技术语境中可能合法），标记为 `[REVIEW]` 供人工确认
-4. 输出改写摘要
+- `[ALWAYS]` 和 `[REGEX]` 命中直接违规，不交给模型覆盖。
+- 每个 `[CONTEXT]` 命中都附带段落和词库备注交 Jev；敏感概率至少 0.50
+  时违规。
+- 整篇文章只发起一次 Jev 变体检查，识别谐音、拆字、拼音缩写、隐晦指代
+  和词库外高风险表述。变体期望分数至少 2.0，或 3–4 级概率至少 0.20
+  时违规。
+- Jev Score 是 0–4 级的概率加权期望，通常为小数；响应分布必须完整、有限、
+  和为 1，并与分数在 provider 四舍五入容差内一致。
+- 无凭据、超时、429/529 重试耗尽、401/422、非法 JSON、坏响应或低置信度
+  均 `blocked`。文章超预算时报告未覆盖范围，绝不静默截断。
 
-### Step 5: 二次验证
+## 自动更新
 
-改写完成后，重新扫描一次确认无残留敏感词。如有残留，报告并提示手动处理。
-
-## 改写原则
-
-1. **保留原意**：改写后的表述必须传达相同的信息
-2. **自然流畅**：替换词要在上下文中读起来自然，避免生硬
-3. **上下文感知**：同一个词在不同语境下可能需要不同的替换
-   - 「注入」在 SQL 注入语境 → 保留（技术术语）
-   - 「注入」在「注入虚假工具」语境 → 改为「插入」
-4. **宁严勿松**：不确定时优先替换，宁可过度谨慎
-
-## 已知局限
-
-- 本技能覆盖文本层面的敏感词，不覆盖图片中的文字
-- 微信的审核规则会动态变化，敏感词库需要定期更新
-- 部分违规判定依赖上下文（如「代理」在技术文章中通常安全，但在翻墙语境中违规）
-- 不覆盖暴力、色情、赌博等微信平台自动检测的类别
+月度调研 procedure 在 [references/monthly-update.md](references/monthly-update.md)，
+政策阈值在 [references/policy.md](references/policy.md)。更新器只接受带来源
+URL、日期和**已验证 Jev 分布**的新增条目；不能凭调用者自己填写的
+`evidence_score` 绕过验证。它只创建 `auto/wordlist-YYYY-MM` 分支上的增量，
+不自动合并 `main` 或发布 ClawHub。
