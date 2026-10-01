@@ -4,7 +4,7 @@ description: "Summarize the current session into a precise, file-saved handoff d
 license: "MIT"
 argument-hint: "What will the next session focus on?"
 allowed-tools: "Bash, Read, Write, Glob, Grep"
-metadata: {"version":"1.5.2","category":"session-memory","triggers":["handoff","session summary","summarize session","hand this off","create handoff","write handoff","/handoff"],"license":"MIT","tags":["session-memory","handoff","workflow","continuation"],"hermes":{"tags":["session-memory","handoff","workflow","continuation"]}}
+metadata: {"version":"1.5.3","category":"session-memory","triggers":["handoff","session summary","summarize session","hand this off","create handoff","write handoff","/handoff"],"license":"MIT","tags":["session-memory","handoff","workflow","continuation"],"hermes":{"tags":["session-memory","handoff","workflow","continuation"]}}
 ---
 
 # Session Handoff
@@ -22,14 +22,18 @@ This skill writes the artifact. Use `handoff-receiver` when the task is to conti
 
 ## Step 1: Determine output path and index files
 
-1. If `.trellis/` exists in the working directory → write to `.trellis/handoffs/YYYY-MM-DD-HH-MM.md`
-2. Else if `docs/` exists in the working directory → write to `docs/handoffs/YYYY-MM-DD-HH-MM.md`
-3. Otherwise → write to `handoff.md` in the project root
+1. If `.trellis/shared/` exists → write to `.trellis/shared/handoffs/YYYY-MM-DD-HH-MM.md`
+2. Else if `.trellis/` exists → write to `.trellis/handoffs/YYYY-MM-DD-HH-MM.md`
+3. Else if `docs/` exists → write to `docs/handoffs/YYYY-MM-DD-HH-MM.md`
+4. Otherwise → write to `handoff.md` in the project root
 4. If the handoff directory is not the project root, maintain `<handoff-dir>/CURRENT` as the active pointer
 5. Maintain `<handoff-dir>/INDEX.md` as the compact handoff index
 
 ```bash
-if [ -d ".trellis" ]; then
+if [ -d ".trellis/shared" ]; then
+  mkdir -p .trellis/shared/handoffs
+  HANDOFF_DIR=".trellis/shared/handoffs"
+elif [ -d ".trellis" ]; then
   mkdir -p .trellis/handoffs
   HANDOFF_DIR=".trellis/handoffs"
 elif [ -d "docs" ]; then
