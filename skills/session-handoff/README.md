@@ -13,11 +13,20 @@ Summarize the current session into a precise, file-saved handoff document.
 
 ## How it works
 
-1. Determine output path (`.trellis/handoffs/`, `docs/handoffs/`, or project root)
+1. Determine output path (`.trellis/shared/handoffs/` when the runtime layer is configured, else `.trellis/handoffs/`, `docs/handoffs/`, or project root)
 2. Gather facts from git (`status`, `diff`, `log`)
 3. Extract from conversation (goal, files, commands, errors, decisions, next steps)
 4. Write the handoff file using a strict template
 5. Update `CURRENT` pointer and `INDEX.md`
+
+## Handoff path precedence
+
+1. `.trellis/shared/handoffs/` (if `.trellis/shared` exists)
+2. `.trellis/handoffs/`
+3. `docs/handoffs/`
+4. project root
+
+This keeps multi-worktree agents synchronized in real time when shared memory runtime layer is enabled.
 
 ## Key features
 

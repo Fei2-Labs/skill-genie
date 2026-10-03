@@ -13,10 +13,19 @@ Receive and continue from a prior session handoff.
 
 ## How it works
 
-1. Locate the active handoff via `CURRENT` pointer and `INDEX.md`
+1. Locate the active handoff via `CURRENT` pointer and `INDEX.md` (in `.trellis/shared/handoffs/` first when the runtime layer is configured)
 2. Validate git state matches the handoff's recorded branch and commit
 3. Load goal, current state, and next steps
 4. Begin executing next steps in order
+
+## Handoff read path precedence
+
+1. `.trellis/shared/handoffs/` (if runtime shared layer is configured)
+2. `.trellis/handoffs/`
+3. `docs/handoffs/`
+4. project root fallback
+
+When path #1 exists, this receiver should treat it as canonical to keep all worktrees in sync in real time.
 
 ## Key features
 

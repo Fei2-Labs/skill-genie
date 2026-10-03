@@ -9,4 +9,9 @@ Add your universal "always do this" and "never do that" rules here.
 - Stack and deployment: `cat ~/.agents/rules/stack-and-deployment.md`
 - External tools and skills: `cat ~/.agents/rules/external-tools.md`
 
+## Session start
+
+At the beginning of every session in a git repository, read
+`~/.agents/rules/session-sync.md` before beginning task work.
+
 <!-- Generate with: skillgenie read init-rules -->

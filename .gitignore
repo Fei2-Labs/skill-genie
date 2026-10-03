@@ -44,3 +44,7 @@ skills/ai-csuite/config/*.yaml
 # Phase 3.3 code-spec knowledge stays local instead of accumulating in the repo.
 .trellis/tasks/
 .trellis/spec/
+
+# Per-repository worktree runtime link created by the shared-memory skill. It
+# points into the git common dir and is machine-local by construction.
+.trellis/shared
