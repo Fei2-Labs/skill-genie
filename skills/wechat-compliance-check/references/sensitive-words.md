@@ -1,6 +1,6 @@
 # 微信公众号敏感词库
 
-> 最后更新：2026-04-04
+> 最后更新：2026-10-03
 > 来源：实际发布踩坑 + 社区汇总 + 微信官方规范
 
 ## 使用说明
@@ -89,6 +89,9 @@ account sharing → multi-user access | 🟡 | [ALWAYS]
 代刷 → 违规操作 | 🟡 | [ALWAYS]
 刷量 → 违规操作 | 🟡 | [ALWAYS]
 外挂 → 第三方工具 | 🟡 | [ALWAYS]
+拉人头 → 邀请用户 | 🔴 | [ALWAYS] 传销典型特征 {src=https://finance.sina.cn/tech/2026-09-22/detail-inistmez1872269.d.html; date=2026-10-03; jev=0.892; run=monthly-2026-10}
+AI魔改 → AI改编 | 🟡 | [CONTEXT] 经典作品/历史人物颠覆性改编被专项治理 {src=https://news.qq.com/rain/a/20260904A0DGB300; date=2026-10-03; jev=0.867; run=monthly-2026-10}
+体育荐彩 → 体育分析 | 🟡 | [CONTEXT] 需企业主体及资质，个人号发布高风险 {src=https://www.sohu.com/a/1077382147_121123774; date=2026-10-03; jev=0.855; run=monthly-2026-10}
 ```
 
 ## 5. 引流/商业化类 🟡
@@ -102,6 +105,7 @@ account sharing → multi-user access | 🟡 | [ALWAYS]
 限时优惠 → （视语境） | 🟡 | [CONTEXT]
 免费领 → （视语境） | 🟡 | [CONTEXT] 可能触发诱导分享
 扫码付款 → （视语境） | 🟡 | [CONTEXT]
+低投入高回报 → （删除收益承诺） | 🟡 | [ALWAYS] 传销/投资诱导话术 {src=https://finance.sina.cn/tech/2026-09-22/detail-inistmez1872269.d.html; date=2026-10-03; jev=0.903; run=monthly-2026-10}
 ```
 
 ## 6. 平台/品牌敏感类 ⚠️
@@ -135,6 +139,7 @@ account sharing → multi-user access | 🟡 | [ALWAYS]
 ---
 
 ## 更新日志
+- 2026-10-03：新增 4 条（run monthly-2026-10），来源与 Jev 评估见各条目元数据
 
 - 2026-04-04：初始版本，基于实际公众号发布违规经验整理
 - 覆盖 8 大类 100+ 敏感词/短语
