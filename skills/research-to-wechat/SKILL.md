@@ -2,7 +2,7 @@
 name: "research-to-wechat"
 description: "A native research-first pipeline that turns a topic, notes, article, URL, or transcript into a sourced article with an evidence ledger, polished Markdown, inline visuals, cover image, WeChat-ready HTML, browser/API-ready draft assets, and optional multi-platform distribution. Use when the user wants 深度研究、改写成公众号、写作、排版、配图、HTML 转换、公众号草稿生成、多平台分发."
 license: "MIT-0"
-metadata: {"openclaw":{"emoji":"🔬","homepage":"https://github.com/Fei2-Labs/skill-genie","requires":{"anyBins":["python3"]},"primaryEnv":"WECHAT_APPID"},"version":"0.7.0","category":"content-generation","author":"Skill Genie","license":"MIT-0","tags":["wechat","research","content-generation","publishing"],"hermes":{"tags":["wechat","research","content-generation","publishing"]}}
+metadata: {"openclaw":{"emoji":"🔬","homepage":"https://github.com/Fei2-Labs/skill-genie","requires":{"anyBins":["python3"]},"primaryEnv":"WECHAT_APPID"},"version":"0.7.2","category":"content-generation","author":"Skill Genie","license":"MIT-0","tags":["wechat","research","content-generation","publishing"],"hermes":{"tags":["wechat","research","content-generation","publishing"]}}
 ---
 
 # Research to WeChat
@@ -26,6 +26,7 @@ Use this skill as a native, research-first article system. It does not route exe
 - the renderer converts `[text](url)` into `text (url)` because WeChat forbids clickable links.
 - Never pretend the workflow did interviews, long field research, team debate, or hands-on testing when it did not.
 - Prefer visible disclosure of AI assistance and source scope.
+- Keep production history and editorial notes out of reader-facing copy unless that history directly helps the reader use the article. Put source provenance in metadata or references; explain only the version distinction a reader needs.
 - Treat source capture as a runtime boundary: preserve title, author, description, body text, and image list before rewriting. **Exception — `rewriteMode: methodology-only` only**: capture is still mandatory, but the captured original and its images are kept privately for comparison and are excluded from the deliverable; see [original-rewrite.md](references/original-rewrite.md).
 
 ## Operating Paths
@@ -131,6 +132,7 @@ Determine this SKILL.md directory as `SKILL_DIR`, then use `${SKILL_DIR}/scripts
 |--------|---------|
 | `scripts/fetch_wechat_article.py` | WeChat article fetch (mobile UA) |
 | `scripts/wechat_delivery.py` | Native WeChat delivery entrypoint (`check`, `design-catalog`, `render`, `upload-images`, `save-draft`, `update-cover`) |
+| `scripts/make_text_cover.py` | Default 2048×872 dark text cover; title block centered so WeChat's automatic square thumbnail shows it ([cover-design-guide.md](references/cover-design-guide.md)) |
 | `scripts/install-openclaw.sh` | OpenClaw skill installer |
 | `scripts/jev_rewrite.py` | Jev rewrite screening evaluator — **only** under `rewriteMode: methodology-only` ([original-rewrite.md](references/original-rewrite.md)) |
 
@@ -204,6 +206,13 @@ Run the article through these phases:
    python3 "${COMPLIANCE_SKILL_DIR}/scripts/compliance_scan.py" article-formatted.md --json
    ```
    退出码 0 才能继续；退出码 1 时只改写报告列出的片段并重扫，最多 5 轮，用尽后 `needs_revision`，不得交付；退出码 2 或 3 为 `blocked`，不得交付。无 scanner 时不得回退为通过，也不影响非公众号流程。
+
+   **⛔ Reader-perspective paragraph review (BLOCKING before HTML rendering or draft save):**
+   - Read the entire final `article-formatted.md` in order, one paragraph and heading at a time. Ignore frontmatter when judging reader-facing prose. For each paragraph, ask: What does a first-time reader know at this point? What question does this answer? Does it require an unstated earlier draft, private decision, working file, or production step? Does it repeat another paragraph or interrupt the promised tutorial?
+   - Flag author-to-editor notes, revision history, internal version comparisons that do not guide installation, process claims, ungrounded examples, undefined terms, and transitions that assume missing context. Preserve version warnings that affect commands, but write them for a reader with no knowledge of the source draft.
+   - Record each flagged location with its exact quote, reader impact, and edit; repair the canonical Markdown and regenerate `article-formatted.md` as needed. Re-read adjacent paragraphs after every repair. Rerun de-AI and compliance scans on the final text. A whole-article score from Jev or another model does not replace this paragraph pass; use semantic judgments only to prioritize ambiguous passages.
+   - Before rendering, confirm the reader-facing body contains no unexplained mentions of "old draft", "rewritten", "this revision", "above discussion", or internal file/process names. For example, "This article was rewritten from an old draft" tells the reader nothing useful; remove it, while keeping a warning that a named repository was archived when it changes which install command works. A zero-hit keyword scan alone does not pass; manually inspect every paragraph. Do not claim this gate passed unless the full article was read and flagged passages were resolved.
+   - Repeat this pass on changed sections after any late rewrite. Compare rendered HTML and any saved draft against the approved text before reporting delivery.
 7. refinement, visual strategy, and image evaluation
 
    **⛔ Pre-delivery compliance gate (BLOCKING — must execute before Phase 8):**
@@ -227,6 +236,8 @@ Run the article through these phases:
 
    **Cover = the 2.35:1 `cover.png`, `--cover-type image`. Never the square crop.**
    The feed card and the article header both use the cover set on the draft. Use the wide `cover.png` (`--cover-type image`), not `cover-thumb.png` / `--cover-type thumb`: verified 2026-09-25, a square thumb gets center-cropped to the card's wide aspect and the bottom line of text is chopped off, so it reads as oversized and clipped. The wide cover keeps its one line of text in the visible band. `cover-thumb.png` is only a fallback where a square is explicitly required. Full rules — dimensions, the single-`thumb_media_id` two-crop reality, and crop-safe text layout — are in [cover-design-guide.md](references/cover-design-guide.md).
+
+   **Default cover layout (non-Kompany articles): `scripts/make_text_cover.py`.** It keeps the cover wide (2048×872) and centers the whole title block within 760px, so the square thumbnail WeChat crops from the center after publishing still shows the full title. Do not make a square cover. `--square-preview` writes a check-only image; never upload it.
 
    **To change ONLY the cover of an existing draft, use `update-cover` — not `save-draft`.**
    `save-draft` rewrites the whole article from local html/markdown (risking body drift and needing a re-render). `update-cover` reads the live body back via `draft/get` and re-pushes only `thumb_media_id`, so the body cannot move:
@@ -313,6 +324,7 @@ The skill is complete only when all of these hold:
 - `manifest.json` agrees with the actual output set and draft state
 - the saved draft was **read back via `draft/get`** and its title, digest, and revision-specific body phrases match the local files — the write call's `errcode:0` alone does not satisfy this
 - the article does not overclaim research effort or authorship
+- the reader-perspective paragraph review passed on the final markdown; each changed section was reviewed again after its last edit
 - `wechat-compliance-check` returned zero violations on the final markdown
 - the workflow can stop safely at the highest-quality completed artifact if a later handoff fails
 - if Phase 8 was triggered, platform copies follow [platform-copy.md](references/platform-copy.md) and manifest includes their output entries

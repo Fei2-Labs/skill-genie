@@ -2,6 +2,18 @@
 
 All notable changes to `research-to-wechat` will be documented in this file.
 
+## 0.7.2 - 2026-10-03
+
+### Added
+
+- `scripts/make_text_cover.py`: default dark text cover at 2048×872. The title
+  block is centered and at most 760px wide, so WeChat's automatic square
+  thumbnail shows the whole title. `--square-preview` writes a check-only crop.
+- Cover design guide: documents the default layout (colors, fonts, coordinates,
+  copy rules), based on the 2026-09-26 GSD tutorial cover.
+- Reader-perspective paragraph review is now a blocking gate before rendering
+  or draft save.
+
 ## 0.7.1 - 2026-09-29
 
 ### Added
