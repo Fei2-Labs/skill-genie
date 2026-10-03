@@ -1,10 +1,12 @@
 # shared-memory
 
-Unified shared state model for all AI agents: durable knowledge + real-time worktree state.
+Portable project memory that any AI agent can find, plus optional real-time state shared across git worktrees.
 
 ## What it does
 
-`shared-memory` defines one cross-agent convention with two concerns:
+`shared-memory` defines an on-disk convention for storing project knowledge that works across all AI coding agents (Claude Code, Cursor, Codex, OpenClaw, Aider, etc.). It includes a shared layer in the project repo and a private layer for personal notes.
+
+It also covers a second, separate concern:
 
 1. **Knowledge memory** (portable, searchable, long-lived)
 2. **Worktree runtime memory** (real-time handoffs/logs across git worktrees)
@@ -16,8 +18,27 @@ This lets Claude Code, Codex, Kiro, Devin, and other agents share both:
 ## When to use
 
 - Saving project knowledge that should survive across tools
+- User says "save to shared memory", "remember this for all agents"
+- When you suspect another agent's memory might be relevant
 - Sharing handoffs/state between multiple worktrees immediately
-- User says "shared memory", "handoff", "cross-worktree", "agent state"
+- User says "handoff", "cross-worktree", "agent state"
+
+## How it works
+
+1. Reads existing shared memory from the project's `.agents/memory/` directory
+2. Writes new knowledge using a structured format with metadata
+3. Private notes go to a machine-local layer outside the repo
+4. Any agent can discover and read the shared layer
+5. Optionally links each worktree's `.trellis/shared` to one per-repository runtime store
+
+## Key features
+
+- Cross-agent compatible: works with any tool that can read files
+- Structured format with timestamps and categories
+- Private layer for personal/sensitive notes (never committed)
+- Search and retrieval across all stored knowledge
+- Sensitive-content gate before anything is written to the shared layer
+- Real-time cross-worktree handoffs without commits or merges
 
 ## Storage model
 

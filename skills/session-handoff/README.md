@@ -4,7 +4,7 @@ Summarize the current session into a precise, file-saved handoff document.
 
 ## What it does
 
-`session-handoff` produces a structured handoff file covering goals, files changed, commands run, errors, decisions, and next steps so a future agent or person can continue with low drift.
+`session-handoff` produces a structured handoff file covering goals, files changed, commands run, errors, decisions, and next steps — so a future agent or person can pick up exactly where you left off.
 
 ## When to use
 
@@ -13,7 +13,7 @@ Summarize the current session into a precise, file-saved handoff document.
 
 ## How it works
 
-1. Determine output path (prefer real-time shared handoff dir when configured)
+1. Determine output path (`.trellis/shared/handoffs/` when the runtime layer is configured, else `.trellis/handoffs/`, `docs/handoffs/`, or project root)
 2. Gather facts from git (`status`, `diff`, `log`)
 3. Extract from conversation (goal, files, commands, errors, decisions, next steps)
 4. Write the handoff file using a strict template
@@ -30,10 +30,10 @@ This keeps multi-worktree agents synchronized in real time when shared memory ru
 
 ## Key features
 
-- Derives everything from conversation + git state
+- Derives everything from conversation + git state — never asks the user
 - Maintains a handoff index for multi-stream tracking
 - Status management: open / paused / done / superseded
-- Pairs with `handoff-receiver` for seamless continuation
+- Pairs with `handoff-receiver` for seamless session continuity
 
 ---
 
