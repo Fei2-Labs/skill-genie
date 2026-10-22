@@ -76,6 +76,13 @@ remote:
     pick:
       - security-audit
 
+  # OpenAI official Ads conversions skill (Pixel + CAPI setup). Proprietary
+  # license: referenced here, never vendored into this repo.
+  - repo: openai/plugins
+    path: plugins/openai-ads-conversions/skills
+    pick:
+      - openai-ads-conversions-setup
+
 # Private repos go in your own skills.yaml, never here. A private entry looks
 # the same as a public one; the clone uses your `gh` git credentials.
 
