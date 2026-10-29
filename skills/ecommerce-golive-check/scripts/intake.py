@@ -31,6 +31,8 @@ QUESTIONNAIRE = [
     ("Orders & webhooks", [
         "Does a webhook drive order state? Which events (order_created, payment_succeeded)?",
         "Is the webhook signature verified?",
+        "Does a confirmation email go to the customer on order? Which mail provider (Resend etc.)?",
+        "Is delivery verified by a real received email, not just a mail-API 200 / 'queued'?",
     ]),
     ("Data & tracking", [
         "Cookies, analytics, ad pixels, third-party SDKs in use?",
@@ -66,6 +68,8 @@ EMPTY_INTAKE = {
         "drives_order_state": None,  # bool
         "events": [],                # e.g. order_created, payment_succeeded
         "signature_verified": None,  # bool
+        "order_confirmation_email": None,  # bool — delivered & verified by a real received email, not a mail-API 200
+        "mail_provider": "",         # e.g. resend
     },
     "data": {
         "cookies": None,             # bool

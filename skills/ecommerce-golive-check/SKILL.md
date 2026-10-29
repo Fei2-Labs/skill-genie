@@ -2,7 +2,7 @@
 name: "ecommerce-golive-check"
 description: "Pre-launch go-live gate for an ecommerce / online store. Orchestrates the existing specialist skills into one ordered, evidence-based checklist with a BLOCKING launch gate: payment & checkout end-to-end, order webhook signature + status flow, feature completeness (no stubs / fake data / auth gaps), legal compliance (GDPR/DSGVO cookie consent, required policy pages, Art. 13 elements) via web-compliance-builder, CRO conversion audit via psychology-master, responsive adaptation on mobile / tablet / desktop via web-verify, SEO/AEO/GEO, deployed-vs-served parity, and release hygiene (no real infra identifiers, CI green, secrets read at runtime). Use when the user says 电商上线检查 / go-live check / 上线前检查 / pre-launch audit / 发布清单 for a store, or wants to verify an ecommerce site is ready to launch. Classifies the store first; marks every item Blocking / High / Medium / Low; produces a pass/fail gate, not prose. Not legal advice."
 license: "MIT"
-metadata: {"version":"1.0.0","category":"launch-qa","license":"MIT","tags":["ecommerce","go-live","launch","audit","checklist","gdpr","dsgvo","cro","responsive","payments","webhook","seo"],"hermes":{"tags":["ecommerce","go-live","launch","audit","checklist","gdpr","dsgvo","cro","responsive","payments","webhook","seo"]}}
+metadata: {"version":"1.1.0","category":"launch-qa","license":"MIT","tags":["ecommerce","go-live","launch","audit","checklist","gdpr","dsgvo","cro","responsive","payments","webhook","seo"],"hermes":{"tags":["ecommerce","go-live","launch","audit","checklist","gdpr","dsgvo","cro","responsive","payments","webhook","seo"]}}
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion
 ---
 
@@ -41,7 +41,7 @@ re-derive a check this skill already delegates.
 | CRO conversion audit (funnel, CTA, forms, pricing, trust, ethics) | `psychology-master` | repo |
 | Responsive adaptation (mobile / tablet / desktop) + a11y | `web-verify` (local); `ui-ux-pro-max`, `web-accessibility-audit` (remote) | repo + skills.yaml |
 | Payment & checkout, settlement, refunds, readiness gate | `cross-layer-payment-provider-migration` | installed (auto/) |
-| Order webhook signature + replay verification | `real-signed-webhook-replay-verification` | installed (auto/) |
+| Order webhook signature + status flow + confirmation email delivery | `real-signed-webhook-replay-verification` (+ inline real-inbox email test) | installed (auto/) |
 | Feature completeness (stubs, fake data, auth gaps, dead links) | `nuxt-app-feature-gap-audit` / `audit-feature-claims-with-evidence` | installed (auto/) |
 | Ad pixel consent-gating + conversion events | `verify-consent-gated-ad-pixel-launch` | installed (auto/) |
 | Deployed-vs-served parity, real-device screenshots | `web-verify` / `verify-and-ship-visual-data-fix` | repo + installed |
@@ -74,10 +74,12 @@ Run the eight blocks below. For each, read the owning skill, run it, and record:
    - Add-to-cart → checkout → provider → success/fail/cancel return all land correctly
    - Amount, currency, tax, shipping computed right; refund path exists
    - Front-of-store copy does not name unfamiliar processors (generic wording)
-2. **Order webhook & status** → `real-signed-webhook-replay-verification`
+2. **Order webhook, status & confirmation email** → `real-signed-webhook-replay-verification` (+ inline email-delivery test)
    - Webhook endpoint verifies signature (real signed replay, not a mock)
    - `order_created` / `payment_succeeded` actually transitions order state
-   - Failures retry or alert; no silent dropped orders
+   - **Order confirmation email actually reaches the customer on a real test order** — received in a real inbox, NOT just a mail-API `200` / "queued" (a queued send is not a delivered email)
+   - Confirmation email has correct order details (order number, line items, total, delivery/returns info) and an authenticated sender (SPF/DKIM/DMARC pass, not landing in spam)
+   - Failures retry or alert; no silent dropped orders and no silently dropped emails
 3. **Feature completeness** → `nuxt-app-feature-gap-audit` + `audit-feature-claims-with-evidence`
    - No fake data / stubs / placeholder content on a shipping page
    - No auth gaps (endpoints that should require login do)
@@ -130,7 +132,7 @@ Run `scripts/gate.py` with the recorded block verdicts (JSON). It produces:
 
 | Severity | Examples | Gate effect |
 |----------|----------|-------------|
-| 🔴 Blocking | payment can't complete, webhook unverified, tag fires pre-consent, missing required legal page, checkout broken on mobile, wrong-locale meta, real infra identifier in public artifact | Fails the gate |
+| 🔴 Blocking | payment can't complete, webhook unverified, order confirmation email never reaches the customer, tag fires pre-consent, missing required legal page, checkout broken on mobile, wrong-locale meta, real infra identifier in public artifact | Fails the gate |
 | 🟠 High | missing JSON-LD, weak CTA, inadequate (present-but-thin) policy, no refund path shown | Fix before launch; recorded as waiver if overridden |
 | 🟡 Medium | suboptimal pricing layout, minor a11y, medium form friction | Fix after launch |
 | 🟢 Low | cosmetic, future improvement | Backlog |

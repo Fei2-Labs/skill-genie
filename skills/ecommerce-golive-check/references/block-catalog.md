@@ -22,18 +22,24 @@ Processor names only where legally required (terms/privacy) or where the custome
 is visibly redirected to the hosted page. Use generic wording ("encrypted payment
 service provider") elsewhere.
 
-## Block 2 — Order webhook & status
+## Block 2 — Order webhook, status & confirmation email
 
-**Owner:** `real-signed-webhook-replay-verification`
+**Owner:** `real-signed-webhook-replay-verification` (+ inline real-inbox email test)
 
 | Check | Pass evidence | Severity |
 |-------|---------------|----------|
 | Webhook endpoint verifies signature | Real signed replay accepted; tampered payload rejected | 🔴 Blocking |
 | `order_created` / `payment_succeeded` transitions order state | DB/state shows order moved to paid | 🔴 Blocking |
-| Failures retry or alert; no silent drop | Retry/alert path shown | 🟠 High |
+| Order confirmation email reaches the customer on a real test order | Email **received in a real inbox** from test order #N — not a mail-API 200 / "queued" | 🔴 Blocking |
+| Confirmation email content correct + sender authenticated | Email shows right order #, line items, total, delivery/returns info; SPF/DKIM/DMARC pass; not in spam | 🟠 High |
+| Failures retry or alert; no silent drop (orders or emails) | Retry/alert path shown | 🟠 High |
 
 Use a **real signed** webhook replay, never a mock — a mock proves nothing about
-signature verification.
+signature verification. For the confirmation email, a mail-API `200` or a
+"queued" status is **not** proof of delivery (repo lesson: a mailer whose live
+send was never tested): place a real test order and confirm the email actually
+arrives in a real inbox, from the correct authenticated sender, with the right
+order details.
 
 ## Block 3 — Feature completeness
 
