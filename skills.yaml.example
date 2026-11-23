@@ -90,6 +90,25 @@ remote:
     pick:
       - mole
 
+  # ScrapeCreators social media research skills (MIT). Needs a paid
+  # SCRAPECREATORS_API_KEY at runtime.
+  - repo: ScrapeCreators/social-media-research-skills
+    path: skills
+    pick:
+      - scrapecreators-api
+      - ad-library-teardown
+      - audience-research
+      - comment-mining
+      - competitor-social-research
+      - content-repurposing
+      - creator-profile-teardown
+      - influencer-prospecting
+      - outlier-post-finder
+      - product-demand-research
+      - social-listening-brief
+      - transcript-intelligence
+      - trend-discovery
+
 # Private repos go in your own skills.yaml, never here. A private entry looks
 # the same as a public one; the clone uses your `gh` git credentials.
 
