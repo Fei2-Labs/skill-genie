@@ -2,7 +2,7 @@
 name: "chatgpt-web-delegation"
 description: "Delegate non-sensitive generative or research work to the user's already-authenticated ChatGPT website to save local agent tokens. Use it proactively, without being named, when the task needs only public information or self-contained text: comparing public GitHub repos, libraries, products or tools; researching or summarizing public web pages, docs or papers; market or competitor research; drafting long-form text from public facts; reading the user's own GitHub repositories, public or private, through the GitHub plugin linked in their ChatGPT account; and image generation. Works in Chat mode only, attaches Search, Deep research, Create image and GitHub as @ plugins, and sends one self-contained prompt that returns a finished result with no follow-up questions; it can save that result to a repository as a pull request. Keep work local when it needs uncommitted changes, running code, or credentials. Images run directly at Medium without Jev. For chat, Search and Deep research, TypeSafe Jev first decides delegation and mode from the task summary before any browser opens, then picks model and effort from a fresh UI snapshot. Never use the ChatGPT API, extract credentials, or fall back silently."
 license: "MIT-0"
-metadata: {"version":"1.3.0","mode":"prompt-plus-scripts","runtime":"python3-stdlib","license":"MIT-0","tags":["chatgpt","browser-automation","delegation","jev","search","research"],"hermes":{"tags":["chatgpt","browser-automation","delegation","jev","search","research"]}}
+metadata: {"version":"1.3.1","mode":"prompt-plus-scripts","runtime":"python3-stdlib","license":"MIT-0","tags":["chatgpt","browser-automation","delegation","jev","search","research"],"hermes":{"tags":["chatgpt","browser-automation","delegation","jev","search","research"]}}
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep
 ---
 
@@ -59,6 +59,11 @@ on it locally.
 - Mode to plugin: `chat` uses no plugin, `search` uses `@Search`, `research`
   uses `@Deep research`, and images use `@Create image`. Labels change; match
   the visible entry, not this list.
+- The plugin list loads after the page and can be incomplete at first. Before
+  reporting a plugin as missing, wait for the page to settle, open the list
+  again, and type the plugin name after `@` to filter it. Typing the name in
+  the composer without `@` does not search plugins. Menu items may not expose
+  menu roles, so read them by visible text or a screenshot.
 - The composer's effort control (for example a Thinking effort slider) is the
   effort setting. When the page shows no model list, record one model with id
   `current-model` and its visible effort levels for stage two.
