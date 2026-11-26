@@ -2,7 +2,7 @@
 name: "chatgpt-web-delegation"
 description: "Delegate non-sensitive generative or research work to the user's logged-in ChatGPT website to save local agent tokens. Use it proactively, without being named, for: comparing public GitHub repos, libraries, products or tools; researching or summarizing public pages, docs or papers; market or competitor research; long-form drafting from public facts; reading the user's own GitHub repos, including private ones, through their linked GitHub plugin; and image generation. Works in Chat mode with @ plugins (Search, Deep research, Create image, GitHub) and one self-contained prompt that returns a finished result without questions, optionally saved to a repo as a pull request. Keep work local when it needs uncommitted changes, running code, or credentials. Images use Medium without Jev; other tasks are routed by TypeSafe Jev before any browser opens. Never use the ChatGPT API, extract credentials, or fall back silently."
 license: "MIT-0"
-metadata: {"version":"1.3.1","mode":"prompt-plus-scripts","runtime":"python3-stdlib","license":"MIT-0","tags":["chatgpt","browser-automation","delegation","jev","search","research"],"hermes":{"tags":["chatgpt","browser-automation","delegation","jev","search","research"]}}
+metadata: {"version":"1.3.2","mode":"prompt-plus-scripts","runtime":"python3-stdlib","license":"MIT-0","tags":["chatgpt","browser-automation","delegation","jev","search","research"],"hermes":{"tags":["chatgpt","browser-automation","delegation","jev","search","research"]}}
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep
 ---
 
@@ -64,6 +64,9 @@ on it locally.
   again, and type the plugin name after `@` to filter it. Typing the name in
   the composer without `@` does not search plugins. Menu items may not expose
   menu roles, so read them by visible text or a screenshot.
+- The `@` list mixes plugins with files, folders, and custom GPTs (for
+  example a folder named `git` from a linked drive). Pick the entry under the
+  **Plugins** heading, then confirm the plugin chip in the composer.
 - The composer's effort control (for example a Thinking effort slider) is the
   effort setting. When the page shows no model list, record one model with id
   `current-model` and its visible effort levels for stage two.
@@ -89,9 +92,11 @@ for ChatGPT to read their repositories, private ones included.
 
 - Attach `@GitHub` and name the repository as `owner/repo` (with a branch or
   path when it matters). Do not paste file contents; the plugin reads them.
-- If the entry shows **Connect** or asks for a new authorization, it is not
-  linked. Do not connect it. Continue without GitHub only when the task does
-  not need it; otherwise stop and report.
+- Judge availability by attaching it with `@`, not by a label in another list:
+  the `+` menu search can show **Connect** for a plugin that `@` attaches
+  normally. It is usable when its chip appears in the composer. Stop only if
+  attaching opens an authorization or sign-in dialog; never complete that
+  dialog. Continue without GitHub only when the task does not need it.
 - **Saving the result:** when the user asked for the output as a document in a
   repository, the prompt may tell ChatGPT to commit it as one new file (for
   example `docs/research/<topic>.md`) on a new branch and open a pull request.
