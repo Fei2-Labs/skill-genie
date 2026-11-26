@@ -1,8 +1,8 @@
 ---
 name: "chatgpt-web-delegation"
-description: "Safely delegate a sanitized, non-sensitive task to the user's already-authenticated ChatGPT website through the user's own browser. Generate images with Medium directly, without Jev. Route other chat, Search, or Deep research work with three independent TypeSafe Jev choices, discover current mode/model/effort controls from fresh UI snapshots, and report observable completion, citations, or failure. Never use the ChatGPT API, extract credentials, or fall back silently."
+description: "Delegate non-sensitive generative or research work to the user's already-authenticated ChatGPT website to save local agent tokens. Use it proactively, without being named, when the task needs only public information or self-contained text: comparing public GitHub repos, libraries, products or tools; researching or summarizing public web pages, docs or papers; market or competitor research; drafting long-form text from public facts; and image generation. Do not use it for work that must read or run the local repository, edit files, or handle private data or credentials. Images run directly at Medium without Jev; chat, Search and Deep research are routed by TypeSafe Jev with fresh UI snapshots. Never use the ChatGPT API, extract credentials, or fall back silently."
 license: "MIT-0"
-metadata: {"version":"1.0.1","mode":"prompt-plus-scripts","runtime":"python3-stdlib","license":"MIT-0","tags":["chatgpt","browser-automation","delegation","jev","search","research"],"hermes":{"tags":["chatgpt","browser-automation","delegation","jev","search","research"]}}
+metadata: {"version":"1.0.2","mode":"prompt-plus-scripts","runtime":"python3-stdlib","license":"MIT-0","tags":["chatgpt","browser-automation","delegation","jev","search","research"],"hermes":{"tags":["chatgpt","browser-automation","delegation","jev","search","research"]}}
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep
 ---
 
@@ -15,6 +15,34 @@ authenticated browser**; it does not call a ChatGPT API and it does not create o
 manage a login.
 
 The user's task is: **$ARGUMENTS**
+
+## When to reach for this skill
+
+Pick this skill on your own, without waiting for the user to name it, whenever
+the bulk of the work is reading or writing public material that ChatGPT can do
+as well as the local agent. Typical cases:
+
+| Task | Mode |
+|------|------|
+| Compare public GitHub repos, libraries, frameworks, products, or SaaS tools | Deep research (or Search for a quick comparison) |
+| Research or summarize public web pages, docs, papers, or release notes | Search or Deep research |
+| Market, competitor, pricing, or trend research from public sources | Deep research |
+| Draft long-form text (articles, outlines, briefs) from public facts | chat |
+| Generate an image | image path below |
+
+Keep the task local instead when any of these hold:
+
+- the answer depends on the local repository, local files, a diff, logs, or
+  command output that would have to be pasted in;
+- the task edits files, runs code, deploys, or changes any system state;
+- the input contains private data, customer records, credentials, or internal
+  identifiers that cannot be removed without losing the task;
+- the answer is a short lookup the local agent can finish in a call or two.
+
+A mixed task can be split: delegate the public research to ChatGPT, then do the
+local part (applying the findings to this repository, for example) yourself.
+Present returned research as ChatGPT output, and verify any claim before acting
+on it locally.
 
 ## Image generation — Medium, without Jev
 
