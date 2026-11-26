@@ -502,7 +502,123 @@ class TransportTests(unittest.TestCase):
         opener.assert_not_called()
 
 
+def plan_input() -> dict:
+    return {
+        "task_summary": "Compare two public open-source repositories for a written report.",
+        "disclosure_reviewed": True,
+    }
+
+
+def plan_answers(
+    route_probs: dict[str, float] | None = None,
+    mode_probs: dict[str, float] | None = None,
+) -> dict:
+    route_probs = route_probs or {"delegate": 0.9, "keep_local": 0.05, "clarify": 0.05}
+    mode_probs = mode_probs or {"chat": 0.05, "search": 0.25, "research": 0.70}
+    return {
+        "route": decision(max(route_probs, key=route_probs.get), route_probs),
+        "mode": decision(max(mode_probs, key=mode_probs.get), mode_probs, confidence=0.5),
+    }
+
+
+class PlanTaskTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.key_patch = mock.patch.dict(os.environ, {"TYPESAFE_API_KEY": DUMMY_KEY})
+        self.key_patch.start()
+
+    def tearDown(self) -> None:
+        self.key_patch.stop()
+
+    def test_clear_delegate_selects_mode_from_summary_only(self) -> None:
+        captured: dict = {}
+
+        def fake_post(payload: dict) -> dict:
+            captured.update(payload)
+            return plan_answers()
+
+        with mock.patch.object(route, "_post_jev", side_effect=fake_post):
+            result = route.plan_task(plan_input())
+
+        self.assertTrue(result["ok"])
+        self.assertEqual(result["route"], "delegate")
+        self.assertEqual(result["action"], "open_chatgpt_web")
+        self.assertEqual(result["selection"], {"mode": "research"})
+        self.assertEqual(result["receipt"]["used_decisions"], ["route", "mode"])
+        # Stage one sends no UI snapshot: only the summary and review flag.
+        self.assertEqual(set(captured["state"]), {"task_summary", "disclosure_reviewed"})
+        self.assertEqual(set(captured["questions"]), {"route", "mode"})
+
+    def test_keep_local_skips_mode_and_opens_no_browser(self) -> None:
+        answers = plan_answers({"delegate": 0.05, "keep_local": 0.9, "clarify": 0.05})
+        del answers["mode"]
+        with mock.patch.object(route, "_post_jev", return_value=answers):
+            result = route.plan_task(plan_input())
+        self.assertEqual(result["route"], "keep_local")
+        self.assertEqual(result["action"], "no_web_action")
+        self.assertEqual(result["receipt"]["used_decisions"], ["route"])
+        self.assertNotIn("selection", result)
+
+    def test_uncertain_route_or_mode_clarifies(self) -> None:
+        cases = (
+            plan_answers({"delegate": 0.5, "keep_local": 0.45, "clarify": 0.05}),
+            plan_answers(mode_probs={"chat": 0.02, "search": 0.47, "research": 0.51}),
+        )
+        for answers in cases:
+            with self.subTest(answers=answers):
+                with mock.patch.object(route, "_post_jev", return_value=answers):
+                    result = route.plan_task(plan_input())
+                self.assertEqual(result["route"], "clarify")
+                self.assertEqual(result["action"], "no_web_action")
+                self.assertNotIn("selection", result)
+
+    def test_plan_input_is_strict_and_sends_no_request_when_invalid(self) -> None:
+        unreviewed = plan_input()
+        unreviewed["disclosure_reviewed"] = False
+        extra = plan_input()
+        extra["ui"] = {}
+        cases = (
+            (unreviewed, "disclosure_not_reviewed"),
+            (extra, "invalid_input"),
+            ({"disclosure_reviewed": True, "task_summary": " "}, "invalid_input"),
+            ([], "invalid_input"),
+        )
+        for payload, code in cases:
+            with self.subTest(code=code, payload=payload):
+                with mock.patch.object(route, "_post_jev") as call:
+                    result = route.plan_task(payload)
+                self.assertFalse(result["ok"])
+                self.assertEqual(result["error"]["code"], code)
+                call.assert_not_called()
+
+    def test_malformed_mode_answer_fails_closed(self) -> None:
+        answers = plan_answers()
+        answers["mode"] = decision("voice", {"chat": 0.2, "search": 0.3, "voice": 0.5})
+        with mock.patch.object(route, "_post_jev", return_value=answers):
+            result = route.plan_task(plan_input())
+        self.assertFalse(result["ok"])
+        self.assertEqual(result["error"]["code"], "invalid_response")
+
+
 class CliTests(unittest.TestCase):
+    def test_cli_plan_flag_runs_stage_one_without_network(self) -> None:
+        source = """
+import io, json, os, sys
+sys.path.insert(0, %r)
+import route
+route._post_jev = lambda payload: %r
+sys.stdin = io.StringIO(%r)
+raise SystemExit(route.main(["--plan"]))
+""" % (str(SCRIPTS), plan_answers(), json.dumps(plan_input()))
+        env = os.environ.copy()
+        env["TYPESAFE_API_KEY"] = DUMMY_KEY
+        completed = subprocess.run(
+            [sys.executable, "-c", source], capture_output=True, env=env, check=False,
+        )
+        self.assertEqual(completed.returncode, 0)
+        result = json.loads(completed.stdout)
+        self.assertEqual(result["selection"], {"mode": "research"})
+        self.assertNotIn(DUMMY_KEY.encode(), completed.stdout)
+
     def test_cli_invalid_json_is_nonzero_json_without_traceback(self) -> None:
         env = os.environ.copy()
         env["TYPESAFE_API_KEY"] = DUMMY_KEY
