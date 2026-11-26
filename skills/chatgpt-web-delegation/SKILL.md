@@ -1,8 +1,8 @@
 ---
 name: "chatgpt-web-delegation"
-description: "Delegate non-sensitive generative or research work to the user's logged-in ChatGPT website to save local agent tokens. Use it proactively, without being named, for: comparing public GitHub repos, libraries, products or tools; researching or summarizing public pages, docs or papers; market or competitor research; long-form drafting from public facts; reading the user's own GitHub repos, including private ones, through their linked GitHub plugin; and image generation. Works in Chat mode with @ plugins (Search, Deep research, Create image, GitHub) and one self-contained prompt that returns a finished result without questions, optionally saved to a repo as a pull request. Keep work local when it needs uncommitted changes, running code, or credentials. Images use Medium without Jev; other tasks are routed by TypeSafe Jev before any browser opens. Never use the ChatGPT API, extract credentials, or fall back silently."
+description: "Delegate non-sensitive generative or research work to the user's logged-in ChatGPT website to save local agent tokens. Use it proactively, without being named, for: comparing public GitHub repos, libraries, products or tools; researching or summarizing public pages, docs or papers; market or competitor research; long-form drafting from public facts; reading the user's own GitHub repos, including private ones, when their ChatGPT has the GitHub plugin; and image generation. Works in Chat mode with @ plugins (Search, Deep research, Create image, GitHub) and one self-contained prompt that returns a finished result without questions, optionally saved to a repo as a pull request. Keep work local when it needs uncommitted changes, running code, or credentials. Images use Medium without Jev; other tasks are routed by TypeSafe Jev before any browser opens. Never use the ChatGPT API, extract credentials, or fall back silently."
 license: "MIT-0"
-metadata: {"version":"1.3.2","mode":"prompt-plus-scripts","runtime":"python3-stdlib","license":"MIT-0","tags":["chatgpt","browser-automation","delegation","jev","search","research"],"hermes":{"tags":["chatgpt","browser-automation","delegation","jev","search","research"]}}
+metadata: {"version":"1.4.0","mode":"prompt-plus-scripts","runtime":"python3-stdlib","license":"MIT-0","tags":["chatgpt","browser-automation","delegation","jev","search","research"],"hermes":{"tags":["chatgpt","browser-automation","delegation","jev","search","research"]}}
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep
 ---
 
@@ -31,7 +31,7 @@ the mode in stage one below.
 | Research or summarize public web pages, docs, papers, or release notes | Search or Deep research |
 | Market, competitor, pricing, or trend research from public sources | Deep research |
 | Draft long-form text (articles, outlines, briefs) from public facts | chat |
-| Read, explain, or review code in the user's GitHub repositories, including private ones, or compare them with public repos | Deep research with `@GitHub` |
+| Read, explain, or review code in the user's GitHub repositories, including private ones, or compare them with public repos (only when the user's account has the GitHub plugin) | Deep research with `@GitHub` |
 | Generate an image | image path below |
 
 Keep the task local instead when any of these hold:
@@ -40,7 +40,8 @@ Keep the task local instead when any of these hold:
   unpushed changes, local files outside GitHub, logs, or command output;
 - the task edits files, runs code, deploys, or changes any system state;
 - the input contains customer records, credentials, or other private data that
-  is not already in a repository the GitHub plugin can read;
+  is not already in a repository the user's GitHub plugin can read (without
+  that plugin, private repositories stay local);
 - the answer is a short lookup the local agent can finish in a call or two.
 
 A mixed task can be split: delegate the research and code reading to ChatGPT,
@@ -67,6 +68,16 @@ on it locally.
 - The `@` list mixes plugins with files, folders, and custom GPTs (for
   example a folder named `git` from a linked drive). Pick the entry under the
   **Plugins** heading, then confirm the plugin chip in the composer.
+- Plugins differ per account, plan, and region. Never assume one exists because
+  this skill names it. Check each needed plugin with `@` in the preflight and
+  handle a missing one this way:
+  - **Search, Deep research, or Create image** missing: the mode is unavailable.
+    Stop with a concrete UI failure; do not switch to another plugin or mode.
+  - **GitHub** missing: public repositories can still be read through Search
+    or Deep research by URL. Private-repository reading stays local. Saving
+    the result falls back to the local agent's normal PR workflow.
+  - A plugin the user never linked is not an error to fix. Never connect,
+    install, or authorize it for them.
 - The composer's effort control (for example a Thinking effort slider) is the
   effort setting. When the page shows no model list, record one model with id
   `current-model` and its visible effort levels for stage two.
@@ -87,8 +98,10 @@ Write the browser prompt so ChatGPT finishes without asking anything:
 
 ## GitHub plugin: read code and save the result
 
-The GitHub plugin linked in the user's ChatGPT account is their authorization
-for ChatGPT to read their repositories, private ones included.
+This section applies only when the user's ChatGPT account has the GitHub
+plugin linked. Many users do not. When it is linked, that link is the user's
+authorization for ChatGPT to read their repositories, private ones included.
+Without it, follow the GitHub fallback in the UI section above.
 
 - Attach `@GitHub` and name the repository as `owner/repo` (with a branch or
   path when it matters). Do not paste file contents; the plugin reads them.
@@ -96,13 +109,12 @@ for ChatGPT to read their repositories, private ones included.
   the `+` menu search can show **Connect** for a plugin that `@` attaches
   normally. It is usable when its chip appears in the composer. Stop only if
   attaching opens an authorization or sign-in dialog; never complete that
-  dialog. Continue without GitHub only when the task does not need it.
+  dialog. If the GitHub plugin is absent or not linked, use the fallback.
 - **Saving the result:** when the user asked for the output as a document in a
   repository, the prompt may tell ChatGPT to commit it as one new file (for
   example `docs/research/<topic>.md`) on a new branch and open a pull request.
   Never write to the default branch, change existing files, comment, or close
-  anything. If GitHub is not linked, return the text and let the local agent
-  commit it through the normal PR workflow.
+  anything.
 - ChatGPT sees only the pushed state. Keep work on uncommitted changes local.
 - Treat claims about code as ChatGPT output. Verify them before acting locally.
 
@@ -207,6 +219,11 @@ summary, so it runs **before** any browser attach:
 echo '{"task_summary": "short sanitized summary", "disclosure_reviewed": true}' \
   | timeout 75s python3 scripts/route.py --plan
 ```
+
+When the task needs a private repository, say in `task_summary` whether the
+user's ChatGPT has the GitHub plugin linked (from an earlier preflight or the
+user's own statement). If unknown, say so; Jev then treats private code as
+local.
 
 It asks two questions together: whether to delegate (`delegate`, `keep_local`,
 `clarify`) and which mode fits (`chat`, `search`, `research`).
