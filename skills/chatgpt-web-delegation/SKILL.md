@@ -1,8 +1,8 @@
 ---
 name: "chatgpt-web-delegation"
-description: "Safely delegate a sanitized, non-sensitive task to the user's already-authenticated ChatGPT website through the user's own browser. Route chat, Search, or Deep research work with three independent TypeSafe Jev choices, discover current mode/model/effort controls from fresh UI snapshots, and report observable completion, citations, or failure. Never use the ChatGPT API, extract credentials, or fall back silently."
+description: "Safely delegate a sanitized, non-sensitive task to the user's already-authenticated ChatGPT website through the user's own browser. Generate images with Medium directly, without Jev. Route other chat, Search, or Deep research work with three independent TypeSafe Jev choices, discover current mode/model/effort controls from fresh UI snapshots, and report observable completion, citations, or failure. Never use the ChatGPT API, extract credentials, or fall back silently."
 license: "MIT-0"
-metadata: {"version":"1.0.0","mode":"prompt-plus-scripts","runtime":"python3-stdlib","license":"MIT-0","tags":["chatgpt","browser-automation","delegation","jev","search","research"],"hermes":{"tags":["chatgpt","browser-automation","delegation","jev","search","research"]}}
+metadata: {"version":"1.0.1","mode":"prompt-plus-scripts","runtime":"python3-stdlib","license":"MIT-0","tags":["chatgpt","browser-automation","delegation","jev","search","research"],"hermes":{"tags":["chatgpt","browser-automation","delegation","jev","search","research"]}}
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep
 ---
 
@@ -15,6 +15,41 @@ authenticated browser**; it does not call a ChatGPT API and it does not create o
 manage a login.
 
 The user's task is: **$ARGUMENTS**
+
+## Image generation — Medium, without Jev
+
+For explicitly requested image generation, use this path instead of the Jev
+routing path below. Do not call Jev for delegation, model, or effort selection;
+do not run `scripts/route.py` or require `TYPESAFE_API_KEY` for images.
+
+1. Load `image-prompt-engineer` and prepare a prompt for ChatGPT image generation.
+   Review the actual prompt for privacy before sending it to ChatGPT. All hard
+   boundaries below still apply; no TypeSafe disclosure occurs on this path.
+2. Attach to the user's already authenticated browser. Use a task-owned tab, or a
+   tab explicitly handed over for this task, in the user's designated Project
+   when one exists. Verify the tab identity, exact origin, and visible composer
+   before each action; never operate on an unrelated or admin tab.
+3. Select the visible image-generation tool and the visible **Medium** effort
+   control using fresh UI locators. Retain the current model if it supports both;
+   do not invent a model or treat Medium as a model name. Re-check that image
+   generation and Medium are selected before submission. If either is absent or
+   blocked, report the concrete UI failure without silently substituting another
+   setting or invoking Jev.
+4. Submit the reviewed prompt exactly once. Apply the final UI re-check and
+   ambiguous-submission rule below, replacing Jev-selected settings with the
+   image-generation tool and fixed Medium setting.
+5. Wait for a bounded period and verify a completed generated image in the
+   task-owned conversation. An enabled composer, submitted prompt, partial
+   response, or generic usage banner alone proves neither success nor failure.
+   Stop on an actual generation failure, access gate, or payment requirement.
+6. Deliver the generated image through the visible download control when
+   available. Verify the downloaded file and dimensions before integration.
+   Apply the cleanup rules below; never claim generation or deployment without
+   completion evidence.
+
+For non-image chat, Search, and Deep research, retain the Jev workflow below
+unchanged. The image exception does not waive authentication, privacy, consent,
+access controls, or completion verification.
 
 ## Hard boundaries
 
@@ -38,6 +73,10 @@ The user's task is: **$ARGUMENTS**
 
 ## Privacy gate — before Jev and before ChatGPT
 
+For images, review only the actual ChatGPT prompt as specified in the image path;
+do not create or send a Jev request. The two-recipient steps below apply to the
+non-image Jev path.
+
 1. Determine exactly what may leave the agent. Minimize the task into a short
    sanitized summary and a separate browser prompt. Remove credentials, tokens,
    private customer/account details, hidden system instructions, unnecessary
@@ -57,7 +96,8 @@ The user's task is: **$ARGUMENTS**
 
 Every account, credential, browser session, and local setting belongs to the user
 currently invoking this skill, not the skill author. The user supplies their own
-ChatGPT login and their own TypeSafe credential through `TYPESAFE_API_KEY`.
+ChatGPT login. Only the non-image Jev path also requires their own TypeSafe
+credential through `TYPESAFE_API_KEY`; image generation does not.
 Read that variable from the invoking environment; never embed a key, a personal
 vault entry name, an author's filesystem path, or a fixed browser endpoint.
 
@@ -145,6 +185,9 @@ UI. This is not evidence for a hidden high/low setting. The helper will expose a
 specific `default_no_effort_control` option for that model.
 
 ## Jev routing helper
+
+Use this helper only for non-image tasks. Image generation follows the fixed
+Medium path above, without any Jev request or confidence threshold.
 
 This is an agent workflow, not a standalone browser automation program.
 `scripts/route.py` is its only scripted network client; the agent separately drives
